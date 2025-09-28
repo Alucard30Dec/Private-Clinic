@@ -1,0 +1,403 @@
+﻿:root {
+    --clinic: #23979a; /* teal chủ đạo */
+    --clinic-dark: #1d7f81; /* footer/admin */
+    --login-bg: #ffffff; /* nền nút trắng */
+    --login-text: #e5442e; /* chữ/viền đỏ cam */
+    --text: #0b1f21;
+}
+
+/* ===== Base Typography ===== */
+html {
+    font-size: 16px
+}
+
+body {
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5 {
+    letter-spacing: .2px
+}
+
+/* ===== Navbar (Ivy vibes) ===== */
+.navbar-clinic {
+    background-color: var(--clinic)
+}
+
+    .navbar-clinic .navbar-brand,
+    .navbar-clinic .nav-link {
+        color: #fff !important
+    }
+
+    .navbar-clinic .navbar-toggler {
+        border-color: rgba(255,255,255,.35)
+    }
+
+    .navbar-clinic .navbar-toggler-icon {
+        filter: invert(1)
+    }
+
+/* Menu giữa + khoảng cách cân đối */
+.clinic-menu {
+    display: flex;
+    align-items: center;
+    gap: 16px; /* chỉnh gap tại đây nếu muốn */
+}
+
+    .clinic-menu .nav-link {
+        padding: .65rem .9rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .35px;
+        line-height: 1;
+        border-radius: 10px;
+        transition: color .2s ease, background-color .2s ease;
+    }
+
+        .clinic-menu .nav-link:hover,
+        .clinic-menu .nav-link:focus {
+            color: #eaf9f9 !important;
+            background-color: rgba(255,255,255,.08);
+        }
+
+        .clinic-menu .nav-link.active {
+            background-color: rgba(255,255,255,.18);
+            color: #fff !important;
+        }
+
+/* ===== Buttons ===== */
+/* (Giữ nếu còn dùng CTA cũ) */
+.btn-consult {
+    background: var(--login-bg);
+    color: var(--login-text);
+    border-radius: 999px;
+    font-weight: 800;
+    padding: .6rem 1rem;
+    border: 1.5px solid rgba(0,0,0,.06);
+    letter-spacing: .3px;
+    transition: transform .15s, box-shadow .2s, background .2s, color .2s;
+}
+
+    .btn-consult:hover {
+        background: #fff5f3;
+        color: #d63e27;
+        transform: translateY(-1px)
+    }
+
+    .btn-consult:active {
+        transform: translateY(0)
+    }
+
+/* Nút Đăng nhập: CHẮC CHẮN đè Bootstrap */
+.navbar-clinic .btn.btn-login,
+.navbar-clinic a.btn-login { /* tăng độ ưu tiên */
+    display: inline-block !important;
+    background: #fff !important;
+    color: var(--login-text) !important;
+    border: 2px solid var(--login-text) !important;
+    border-radius: 999px !important;
+    padding: .55rem 1rem !important;
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    letter-spacing: .35px !important;
+    line-height: 1 !important;
+    transition: all .2s ease !important;
+}
+
+    .navbar-clinic .btn.btn-login:hover,
+    .navbar-clinic .btn.btn-login:focus,
+    .navbar-clinic a.btn-login:hover,
+    .navbar-clinic a.btn-login:focus {
+        background: var(--login-text) !important;
+        color: #fff !important;
+        text-decoration: none !important;
+    }
+
+/* Tách nhẹ nút login khi nằm chung hàng với menu (desktop) */
+@media (min-width:992px) {
+    .clinic-menu .btn-login {
+        margin-left: 10px
+    }
+}
+
+/* ===== Footer ===== */
+.footer-clinic {
+    background: var(--clinic-dark);
+    color: #fff
+}
+
+/* ===== Admin Shell ===== */
+.admin-shell {
+    background: #f6f7fb
+}
+
+.admin-topbar {
+    background: #0f7f81;
+    color: #fff
+}
+
+    .admin-topbar .navbar-brand, .admin-topbar .nav-link {
+        color: #fff !important
+    }
+
+.admin-body {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    min-height: calc(100vh - 56px)
+}
+
+.admin-sidebar {
+    background: var(--clinic);
+    min-height: calc(100vh - 56px)
+}
+
+    .admin-sidebar .nav-link {
+        color: #eaf9f9;
+        border-radius: 10px
+    }
+
+        .admin-sidebar .nav-link:hover, .admin-sidebar .nav-link.active {
+            background: rgba(255,255,255,.15);
+            color: #fff
+        }
+
+.admin-main {
+    padding: 16px
+}
+
+/* ===== Utilities ===== */
+section {
+    scroll-margin-top: 80px
+}
+
+main {
+    margin-top: 64px
+}
+
+/* ===== Responsive ===== */
+@media (max-width:991.98px) {
+    .clinic-menu {
+        gap: 8px
+    }
+        /* thu khoảng cách trên mobile */
+        .clinic-menu .nav-link {
+            text-transform: none;
+            font-weight: 600;
+            padding: .6rem .8rem;
+            border-radius: 8px;
+        }
+
+    main {
+        margin-top: 56px
+    }
+}
+/* ==== ABOUT (giống style mẫu) ==== */
+.text-teal {
+    color: var(--clinic);
+}
+
+.ivy-about {
+    background: #f7fbfb;
+}
+/* nền sáng nhẹ như mẫu */
+.about-title span {
+    display: inline-block;
+    color: #1a7f81; /* teal đậm */
+    font-weight: 800;
+    letter-spacing: .6px;
+    text-transform: uppercase;
+    border-top: 8px solid var(--clinic); /* gợi header sọc teal phía trên tiêu đề */
+    padding-top: .6rem;
+}
+
+.about-img {
+    width: 100%;
+    height: auto;
+    border-radius: 16px;
+    object-fit: cover;
+}
+
+.about-lead {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #334b4c;
+}
+
+.about-bullets {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+    .about-bullets li {
+        position: relative;
+        padding-left: 28px;
+        margin-bottom: .6rem;
+        color: #4f6b6c;
+    }
+
+        .about-bullets li::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: .5rem;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--clinic);
+        }
+
+/* Mobile tweak */
+@media (max-width: 991.98px) {
+    .about-title span {
+        font-size: 1.25rem;
+        border-top-width: 6px;
+    }
+
+    .about-lead {
+        font-size: 1rem;
+    }
+}
+
+/* ===== FACILITY (Trang thiết bị – Private Clinic) ===== */
+.ivy-facility {
+    background: linear-gradient(180deg, rgba(35,151,154,.05), rgba(255,255,255,0));
+}
+
+.facility-title span {
+    display: inline-block;
+    color: #1a7f81;
+    font-weight: 800;
+    letter-spacing: .6px;
+    text-transform: uppercase;
+    border-top: 8px solid #23979a;
+    padding-top: .6rem;
+}
+
+.facility-hero {
+    max-width: 520px;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+.facility-item {
+    gap: 16px;
+}
+
+    .facility-item .facility-icon {
+        width: 80px;
+        height: 80px;
+        min-width: 80px;
+        border-radius: 50%;
+        background: #e7f5f6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 6px 18px rgba(0,0,0,.08);
+    }
+
+        .facility-item .facility-icon img {
+            width: 44px;
+            height: 44px;
+            object-fit: contain;
+        }
+
+.facility-pill {
+    background: #22a6ab;
+    color: #fff;
+    padding: 16px 22px;
+    border-radius: 999px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.12);
+    font-weight: 600;
+    line-height: 1.6;
+}
+
+/* Mobile */
+@media (max-width: 991.98px) {
+    .facility-hero {
+        max-width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .facility-item .facility-icon {
+        width: 64px;
+        height: 64px;
+        min-width: 64px;
+    }
+
+        .facility-item .facility-icon img {
+            width: 36px;
+            height: 36px;
+        }
+
+    .facility-pill {
+        border-radius: 20px;
+    }
+}
+
+/* ===== Auth Modal Modern ===== */
+.fw-800 {
+    font-weight: 800;
+}
+
+.modal-auth {
+    box-shadow: 0 24px 64px rgba(0,0,0,.25);
+    background: #fff;
+}
+
+    .modal-auth .modal-header {
+        background: linear-gradient(135deg, rgba(35,151,154,.12), rgba(35,151,154,.06));
+        padding: 22px 24px 18px;
+    }
+
+.auth-title {
+    color: var(--clinic);
+    letter-spacing: .3px;
+}
+
+.auth-input .input-group-text {
+    background: #f3f7f7;
+    border: 1px solid rgba(0,0,0,.06);
+    border-right: 0;
+    border-radius: 12px 0 0 12px !important;
+}
+
+.auth-input .form-control {
+    border: 1px solid rgba(0,0,0,.06);
+    border-left: 0;
+    border-radius: 0 12px 12px 0 !important;
+    height: 52px;
+}
+
+    .auth-input .form-control:focus {
+        box-shadow: 0 0 0 .2rem rgba(35,151,154,.15);
+        border-color: rgba(35,151,154,.35);
+    }
+
+.toggle-pass {
+    border: 1px solid rgba(0,0,0,.06);
+    border-left: 0;
+    border-radius: 0 12px 12px 0 !important;
+    background: #f3f7f7;
+    padding: 0 12px;
+}
+
+    .toggle-pass i {
+        color: #607d7e;
+    }
+
+/* Nút CTA to, bo tròn */
+.btn-ivy-cta.btn-lg, .btn-outline-secondary.btn-lg {
+    border-radius: 14px;
+    font-weight: 800;
+}
+
+/* Title modal căn giữa đẹp khi có nút close */
+.modal-header .btn-close {
+    top: 50%;
+    transform: translateY(-50%);
+}

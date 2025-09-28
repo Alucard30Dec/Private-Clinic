@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "E:\\Study\\WebApp\\1. Project\\Private-Clinic\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{6C333661-A1D9-43A7-8132-682517765DD1}|Private Clinic\\Private Clinic.csproj|e:\\study\\webapp\\1. project\\private-clinic\\private clinic\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{6C333661-A1D9-43A7-8132-682517765DD1}|Private Clinic\\Private Clinic.csproj|solutionrelative:private clinic\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "E:\\Study\\WebApp\\1. Project\\Private-Clinic\\Private Clinic\\Views\\Home\\Index.cshtml",
+              "RelativeDocumentMoniker": "Private Clinic\\Views\\Home\\Index.cshtml",
+              "ToolTip": "E:\\Study\\WebApp\\1. Project\\Private-Clinic\\Private Clinic\\Views\\Home\\Index.cshtml",
+              "RelativeToolTip": "Private Clinic\\Views\\Home\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-09-28T06:37:23.438Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

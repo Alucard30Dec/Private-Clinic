@@ -1,0 +1,58 @@
+﻿@{
+    ViewBag.Title = "Giới Thiệu IVY HEALTH";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles{
+    <style>
+        .about-title {
+            color: #0f9a9a;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .about-lead b {
+            color: #0f9a9a;
+        }
+
+        .about-img {
+            border-radius: 16px;
+            box-shadow: 0 10px 28px rgba(15,154,154,.15);
+        }
+
+        .about-block h5 {
+            color: #19a3a3;
+            font-weight: 800;
+        }
+    </style>
+}
+
+<div class="container py-4">
+    <h1 class="about-title mb-4">Giới Thiệu IVY HEALTH</h1>
+
+    <div class="row g-4 align-items-start">
+        <div class="col-lg-6">
+            <!-- thay ảnh bằng ảnh của bạn -->
+            <img src="~/Content/images/about-building.jpg" alt="IVY Health"
+                 class="img-fluid about-img" />
+        </div>
+
+        <div class="col-lg-6">
+            <p class="fs-5 about-lead">
+                <b>Ivy Health</b> được đầu tư phát triển bởi Công ty Cổ phần Y Tế Prime Health
+                với hệ thống trang thiết bị hiện đại theo đúng tiêu chuẩn Mỹ, Châu Âu, Nhật Bản…
+                cùng đội ngũ chuyên khoa, bác sĩ dày dặn kinh nghiệm, tận tâm.
+                Phòng Khám Đa Khoa IVY HEALTH đã trở thành nơi bảo chứng cho khách hàng sự hoàn hảo,
+                uy tín trong dịch vụ chăm sóc sức khỏe tại trung tâm Thành phố Hồ Chí Minh.
+            </p>
+
+            <div class="about-block mt-3">
+                <h5 class="mb-2">Mục tiêu chính</h5>
+                <p class="fs-5">
+                    Phòng Khám hướng đến sự chuyên nghiệp trong khám chữa bệnh và tư vấn sức khỏe cao cấp giữa
+                    không gian ấm áp và gần gũi, mỗi khách hàng sẽ hài lòng, thoải mái trong từng khoảnh khắc tại IVY HEALTH.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

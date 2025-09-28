@@ -1,0 +1,31 @@
+﻿@{
+    ViewBag.Title = "Bác sĩ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container py-5">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 mb-4">
+        <div>
+            <h2 class="fw-bold mb-0">Danh sách Bác sĩ</h2>
+            <small class="text-muted">5 bác sĩ chuyên khoa tại phòng khám</small>
+        </div>
+        <div class="d-flex gap-2">
+            <select class="form-select">
+                <option>Tất cả chuyên khoa</option>
+                <option>Nội tổng quát</option>
+                <option>Tim mạch</option>
+                <option>Tai mũi họng</option>
+                <option>Da liễu</option>
+            </select>
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input class="form-control" placeholder="Tìm tên bác sĩ..." />
+            </div>
+        </div>
+    </div>
+    <div class="row g-4">
+        @for (int i = 0; i < 6; i++)
+        {
+            <div class="col-md-6 col-lg-4">@Html.Partial("_DoctorCard", new { Name = $"BS. B{i}", Specialty = "Tim mạch", Rating = 4.9 })</div>
+        }
+    </div>
+</div>

@@ -1,0 +1,62 @@
+﻿@{
+    ViewBag.Title = "Thanh Loading";
+    Layout = null; // Nếu muốn dùng _Layout.cshtml, hãy xóa dòng này
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Thanh Loading</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="@Url.Content("~/Content/Loading.css")" />
+</head>
+<body>
+    <main class="container">
+        <h1 class="title">Loading</h1>
+
+        <div class="progress-wrap" aria-label="Đang tải" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div class="progress-track">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div class="progress-text"><span id="percent">0</span>%</div>
+        </div>
+    </main>
+
+    <script>
+    // Cấu hình
+    const DURATION_MS = 750; // Tổng thời gian để đầy
+    const REDIRECT_TO = '@Url.Action("Index","Home")'; // Trang đích khi đầy
+
+    const bar = document.getElementById("progressBar");
+    const percentEl = document.getElementById("percent");
+    const wrap = document.querySelector(".progress-wrap");
+
+    const start = performance.now();
+
+    function step(now) {
+      const elapsed = now - start;
+      let pct = Math.min(1, elapsed / DURATION_MS);
+      const pct100 = Math.round(pct * 100);
+
+      bar.style.setProperty("--pct", pct);
+      percentEl.textContent = pct100;
+      wrap.setAttribute("aria-valuenow", pct100);
+
+      if (pct < 1) {
+        requestAnimationFrame(step);
+      } else {
+        // đợi một chút cho mượt rồi chuyển trang
+        setTimeout(() => (window.location.href = REDIRECT_TO), 300);
+      }
+    }
+
+    // Khởi động animation
+    requestAnimationFrame(step);
+    </script>
+</body>
+</html>
+

@@ -123,6 +123,7 @@
     <Compile Include="Controllers\AppointmentsController.cs" />
     <Compile Include="Controllers\DoctorsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\Loading.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -149,6 +150,7 @@
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Content\images\about-building.jpg" />
     <Content Include="Content\images\BacSiNam.jpg" />
+    <Content Include="Content\Loading.css" />
     <Content Include="Content\images\Thietbi1.jpg" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
@@ -189,6 +191,7 @@
     <Content Include="Views\Appointments\Book.cshtml" />
     <Content Include="Views\Shared\_Header.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Loading\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

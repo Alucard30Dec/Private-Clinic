@@ -1,0 +1,75 @@
+﻿/* Thanh loading phong cách web.dev */
+:root {
+    --bg: #f6f7fb;
+    --text: #3d3f45;
+    --halo: rgba(0, 0, 0, 0.08);
+    --track: #e6e9f6;
+    --bar: #0a45ff;
+    --bar-glow: #5b7cff;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    background: radial-gradient(1200px 500px at 30% 80%, rgba(0,0,0,0.05), transparent 60%) var(--bg);
+    color: var(--text);
+}
+
+.container {
+    height: 100%;
+    display: grid;
+    place-items: center;
+    gap: 28px;
+    padding: 24px;
+}
+
+.title {
+    margin: 0;
+    font-weight: 600;
+    margin-top: 100px;
+    letter-spacing: .2px;
+    font-size: 60px;
+    color: #4a4f58;
+    text-align: center; /* căn chữ giữa theo ngang */
+}
+
+.progress-wrap {
+    width: min(880px, 92vw);
+    margin-top: -600px;
+    background: white;
+    padding: 34px 24px;
+    border-radius: 28px;
+    box-shadow: 0 16px 40px var(--halo), 0 2px 0 rgba(255,255,255,0.6) inset;
+}
+
+.progress-track {
+    position: relative;
+    height: 28px;
+    border-radius: 999px;
+    padding: 4px;
+    background: linear-gradient(#ffffff, #fbfbff);
+    box-shadow: inset 0 0 0 3px #1f57ff, inset 0 0 0 6px #c7d3ff;
+}
+
+.progress-bar {
+    /* Sử dụng biến --pct để điều khiển chiều rộng (0..1) */
+    --pct: 0;
+    height: 100%;
+    width: calc(var(--pct) * 100%);
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--bar) 0%, #1f57ff 60%, var(--bar-glow) 100%);
+    box-shadow: 0 0 12px 0 rgba(46, 93, 255, 0.5), inset 0 0 0 2px rgba(255, 255, 255, 0.65);
+    transition: width 60ms linear;
+}
+
+.progress-text {
+    text-align: right;
+    font-size: 14px;
+    margin-top: 10px;
+    color: #6b7280;
+}

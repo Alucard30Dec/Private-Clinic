@@ -15,7 +15,7 @@ namespace Private_Clinic
             routes.MapRoute(
             name: "Default",
             url: "{controller}/{action}/{id}",
-            defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+            defaults: new { controller = "Loading", action = "Index", id = UrlParameter.Optional }
             );
         }
     }

@@ -1,11 +1,15 @@
 ﻿@{
-    var brand = ViewBag.Brand as string ?? "Private Clinic";
+    var brand = "Private Clinic";
 }
 <header>
-    <nav class="navbar navbar-expand-lg navbar-clinic fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-clinic fixed-top" role="navigation" aria-label="Main navigation">
         <div class="container">
-            <!-- Logo trái -->
-            <a class="navbar-brand fw-bold me-2" href="@Url.Action("Index","Home")">@brand</a>
+
+            <!-- Brand -->
+            <a class="navbar-brand d-flex align-items-center gap-2" href="@Url.Action("Index","Home")" aria-label="Trang chủ">
+                <img src="@Url.Content("~/Content/images/Logo1.jpg")" alt="Logo @brand" style="height:36px;width:auto;" />
+                <span class="brand-main text-white fw-bold">@brand</span>
+            </a>
 
             <!-- Toggler -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
@@ -13,36 +17,37 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <!-- Menu + Đăng nhập ở giữa -->
+            <!-- Menu giữa -->
             <div class="collapse navbar-collapse justify-content-center" id="mainNav">
                 <ul class="navbar-nav clinic-menu text-center align-items-lg-center">
                     <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Index","Home")#about"
-                           data-bs-toggle="collapse" data-bs-target="#mainNav">Giới Thiệu</a>
+                        <a class="nav-link" href="@Url.Action("About","Home")" data-bs-toggle="collapse" data-bs-target="#mainNav">GIỚI THIỆU</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Index","Home")#facility"
-                           data-bs-toggle="collapse" data-bs-target="#mainNav">Trang Thiết Bị</a>
+                        <a class="nav-link" href="@Url.Action("Facility","Home")" data-bs-toggle="collapse" data-bs-target="#mainNav">TRANG THIẾT BỊ</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Index","Home")#doctors"
-                           data-bs-toggle="collapse" data-bs-target="#mainNav">Bác sĩ</a>
+                        <a class="nav-link" href="@Url.Action("Index","Doctors")" data-bs-toggle="collapse" data-bs-target="#mainNav">BÁC SĨ</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Index","Home")#hero"
-                           data-bs-toggle="collapse" data-bs-target="#mainNav">Đặt lịch</a>
+                        <a class="nav-link" href="@Url.Action("Index","Specialties")" data-bs-toggle="collapse" data-bs-target="#mainNav">CHUYÊN KHOA</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Index","Home")#contact"
-                           data-bs-toggle="collapse" data-bs-target="#mainNav">Liên hệ</a>
+                        <a class="nav-link" href="@Url.Action("Index","Membership")" data-bs-toggle="collapse" data-bs-target="#mainNav">THẺ THÀNH VIÊN</a>
                     </li>
-                    <!-- Nút đăng nhập kế bên menu -->
-                    <li class="nav-item">
-                        <a class="btn btn-login ms-lg-2" href="@Url.Action("Login","Account")"
-                           data-bs-toggle="collapse" data-bs-target="#mainNav">Đăng nhập</a>
+
+                    <!-- CTA trên mobile: CHỈ còn Đăng nhập -->
+                    <li class="nav-item d-lg-none mt-2">
+                        <a class="btn btn-ivy-cta w-100 btn-login" href="#">Đăng nhập</a>
                     </li>
                 </ul>
             </div>
+
+            <!-- CTA phải (desktop): CHỈ còn Đăng nhập -->
+            <div class="d-none d-lg-flex align-items-center">
+                <a class="btn btn-ivy-cta btn-login" href="#">Đăng nhập</a>
+            </div>
+
         </div>
     </nav>
 </header>

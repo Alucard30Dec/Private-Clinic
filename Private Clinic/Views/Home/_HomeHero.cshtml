@@ -1,0 +1,87 @@
+﻿@* Views/Home/_HomeHero.cshtml
+    - Block HERO trang chủ: tiêu đề + mô tả + form đăng ký nhanh
+    - Dùng CSS: .hero-ivy, .hero-title, .hero-sub, .form-box-ivy, .btn-ivy-cta, .hero-bg-doctor
+    - Ảnh bác sĩ set bằng CSS (.hero-bg-doctor) trong app-pages.css *@
+
+<section class="hero-ivy" id="hero">
+    <div class="container">
+        <div class="row align-items-center g-4">
+            <!-- Trái: tiêu đề + form -->
+            <div class="col-lg-6">
+                <h1 class="hero-title display-4 mb-3">
+                    <span class="line">CHĂM SÓC SỨC KHỎE</span>
+                    <span class="line">CHUẨN QUỐC TẾ</span>
+                </h1>
+                <p class="hero-sub mb-4">
+                    Đăng kí khám không chờ đợi – chọn giờ linh hoạt, xác nhận ngay.
+                </p>
+
+                <div class="form-box-ivy">
+                    <h5>ĐĂNG KÍ KHÁM KHÔNG CHỜ ĐỢI</h5>
+                    @{
+                        // Giữ lại dữ liệu cũ sau khi submit lỗi (nếu có)
+                        var old = TempData["FormData"] as Private_Clinic.Models.QuickRegisterVM;
+                    }
+                    <form method="post"
+                          action="@Url.Action("QuickRegister","Appointment")"
+                          id="quick-register-form"
+                          novalidate>
+                        @Html.AntiForgeryToken()
+
+                        <div class="mb-2">
+                            <input class="form-control"
+                                   name="FullName"
+                                   placeholder="Họ và tên"
+                                   value="@(old?.FullName ?? "")"
+                                   required />
+                        </div>
+
+                        <div class="row g-2 mb-2">
+                            <div class="col-sm-6">
+                                <input class="form-control"
+                                       type="email"
+                                       name="Email"
+                                       placeholder="Email"
+                                       value="@(old?.Email ?? "")"
+                                       required />
+                            </div>
+                            <div class="col-sm-6">
+                                <input class="form-control"
+                                       name="Phone"
+                                       placeholder="Số điện thoại"
+                                       value="@(old?.Phone ?? "")"
+                                       pattern="^0\\d{9,10}$"
+                                       required />
+                            </div>
+                        </div>
+
+                        <div class="mb-2">
+                            <input class="form-control"
+                                   name="Address"
+                                   placeholder="Địa chỉ"
+                                   value="@(old?.Address ?? "")"
+                                   required />
+                        </div>
+
+                        <div class="mb-3">
+                            <textarea class="form-control"
+                                      name="Note"
+                                      placeholder="Để lại lời nhắn cho chúng tôi"
+                                      rows="3"
+                                      required>@(old?.Note ?? "")</textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-ivy-cta w-100">
+                            ĐĂNG KÍ KHÁM BỆNH
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Phải: ảnh bác sĩ phủ kín (thiết lập trong CSS .hero-bg-doctor) -->
+            <div class="col-lg-6">
+                <div class="hero-bg-doctor"></div>
+            </div>
+        </div>
+    </div>
+</section>

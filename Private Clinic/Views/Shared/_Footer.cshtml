@@ -1,30 +1,96 @@
-﻿<footer class="footer-clinic mt-auto pt-5 pb-4">
+﻿@* Views/Shared/_Footer.cshtml *@
+@{
+    var brand = ViewBag.Brand as string ?? "Private Clinic";
+}
+<footer class="footer-clinic mt-auto pt-5 pb-4" role="contentinfo" aria-labelledby="footerTitle">
     <div class="container">
+
         <div class="row g-4">
-            <div class="col-md-4">
-                <h5 class="text-white mb-3">Private Clinic</h5>
-                <p class="text-light opacity-75 mb-0">Chăm sóc tận tâm – Đặt lịch trực tuyến nhanh chóng.</p>
+            <!-- Logo + mô tả -->
+            <div class="col-md-4 d-flex flex-column">
+                <div class="d-flex align-items-center mb-2">
+                    <a href="@Url.Action("Index","Home")" class="d-inline-flex align-items-center text-decoration-none">
+                        <img src="@Url.Content("~/Content/images/Logo1.jpg")"
+                             alt="Logo @brand"
+                             style="height:40px;width:auto;" class="me-2" />
+                        <h5 id="footerTitle" class="text-white mb-0">@brand</h5>
+                    </a>
+                </div>
+                <p class="text-light opacity-75 mb-0">
+                    Chăm sóc tận tâm – Đặt lịch trực tuyến nhanh chóng.
+                </p>
             </div>
+
+            <!-- Liên hệ -->
             <div class="col-md-4">
                 <h6 class="text-white">Liên hệ</h6>
-                <ul class="list-unstyled text-light opacity-75">
-                    <li>Hotline: 0123 456 789</li>
-                    <li>Email: hello@privateclinic.vn</li>
-                    <li>Địa chỉ: 123 Nguyễn Trãi, Q.5, TP.HCM</li>
-                </ul>
+                <address class="mb-3 text-light opacity-75">
+                    <div>
+                        Hotline:
+                        <a class="link-light text-decoration-underline" href="tel:+84901206020" aria-label="Gọi số 0901 206 020">
+                            0901 206 020
+                        </a>
+                    </div>
+                    <div>
+                        Email:
+                        <a class="link-light text-decoration-underline" href="mailto:hello@privateclinic.vn">
+                            hello@privateclinic.vn
+                        </a>
+                    </div>
+                    <div>
+                        Địa chỉ:
+                        <a class="link-light text-decoration-underline"
+                           href="https://maps.google.com/?q=123%20Nguy%E1%BB%85n%20Tr%C3%A3i,%20Qu%E1%BA%ADn%205,%20TP.HCM"
+                           target="_blank" rel="noopener noreferrer">
+                            123 Nguyễn Trãi, Q.5, TP.HCM
+                        </a>
+                    </div>
+                </address>
+
+                <!-- Social Icons -->
+                <nav aria-label="Mạng xã hội">
+                    <div class="d-flex gap-3">
+                        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer"
+                           class="text-light fs-4" aria-label="Facebook">
+                            <i class="bi bi-facebook" aria-hidden="true"></i><span class="visually-hidden">Facebook</span>
+                        </a>
+                        <a href="https://zalo.me" target="_blank" rel="noopener noreferrer"
+                           class="text-light fs-4" aria-label="Zalo">
+                            <i class="bi bi-chat-dots" aria-hidden="true"></i><span class="visually-hidden">Zalo</span>
+                        </a>
+                        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"
+                           class="text-light fs-4" aria-label="Instagram">
+                            <i class="bi bi-instagram" aria-hidden="true"></i><span class="visually-hidden">Instagram</span>
+                        </a>
+                    </div>
+                </nav>
             </div>
+
+            <!-- Liên kết nhanh + Giờ làm việc -->
             <div class="col-md-4">
-                <h6 class="text-white">Giờ làm việc</h6>
-                <ul class="list-unstyled text-light opacity-75">
+                <h6 class="text-white">Liên kết</h6>
+                <ul class="list-unstyled mb-3">
+                    <li><a class="link-light text-decoration-none opacity-75" href="@Url.Action("About","Home")">Giới thiệu</a></li>
+                    <li><a class="link-light text-decoration-none opacity-75" href="@Url.Action("Facility","Home")">Trang thiết bị</a></li>
+                    <li><a class="link-light text-decoration-none opacity-75" href="@Url.Action("Index","Doctors")">Bác sĩ</a></li>
+                    @* Lưu ý: controller đặt là Appointment hay Appointments? Khớp với route hiện có *@
+                    <li><a class="link-light text-decoration-none opacity-75" href="@Url.Action("Create","Appointment")">Đặt lịch</a></li>
+                    <li><a class="link-light text-decoration-none opacity-75" href="@Url.Action("Contact","Home")">Liên hệ</a></li>
+                </ul>
+
+                <h6 class="text-white mt-3">Giờ làm việc</h6>
+                <ul class="list-unstyled text-light opacity-75 mb-3">
                     <li>T2–T6: 08:00 – 20:00</li>
                     <li>T7–CN: 08:00 – 17:00</li>
                 </ul>
+
+                <!-- Back to top -->
+                <a href="#top" class="btn btn-outline-light btn-sm rounded-pill px-3">
+                    <i class="bi bi-arrow-up-short" aria-hidden="true"></i> Lên đầu trang
+                </a>
             </div>
         </div>
-        <hr class="border-light opacity-25 my-4" />
-        <div class="d-flex justify-content-between flex-wrap gap-2 text-light opacity-75 small">
-            <span>© @DateTime.Now.Year Private Clinic</span>
-            <span>Thiết kế theo phong cách Ivy Health</span>
-        </div>
+
+        
     </div>
 </footer>

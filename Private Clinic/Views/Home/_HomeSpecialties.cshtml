@@ -1,0 +1,46 @@
+﻿@* ----- SPECIALTIES (Kiểu icon to, nền trắng) ----- *@
+@{
+    var spItems = new[]
+    {
+        new { Title = "NỘI TỔNG QUÁT",            File = "noi-tong-quat.jpg",  Url = Url.Action("Detail","Specialties", new { slug="noi-tong-quat" }) },
+        new { Title = "TAI - MŨI - HỌNG",         File = "tai-mui-hong.jpg",   Url = Url.Action("Detail","Specialties", new { slug="tai-mui-hong" }) },
+        new { Title = "SẢN KHOA",                 File = "san-khoa.jpg",       Url = Url.Action("Detail","Specialties", new { slug="san-khoa" }) },
+        new { Title = "MẮT - TẬT KHÚC XẠ",        File = "mat.jpg",            Url = Url.Action("Detail","Specialties", new { slug="mat-tat-khuc-xa" }) },
+        new { Title = "DA LIỄU",                  File = "da-lieu.jpg",        Url = Url.Action("Detail","Specialties", new { slug="da-lieu" }) },
+        new { Title = "NGOẠI KHOA",               File = "ngoai-khoa.jpg",     Url = Url.Action("Detail","Specialties", new { slug="ngoai-khoa" }) },
+        new { Title = "TÂM THẦN KINH<br/>TÂM LÝ", File = "tam-than.jpg",       Url = Url.Action("Detail","Specialties", new { slug="tam-than-kinh-tam-ly" }) },
+        new { Title = "XÉT NGHIỆM",               File = "xet-nghiem.jpg",     Url = Url.Action("Detail","Specialties", new { slug="xet-nghiem" }) },
+        new { Title = "TIÊM CHỦNG",               File = "tiem-chung.jpg",     Url = Url.Action("Detail","Specialties", new { slug="tiem-chung" }) },
+        new { Title = "RĂNG HÀM MẶT",             File = "rang-ham-mat.jpg",   Url = Url.Action("Detail","Specialties", new { slug="rang-ham-mat" }) },
+        new { Title = "TIÊU HÓA",                 File = "tieu-hoa.jpg",       Url = Url.Action("Detail","Specialties", new { slug="tieu-hoa" }) },
+        new { Title = "NHI KHOA",                 File = "nhi-khoa.jpg",       Url = Url.Action("Detail","Specialties", new { slug="nhi-khoa" }) },
+    };
+}
+<section class="strip-band strip-specialties-min py-5">
+    <div class="container">
+        <div class="section-title has-lines mb-4">
+            <h2>Chuyên Khoa</h2>
+        </div>
+
+        <!-- 2 hàng 5–5, luôn căn giữa (col-auto + width cố định) -->
+        <div class="row g-5 justify-content-center sp-min-row">
+            @foreach (var s in spItems)
+            {
+                var plain = (s.Title ?? "").Replace("<br/>", " ");
+                <div class="col-auto">
+                    <a href="@s.Url" class="sp-min text-decoration-none" aria-label="@plain">
+                        <div class="sp-min-ico">
+                            <img src="@Url.Content("~/Content/icons/" + s.File)"
+                                 alt="@plain" loading="lazy" />
+                        </div>
+                        <div class="sp-min-title">@Html.Raw(s.Title)</div>
+                    </a>
+                </div>
+            }
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="#hero" class="btn btn-ivy-solid px-4 js-scroll-to-hero">Đặt lịch khám</a>
+        </div>
+    </div>
+</section>

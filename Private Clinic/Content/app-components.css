@@ -1,0 +1,113 @@
+﻿/* ===== AUTH MODAL – đồng bộ với layout, KHÔNG đổi class ===== */
+
+/* Khung & header */
+.modal-auth .modal-content {
+    border-radius: 18px;
+    box-shadow: 0 24px 64px rgba(0,0,0,.18);
+    border: 0;
+}
+
+.modal-auth .modal-header {
+    background: #fff;
+}
+
+.modal-auth .auth-title {
+    color: var(--clinic-dark,#1a7f81);
+    font-weight: 800;
+}
+
+/* Nhãn & chữ nhỏ */
+.modal-auth .form-label {
+    color: #123;
+    font-weight: 600;
+}
+
+.modal-auth .small, .modal-auth .form-text {
+    color: #657;
+}
+
+/* Input group */
+.modal-auth .auth-input .input-group-text {
+    background: #e7f5f6;
+    color: var(--clinic-dark,#1a7f81);
+    border: 1px solid rgba(0,0,0,.06);
+    border-right: 0;
+}
+
+.modal-auth .auth-input .form-control {
+    border: 1px solid rgba(0,0,0,.08);
+    box-shadow: none;
+}
+
+    .modal-auth .auth-input .form-control:focus {
+        border-color: var(--clinic,#23979a);
+        box-shadow: 0 0 0 3px rgba(35,151,154,.15);
+    }
+
+/* Nút hiện/ẩn mật khẩu */
+.modal-auth .toggle-pass {
+    border: none;
+    background: transparent;
+    color: var(--clinic-dark,#1a7f81);
+}
+
+    .modal-auth .toggle-pass:hover {
+        color: var(--clinic,#23979a);
+    }
+
+/* Link “Quên mật khẩu?” */
+.modal-auth .link-offset-2 {
+    color: var(--clinic,#23979a);
+    text-decoration: none;
+}
+
+    .modal-auth .link-offset-2:hover {
+        text-decoration: underline;
+    }
+
+/* CTA Đăng nhập – GIỮ màu đỏ như ngoài */
+/* Modal login CTA giữ nền đỏ */
+.modal-auth .btn-ivy-cta {
+    background: #e74c3c;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    height: 48px;
+    font-weight: 800;
+}
+
+
+/* Nút phụ “Đăng ký” – giữ class hiện tại nhưng đổi style trong modal cho hợp palette */
+.modal-auth .btn-outline-secondary {
+    border: 2px solid var(--clinic,#23979a);
+    color: var(--clinic,#23979a);
+    background: #fff;
+    border-radius: 12px;
+    height: 48px;
+    font-weight: 700;
+}
+
+    .modal-auth .btn-outline-secondary:hover {
+        background: var(--clinic,#23979a);
+        color: #fff;
+        border-color: var(--clinic,#23979a);
+    }
+
+/* Checkbox & nút đóng */
+.modal-auth .form-check-input:focus {
+    border-color: var(--clinic,#23979a);
+    box-shadow: 0 0 0 3px rgba(35,151,154,.15);
+}
+
+.modal-auth .btn-close {
+    opacity: .6;
+}
+
+    .modal-auth .btn-close:hover {
+        opacity: .9;
+    }
+
+/* Backdrop nhẹ cho hiện đại */
+.modal-backdrop.show {
+    opacity: .35;
+}

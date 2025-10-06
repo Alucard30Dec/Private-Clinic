@@ -1,0 +1,42 @@
+﻿/* ===================== app-core.css =====================
+   - Biến màu dùng toàn site
+   - Font, reset nhẹ
+   - Utility class tái dùng nhiều nơi
+   ======================================================= */
+
+/* Biến màu brand */
+:root {
+    --clinic: #23979a; /* teal chủ đạo */
+    --clinic-dark: #1a7f81; /* teal đậm (footer, accent) */
+    --text-on-teal: #ffffff; /* chữ trên nền teal */
+}
+
+/* (Tuỳ chọn) Reset/normalize nhẹ */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Helpers/Utilities chung */
+.text-teal {
+    color: var(--clinic);
+}
+
+.bg-teal {
+    background: var(--clinic);
+    color: var(--text-on-teal);
+}
+
+.fw-800 {
+    font-weight: 800;
+}
+
+.rounded-2xl {
+    border-radius: 20px;
+}
+/* ví dụ utility bo góc lớn */
+.shadow-soft {
+    box-shadow: 0 10px 30px rgba(0,0,0,.08);
+}
+

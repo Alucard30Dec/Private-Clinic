@@ -1,0 +1,40 @@
+﻿@* Views/Home/_HomeAbout.cshtml
+    - Block ABOUT / GIỚI THIỆU
+    - Dùng CSS: .ivy-about, .about-title, .about-img, .about-lead, .about-bullets *@
+
+<section id="about" class="about ivy-about py-5">
+    <div class="container">
+        <h2 class="about-title text-center mb-4">
+            <span>Giới Thiệu PRIVATE CLINIC</span>
+        </h2>
+
+        <div class="row align-items-start g-4">
+            <!-- Trái: Ảnh -->
+            <div class="col-lg-6">
+                <img src="@Url.Content("~/Content/images/about-building.jpg")"
+                     alt="Private Clinic"
+                     class="img-fluid rounded-4 shadow-sm about-img" />
+            </div>
+
+            <!-- Phải: Nội dung -->
+            <div class="col-lg-6">
+                <p class="about-lead">
+                    <strong class="text-teal">Private Clinic</strong> được đầu tư phát triển với hệ thống trang thiết bị hiện đại theo tiêu chuẩn quốc tế,
+                    cùng đội ngũ chuyên khoa giàu kinh nghiệm và tận tâm. Chúng tôi hướng tới trải nghiệm thăm khám nhanh chóng,
+                    đặt lịch linh hoạt và dịch vụ chăm sóc cá nhân hoá.
+                </p>
+
+                <p class="about-lead mb-4">
+                    <strong class="text-teal">Mục tiêu chính</strong> của phòng khám là sự chuyên nghiệp trong khám chữa bệnh và tư vấn sức khoẻ cao cấp,
+                    trong một không gian ấm áp – gần gũi, để mỗi khách hàng đều cảm thấy yên tâm và thoải mái.
+                </p>
+
+                <ul class="about-bullets">
+                    <li>Thiết bị hiện đại, quy trình tối ưu – xác nhận lịch trong 1 phút</li>
+                    <li>Bác sĩ tận tâm, theo dõi sát – bảo mật thông tin</li>
+                    <li>Dịch vụ chất lượng, giá minh bạch – hỗ trợ 24/7</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>

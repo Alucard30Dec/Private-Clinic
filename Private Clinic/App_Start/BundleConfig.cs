@@ -1,30 +1,45 @@
-﻿using System.Web;
-using System.Web.Optimization;
+﻿using System.Web.Optimization;
 
 namespace Private_Clinic
 {
     public class BundleConfig
     {
-        // For more information on bundling, visit https://go.microsoft.com/fwlink/?LinkId=301862
+        // Gọi từ Global.asax -> Application_Start
         public static void RegisterBundles(BundleCollection bundles)
         {
+            // (Tuỳ chọn) jQuery & Validate — giữ nếu bạn có dùng
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/Scripts/jquery-{version}.js"));
-
+                "~/Scripts/jquery-{version}.js"
+            ));
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
-                        "~/Scripts/jquery.validate*"));
+                "~/Scripts/jquery.validate*",
+                "~/Scripts/jquery.unobtrusive*"
+            ));
 
-            // Use the development version of Modernizr to develop with and learn from. Then, when you're
-            // ready for production, use the build tool at https://modernizr.com to pick only the tests you need.
-            bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
-                        "~/Scripts/modernizr-*"));
+            // ===== CSS: Site người dùng (KHỚP THƯ MỤC HIỆN TẠI) =====
+            bundles.Add(new StyleBundle("~/Content/appcss")
+                .Include("~/Content/app-core.css", new CssRewriteUrlTransform())
+                .Include("~/Content/app-layout.css", new CssRewriteUrlTransform())
+                .Include("~/Content/app-components.css", new CssRewriteUrlTransform())
+                .Include("~/Content/app-pages.css", new CssRewriteUrlTransform())
+            );
 
-            bundles.Add(new Bundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/bootstrap.js"));
+            // ===== CSS: Khu Admin (nếu dùng _AdminLayout.cshtml) =====
+            bundles.Add(new StyleBundle("~/Content/admincss")
+                .Include("~/Content/app-core.css", new CssRewriteUrlTransform())
+                .Include("~/Content/app-admin.css", new CssRewriteUrlTransform())
+            );
 
-            bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
+            bundles.Add(new ScriptBundle("~/bundles/appjs")
+                .Include(
+                         "~/Scripts/app/app-nav.js",
+                          "~/Scripts/app/auth-login.js",
+                          "~/Scripts/app/auth-forgot.js"
+));
+
+
+            // Bật khi release (hoặc đặt <compilation debug="false"/>)
+            // BundleTable.EnableOptimizations = true;
         }
     }
 }

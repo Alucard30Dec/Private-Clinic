@@ -11,152 +11,108 @@
     <title>@title</title>
     <meta name="description" content="Private Clinic - Đặt lịch khám trực tuyến nhanh chóng, phong cách giống Ivy Health." />
 
-    <!-- Bootstrap 5 (CDN) -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+    <!-- Vendor CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+          crossorigin="anonymous" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+          rel="stylesheet" />
 
-    <!-- Site CSS (đặt SAU Bootstrap) -->
-    <link href="@Url.Content("~/Content/Site.css")?v=4" rel="stylesheet" />
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
-
+    <!-- App CSS (sau vendor để ghi đè) -->
+    @Styles.Render("~/Content/appcss")
 
     @RenderSection("Styles", required: false)
-
-    <!-- Favicon (tuỳ chọn)
-    <link rel="icon" type="image/png" href="~/favicon.png" />
-    -->
+    @* <link rel="icon" type="image/png" href="~/favicon.png" /> *@
 </head>
-<body class="d-flex flex-column min-vh-100">
-
-    @* Header chung *@
+<body id="top" class="d-flex flex-column min-vh-100 @ViewBag.PageClass">
+    <!-- Header -->
     @Html.Partial("_Header")
 
-    @* Nội dung trang *@
+    <!-- Alerts từ TempData -->
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success text-center mb-0 rounded-0">@TempData["Success"]</div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger text-center mb-0 rounded-0">@TempData["Error"]</div>
+    }
+
+    <!-- Body -->
     <main class="flex-grow-1 pt-5">
         @RenderBody()
     </main>
 
-    @* Footer chung *@
+    <!-- Footer -->
     @Html.Partial("_Footer")
 
-    <!-- Bootstrap 5 JS (CDN) -->
+    <!-- Vendor JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
             crossorigin="anonymous"></script>
 
-    <!-- Smooth scroll + bù trừ navbar + auto đóng menu mobile -->
-    <script>
-        (function () {
-            var nav = document.querySelector('.navbar-clinic');
-            function offsetY() { return (nav ? nav.offsetHeight : 64) + 8; }
+    <!-- App JS (đã tách ra bundle) -->
+    @Scripts.Render("~/bundles/appjs")
 
-            document.addEventListener('click', function (e) {
-                var a = e.target.closest('a[href*="#"]');
-                if (!a) return;
-
-                var hash = "";
-                try { hash = new URL(a.href, location.origin).hash.slice(1); }
-                catch { var h = (a.getAttribute('href') || "").split('#'); hash = h[1] || ""; }
-
-                if (!hash) return;
-                var target = document.getElementById(hash);
-                if (!target) return;          // không có phần tử -> để browser điều hướng
-
-                e.preventDefault();           // có phần tử trên trang -> tự cuộn có offset
-                var y = target.getBoundingClientRect().top + window.pageYOffset - offsetY();
-                window.scrollTo({ top: y, behavior: 'smooth' });
-
-                // đóng menu mobile
-                var navCollapse = document.getElementById('mainNav');
-                if (navCollapse && navCollapse.classList.contains('show') && window.bootstrap) {
-                    new bootstrap.Collapse(navCollapse).hide();
-                }
-            });
-
-            // Khi tải với URL có hash sẵn
-            window.addEventListener('load', function () {
-                if (location.hash) {
-                    var t = document.getElementById(location.hash.substring(1));
-                    if (t) {
-                        var y = t.getBoundingClientRect().top + window.pageYOffset - offsetY();
-                        window.scrollTo(0, y);
-                    }
-                }
-            });
-        })();
-    </script>
-
-    <!-- LOGIN MODAL (Modern) -->
+    <!-- LOGIN MODAL -->
     <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-md" role="document">
             <div class="modal-content modal-auth border-0 rounded-4 overflow-hidden">
-                <!-- Header -->
                 <div class="modal-header border-0 justify-content-center position-relative">
                     <h5 class="modal-title auth-title fw-800 text-center">Đăng nhập Private Clinic</h5>
-                    <button type="button" class="btn-close position-absolute end-0 me-3" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                    <button type="button" class="btn-close position-absolute end-0 me-3"
+                            data-bs-dismiss="modal" aria-label="Đóng"></button>
                 </div>
-
-                <!-- Body -->
                 <div class="modal-body pt-0">
                     <form method="post" action="@Url.Action("Login","Account")" id="login-form" novalidate>
                         @Html.AntiForgeryToken()
-
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Tên Đăng Nhập</label>
                             <div class="input-group input-group-lg auth-input">
                                 <span class="input-group-text"><i class="bi bi-person"></i></span>
-                                <input type="text" name="UserNameOrEmail" class="form-control" placeholder="" required />
+                                <input type="text" name="UserNameOrEmail" class="form-control" required />
                             </div>
                         </div>
-
                         <div class="mb-1">
                             <label class="form-label fw-semibold">Mật Khẩu</label>
                             <div class="input-group input-group-lg auth-input">
                                 <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                                <input type="password" name="Password" class="form-control" placeholder="" required />
+                                <input type="password" name="Password" class="form-control" required />
                                 <button type="button" class="btn toggle-pass" aria-label="Hiện/ẩn mật khẩu">
                                     <i class="bi bi-eye"></i>
                                 </button>
                             </div>
                         </div>
-
                         <div class="d-flex justify-content-between align-items-center mb-3 small">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="true" id="RememberMe" name="RememberMe">
                                 <label class="form-check-label" for="RememberMe">Ghi nhớ tôi</label>
                             </div>
                             <a href="#" class="link-offset-2 js-open-forgot">Quên mật khẩu?</a>
-
                         </div>
-
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-ivy-cta btn-lg">Đăng nhập</button>
                             <a class="btn btn-outline-secondary btn-lg" href="@Url.Action("Register","Account")">Đăng ký</a>
                         </div>
                     </form>
                 </div>
-
-
-
             </div>
         </div>
     </div>
 
-    <!-- FORGOT PASSWORD MODAL (đặt tách riêng, không lồng trong Login) -->
+    <!-- FORGOT PASSWORD MODAL -->
     <div class="modal fade" id="forgotModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-md">
             <div class="modal-content modal-auth border-0 rounded-4">
                 <div class="modal-header border-0 justify-content-center position-relative">
                     <h5 class="modal-title fw-800 text-center text-teal">Quên mật khẩu</h5>
-                    <button type="button" class="btn-close position-absolute end-0 me-3" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close position-absolute end-0 me-3"
+                            data-bs-dismiss="modal" aria-label="Đóng"></button>
                 </div>
-
                 <div class="modal-body pt-0">
                     <form method="post" action="@Url.Action("ForgotPassword","Account")" id="forgot-form" novalidate>
                         @Html.AntiForgeryToken()
-
-                        <!-- Tên đăng nhập -->
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Tên đăng nhập</label>
                             <div class="input-group input-group-lg auth-input">
@@ -164,8 +120,6 @@
                                 <input type="text" name="UserName" class="form-control" placeholder="Nhập tên đăng nhập" required />
                             </div>
                         </div>
-
-                        <!-- Mật khẩu mới -->
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Mật khẩu mới</label>
                             <div class="input-group input-group-lg auth-input">
@@ -176,8 +130,6 @@
                                 </button>
                             </div>
                         </div>
-
-                        <!-- Xác nhận mật khẩu mới -->
                         <div class="mb-4">
                             <label class="form-label fw-semibold">Xác nhận mật khẩu mới</label>
                             <div class="input-group input-group-lg auth-input">
@@ -188,13 +140,11 @@
                                 </button>
                             </div>
                         </div>
-
                         <div class="d-grid">
                             <button type="submit" class="btn btn-ivy-cta btn-lg">Xác nhận</button>
                         </div>
                     </form>
                 </div>
-
                 <div class="modal-footer border-0 small text-muted justify-content-center">
                     Vui lòng giữ an toàn mật khẩu của bạn.
                 </div>
@@ -202,107 +152,6 @@
         </div>
     </div>
 
-
-
-    <!-- JS mở modal khi click nút Đăng nhập trên header (thêm mới) -->
-    <script>
-        (function () {
-            document.addEventListener('click', function (e) {
-                var btn = e.target.closest('.btn-login');
-                if (!btn) return;
-
-                // chặn điều hướng sang /Account/Login để bật modal
-                e.preventDefault();
-
-                // đóng navbar collapse nếu đang mở (mobile)
-                var navCollapse = document.getElementById('mainNav');
-                if (navCollapse && navCollapse.classList.contains('show') && window.bootstrap) {
-                    bootstrap.Collapse.getOrCreateInstance(navCollapse).hide();
-                }
-
-                // mở modal đăng nhập
-                var modalEl = document.getElementById('loginModal');
-                if (modalEl && window.bootstrap) {
-                    bootstrap.Modal.getOrCreateInstance(modalEl).show();
-                }
-            });
-
-            // validate đơn giản
-            var f = document.getElementById('login-form');
-            if (f) {
-                f.addEventListener('submit', function (e) {
-                    if (!f.checkValidity()) {
-                        e.preventDefault();
-                        var invalid = f.querySelector(':invalid');
-                        if (invalid) invalid.focus();
-                    }
-                });
-            }
-        })();
-    </script>
-
-    <script>
-        (function () {
-            // Toggle hiển/ẩn mật khẩu
-            document.addEventListener('click', function (e) {
-                var btn = e.target.closest('.toggle-pass');
-                if (!btn) return;
-                var input = btn.parentElement.querySelector('input[type="password"], input[type="text"]');
-                var icon = btn.querySelector('i');
-                if (!input) return;
-
-                var isPw = input.type === 'password';
-                input.type = isPw ? 'text' : 'password';
-                if (icon) {
-                    icon.classList.toggle('bi-eye');
-                    icon.classList.toggle('bi-eye-slash');
-                }
-            });
-        })();
-    </script>
-
-    <script>
-        (function () {
-            // Mở modal Quên MK từ trong modal Đăng nhập (đóng login trước, rồi mở forgot)
-            var loginEl = document.getElementById('loginModal');
-            var forgotEl = document.getElementById('forgotModal');
-
-            document.addEventListener('click', function (e) {
-                var link = e.target.closest('.js-open-forgot');
-                if (!link) return;
-                e.preventDefault();
-
-                if (loginEl && window.bootstrap) {
-                    var loginIns = bootstrap.Modal.getOrCreateInstance(loginEl);
-                    loginEl.addEventListener('hidden.bs.modal', function handler() {
-                        loginEl.removeEventListener('hidden.bs.modal', handler);
-                        if (forgotEl) bootstrap.Modal.getOrCreateInstance(forgotEl).show();
-                    });
-                    loginIns.hide();
-                } else if (forgotEl && window.bootstrap) {
-                    bootstrap.Modal.getOrCreateInstance(forgotEl).show();
-                }
-            });
-
-            // Validate: ConfirmPassword phải khớp NewPassword
-            var ff = document.getElementById('forgot-form');
-            if (ff) {
-                ff.addEventListener('submit', function (e) {
-                    var pw = ff.querySelector('input[name="NewPassword"]');
-                    var cf = ff.querySelector('input[name="ConfirmPassword"]');
-                    if (pw && cf && pw.value !== cf.value) {
-                        e.preventDefault();
-                        alert('Mật khẩu xác nhận không khớp!');
-                        cf.focus();
-                    }
-                });
-            }
-        })();
-    </script>
-
-
-
     @RenderSection("Scripts", required: false)
-
 </body>
 </html>

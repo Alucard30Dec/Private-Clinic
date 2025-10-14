@@ -1,89 +1,64 @@
 ﻿@model Clinic.Models.IndexViewModel
 @{
-    ViewBag.Title = "Manage";
+    ViewBag.Title = "Quản lý tài khoản";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<main aria-labelledby="title">
-    <h2 id="title">@ViewBag.Title.</h2>
+<section id="manage" data-stellar-background-ratio="3" style="padding:60px 0;">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1">
+                <div class="section-title wow fadeInUp" data-wow-delay="0.2s">
+                    <h2>Quản lý tài khoản</h2>
+                    <p>Thay đổi mật khẩu, quản lý đăng nhập ngoài (Google), và cài đặt bảo mật.</p>
+                    @if (ViewBag.StatusMessage != null && !string.IsNullOrWhiteSpace(ViewBag.StatusMessage.ToString()))
+                    {
+                        <div class="alert alert-success" style="margin-top:10px;">@ViewBag.StatusMessage</div>
+                    }
+                </div>
 
-    <p class="text-success">@ViewBag.StatusMessage</p>
-    <div>
-        <h4>Change your account settings</h4>
-        <hr />
-        <dl class="dl-horizontal">
-            <dt>Password:</dt>
-            <dd>
-                [
-                @if (Model.HasPassword)
-                {
-                    @Html.ActionLink("Change your password", "ChangePassword")
-                }
-                else
-                {
-                    @Html.ActionLink("Create", "SetPassword")
-                }
-                ]
-            </dd>
-            <dt>External Logins:</dt>
-            <dd>
-                @Model.Logins.Count [
-                @Html.ActionLink("Manage", "ManageLogins") ]
-            </dd>
-            @*
-                Phone Numbers can used as a second factor of verification in a two-factor authentication system.
-                
-                See <a href="https://go.microsoft.com/fwlink/?LinkId=403804">this article</a>
-                    for details on setting up this ASP.NET application to support two-factor authentication using SMS.
-                
-                Uncomment the following block after you have set up two-factor authentication
-            *@
-            @*  
-                <dt>Phone Number:</dt>
-                <dd>
-                    @(Model.PhoneNumber ?? "None")
-                    @if (Model.PhoneNumber != null)
-                    {
-                        <br />
-                        <text>[&nbsp;&nbsp;@Html.ActionLink("Change", "AddPhoneNumber")&nbsp;&nbsp;]</text>
-                        using (Html.BeginForm("RemovePhoneNumber", "Manage", FormMethod.Post, new { role = "form" }))
-                        {
-                            @Html.AntiForgeryToken()
-                            <text>[<input type="submit" value="Remove" class="btn-link" />]</text>
-                        }
-                    }
-                    else
-                    {
-                        <text>[&nbsp;&nbsp;@Html.ActionLink("Add", "AddPhoneNumber")
-                    }
-                </dd>
-            *@
-            <dt>Two-Factor Authentication:</dt>
-            <dd>
-                <p>
-                    There are no two-factor authentication providers configured. See <a href="https://go.microsoft.com/fwlink/?LinkId=403804">this article</a>
-                    for details on setting up this ASP.NET application to support two-factor authentication.
-                </p>
-                @*@if (Model.TwoFactor)
-                    {
-                        using (Html.BeginForm("DisableTwoFactorAuthentication", "Manage", FormMethod.Post, new { role = "form" }))
-                        {
-                            @Html.AntiForgeryToken()
-                            <text>Enabled
-                            <input type="submit" value="Disable" class="btn btn-link" />
-                            </text>
-                        }
-                    }
-                    else
-                    {
-                        using (Html.BeginForm("EnableTwoFactorAuthentication", "Manage", FormMethod.Post, new { role = "form" }))
-                        {
-                            @Html.AntiForgeryToken()
-                            <text>Disabled
-                            <input type="submit" value="Enable" class="btn btn-link" />
-                            </text>
-                        }
-                    }*@
-            </dd>
-        </dl>
+                <div class="panel panel-default wow fadeInUp" data-wow-delay="0.4s" style="border:none; box-shadow:none;">
+                    <div class="panel-body">
+
+                        <!-- Password -->
+                        <div class="row" style="margin-bottom:18px;">
+                            <div class="col-sm-4 text-muted">Mật khẩu:</div>
+                            <div class="col-sm-8">
+                                @if (Model.HasPassword)
+                                {
+                                    @Html.ActionLink("Đổi mật khẩu", "ChangePassword", null, new { @class = "section-btn btn btn-primary btn-sm" })
+                                }
+                                else
+                                {
+                                    @Html.ActionLink("Tạo mật khẩu", "SetPassword", null, new { @class = "section-btn btn btn-primary btn-sm" })
+                                }
+                            </div>
+                        </div>
+
+                        <!-- External Logins -->
+                        <div class="row" style="margin-bottom:18px;">
+                            <div class="col-sm-4 text-muted">Đăng nhập ngoài:</div>
+                            <div class="col-sm-8">
+                                <span class="label label-default" style="margin-right:8px;">@Model.Logins.Count</span>
+                                @Html.ActionLink("Quản lý", "ManageLogins", null, new { @class = "section-btn btn btn-default btn-sm", style = "border:1px solid #ddd" })
+                            </div>
+                        </div>
+
+                        <!-- 2FA (nếu chưa dùng thì chỉ hiển thị mô tả) -->
+                        <div class="row" style="margin-bottom:6px;">
+                            <div class="col-sm-4 text-muted">Xác thực 2 bước:</div>
+                            <div class="col-sm-8 text-muted">
+                                Hiện chưa cấu hình nhà cung cấp xác thực hai lớp cho ứng dụng này.
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="text-center" style="margin-top:12px;">
+                    @Html.ActionLink("Quay lại trang chủ", "Index", "Home", null, new { @class = "section-btn btn btn-default", style = "border:1px solid #ddd" })
+                </div>
+            </div>
+        </div>
     </div>
-</main>
+</section>

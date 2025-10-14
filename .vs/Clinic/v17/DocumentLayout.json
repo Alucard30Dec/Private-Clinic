@@ -3,6 +3,14 @@
   "WorkspaceRootPath": "D:\\Private-Clinic\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|D:\\Private-Clinic\\clinic\\web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|solutionrelative:clinic\\web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|d:\\private-clinic\\clinic\\appsecrets.config||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|solutionrelative:clinic\\appsecrets.config||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|d:\\private-clinic\\clinic\\views\\manage\\setpassword.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|solutionrelative:clinic\\views\\manage\\setpassword.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
@@ -25,10 +33,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|D:\\Private-Clinic\\clinic\\views\\shared\\_loginpartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|solutionrelative:clinic\\views\\shared\\_loginpartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|D:\\Private-Clinic\\clinic\\web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
-      "RelativeMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|solutionrelative:clinic\\web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|D:\\Private-Clinic\\clinic\\models\\clinicdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -114,24 +118,37 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
+              "Title": "AppSecrets.config",
+              "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\AppSecrets.config",
+              "RelativeDocumentMoniker": "Clinic\\AppSecrets.config",
+              "ToolTip": "D:\\Private-Clinic\\Clinic\\AppSecrets.config",
+              "RelativeToolTip": "Clinic\\AppSecrets.config",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
+              "WhenOpened": "2025-10-14T17:11:39.214Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "SetPassword.cshtml",
               "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Views\\Manage\\SetPassword.cshtml",
               "RelativeDocumentMoniker": "Clinic\\Views\\Manage\\SetPassword.cshtml",
               "ToolTip": "D:\\Private-Clinic\\Clinic\\Views\\Manage\\SetPassword.cshtml",
               "RelativeToolTip": "Clinic\\Views\\Manage\\SetPassword.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAADAAAAAKAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-10-14T16:49:16.825Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "Index.cshtml",
               "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Views\\Manage\\Index.cshtml",
               "RelativeDocumentMoniker": "Clinic\\Views\\Manage\\Index.cshtml",
@@ -143,7 +160,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "ManageLogins.cshtml",
               "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Views\\Manage\\ManageLogins.cshtml",
               "RelativeDocumentMoniker": "Clinic\\Views\\Manage\\ManageLogins.cshtml",
@@ -155,7 +172,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "Startup.Auth.cs",
               "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\App_Start\\Startup.Auth.cs",
               "RelativeDocumentMoniker": "Clinic\\App_Start\\Startup.Auth.cs",
@@ -167,20 +184,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 0,
               "Title": "Web.config",
               "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Web.config",
               "RelativeDocumentMoniker": "Clinic\\Web.config",
               "ToolTip": "D:\\Private-Clinic\\Clinic\\Web.config",
               "RelativeToolTip": "Clinic\\Web.config",
-              "ViewState": "AgIAABQAAAAAAAAAAAAowCIAAAAtAAAAAAAAAA==",
+              "ViewState": "AgIAABQAAAAAAAAAAAAowCAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
               "WhenOpened": "2025-10-14T16:24:20.145Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "_Layout.cshtml",
               "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Views\\Shared\\_Layout.cshtml",
               "RelativeDocumentMoniker": "Clinic\\Views\\Shared\\_Layout.cshtml",
@@ -192,7 +209,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 13,
               "Title": "Register.cshtml",
               "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Views\\Account\\Register.cshtml",
               "RelativeDocumentMoniker": "Clinic\\Views\\Account\\Register.cshtml",
@@ -204,7 +221,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 11,
               "Title": "Configuration.cs",
               "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Migrations\\IdentityMigrations\\Configuration.cs",
               "RelativeDocumentMoniker": "Clinic\\Migrations\\IdentityMigrations\\Configuration.cs",
@@ -216,7 +233,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "Login.cshtml",
               "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Views\\Account\\Login.cshtml",
               "RelativeDocumentMoniker": "Clinic\\Views\\Account\\Login.cshtml",
@@ -228,7 +245,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 14,
               "Title": "HealthController.cs",
               "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Controllers\\HealthController.cs",
               "RelativeDocumentMoniker": "Clinic\\Controllers\\HealthController.cs",
@@ -240,7 +257,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 7,
               "Title": "_LoginPartial.cshtml",
               "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Views\\Shared\\_LoginPartial.cshtml",
               "RelativeDocumentMoniker": "Clinic\\Views\\Shared\\_LoginPartial.cshtml",
@@ -252,7 +269,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 12,
               "Title": "ForgotPassword.cshtml",
               "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Views\\Account\\ForgotPassword.cshtml",
               "RelativeDocumentMoniker": "Clinic\\Views\\Account\\ForgotPassword.cshtml",
@@ -264,7 +281,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "ClinicDbContext.cs",
               "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Models\\ClinicDbContext.cs",
               "RelativeDocumentMoniker": "Clinic\\Models\\ClinicDbContext.cs",
@@ -276,7 +293,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 10,
               "Title": "ForgotPasswordConfirmation.cshtml",
               "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Views\\Account\\ForgotPasswordConfirmation.cshtml",
               "RelativeDocumentMoniker": "Clinic\\Views\\Account\\ForgotPasswordConfirmation.cshtml",
@@ -288,7 +305,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 15,
               "Title": "Configuration.cs",
               "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Migrations\\ClinicMigrations\\Configuration.cs",
               "RelativeDocumentMoniker": "Clinic\\Migrations\\ClinicMigrations\\Configuration.cs",
@@ -300,7 +317,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 18,
               "Title": "Appointment.cs",
               "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Models\\Appointment.cs",
               "RelativeDocumentMoniker": "Clinic\\Models\\Appointment.cs",
@@ -312,7 +329,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 19,
               "Title": "PatientProfile.cs",
               "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Models\\PatientProfile.cs",
               "RelativeDocumentMoniker": "Clinic\\Models\\PatientProfile.cs",
@@ -324,7 +341,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 17,
               "Title": "IdentityModels.cs",
               "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Models\\IdentityModels.cs",
               "RelativeDocumentMoniker": "Clinic\\Models\\IdentityModels.cs",
@@ -336,7 +353,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 16,
               "Title": "Service.cs",
               "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Models\\Service.cs",
               "RelativeDocumentMoniker": "Clinic\\Models\\Service.cs",
@@ -348,7 +365,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 20,
               "Title": "WorkingHour.cs",
               "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Models\\WorkingHour.cs",
               "RelativeDocumentMoniker": "Clinic\\Models\\WorkingHour.cs",
@@ -360,7 +377,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 21,
               "Title": "Doctor.cs",
               "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Models\\Doctor.cs",
               "RelativeDocumentMoniker": "Clinic\\Models\\Doctor.cs",
@@ -372,7 +389,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 22,
               "Title": "tooplate-style.css",
               "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Resources\\css\\tooplate-style.css",
               "RelativeDocumentMoniker": "Clinic\\Resources\\css\\tooplate-style.css",
@@ -384,7 +401,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 23,
+              "DocumentIndex": 24,
               "Title": "Site.css",
               "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Content\\Site.css",
               "RelativeDocumentMoniker": "Clinic\\Content\\Site.css",
@@ -396,7 +413,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 25,
+              "DocumentIndex": 26,
               "Title": "_Footer.cshtml",
               "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Views\\Shared\\_Footer.cshtml",
               "RelativeDocumentMoniker": "Clinic\\Views\\Shared\\_Footer.cshtml",
@@ -408,7 +425,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 23,
               "Title": "_Header.cshtml",
               "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Views\\Shared\\_Header.cshtml",
               "RelativeDocumentMoniker": "Clinic\\Views\\Shared\\_Header.cshtml",
@@ -420,7 +437,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 24,
+              "DocumentIndex": 25,
               "Title": "Index.cshtml",
               "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Views\\Home\\Index.cshtml",
               "RelativeDocumentMoniker": "Clinic\\Views\\Home\\Index.cshtml",

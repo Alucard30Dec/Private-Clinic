@@ -1,0 +1,36 @@
+﻿<!-- MENU -->
+<section class="navbar navbar-default navbar-static-top" role="navigation">
+    <div class="container">
+
+        <div class="navbar-header">
+            <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon icon-bar"></span>
+                <span class="icon icon-bar"></span>
+                <span class="icon icon-bar"></span>
+            </button>
+
+            <!-- lOGO TEXT HERE -->
+            <a href="@Url.Action("Index","Home")" class="navbar-brand">
+                <i class="fa fa-h-square"></i>ealth Center
+            </a>
+        </div>
+
+        <div class="collapse navbar-collapse">
+            <!-- NHÓM MENU GIỮA -->
+            <ul class="nav navbar-nav nav-left">
+                <li><a href="@Url.Content("#top")" class="smoothScroll">Home</a></li>
+                <li><a href="@Url.Content("#about")" class="smoothScroll">About Us</a></li>
+                <li><a href="@Url.Content("#team")" class="smoothScroll">Doctors</a></li>
+                <li><a href="@Url.Content("#news")" class="smoothScroll">News</a></li>
+                <li><a href="@Url.Content("#google-map")" class="smoothScroll">Contact</a></li>
+                <li><a href="@Url.Content("#appointment")" class="smoothScroll">Make an appointment</a></li>
+            </ul>
+
+            <!-- NHÓM NÚT BÊN PHẢI -->
+            <ul class="nav navbar-nav navbar-right nav-right">
+                @Html.Partial("_LoginPartial")
+            </ul>
+        </div>
+
+    </div>
+</section>

@@ -1,0 +1,58 @@
+﻿@model Clinic.Models.LoginViewModel
+@{
+    ViewBag.Title = "Đăng nhập";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section id="login" data-stellar-background-ratio="3" style="padding:60px 0;">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1">
+                <div class="section-title wow fadeInUp" data-wow-delay="0.2s">
+                    <h2>Đăng nhập</h2>
+                    <p>Vui lòng dùng tài khoản đã đăng ký để tiếp tục đặt lịch khám.</p>
+                </div>
+
+                @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "wow fadeInUp", role = "form", data_wow_delay = "0.4s" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger", @style = "margin-bottom:15px" })
+
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12">
+                            <label for="Email">Email</label>
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "you@example.com", autofocus = "autofocus" })
+                            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="col-md-12 col-sm-12" style="margin-top:10px;">
+                            <label for="Password">Mật khẩu</label>
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "••••••••" })
+                            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="col-md-6 col-sm-6" style="margin-top:10px;">
+                            <div class="checkbox">
+                                <label>@Html.CheckBoxFor(m => m.RememberMe) Ghi nhớ đăng nhập?</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-6 text-right" style="margin-top:10px;">
+                            <a href="@Url.Action("ForgotPassword","Account")">Quên mật khẩu?</a>
+                        </div>
+
+                        <div class="col-md-12 col-sm-12" style="margin-top:15px;">
+                            <button type="submit" class="form-control section-btn btn btn-primary">Đăng nhập</button>
+                        </div>
+
+                        <div class="col-md-12 col-sm-12 text-center" style="margin-top:12px;">
+                            Chưa có tài khoản?
+                            <a href="@Url.Action("Register","Account")">Đăng ký ngay</a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts { @Scripts.Render("~/bundles/jqueryval") }

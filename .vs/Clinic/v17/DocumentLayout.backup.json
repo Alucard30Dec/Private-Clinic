@@ -1,0 +1,357 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Private-Clinic\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|d:\\private-clinic\\clinic\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|solutionrelative:clinic\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|D:\\Private-Clinic\\clinic\\views\\account\\forgotpasswordconfirmation.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|solutionrelative:clinic\\views\\account\\forgotpasswordconfirmation.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|D:\\Private-Clinic\\clinic\\migrations\\identitymigrations\\configuration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|solutionrelative:clinic\\migrations\\identitymigrations\\configuration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|D:\\Private-Clinic\\clinic\\views\\account\\forgotpassword.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|solutionrelative:clinic\\views\\account\\forgotpassword.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|D:\\Private-Clinic\\clinic\\views\\account\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|solutionrelative:clinic\\views\\account\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|D:\\Private-Clinic\\clinic\\views\\account\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|solutionrelative:clinic\\views\\account\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|D:\\Private-Clinic\\clinic\\controllers\\healthcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|solutionrelative:clinic\\controllers\\healthcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|D:\\Private-Clinic\\clinic\\models\\clinicdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|solutionrelative:clinic\\models\\clinicdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|D:\\Private-Clinic\\clinic\\migrations\\clinicmigrations\\configuration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|solutionrelative:clinic\\migrations\\clinicmigrations\\configuration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|D:\\Private-Clinic\\clinic\\models\\service.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|solutionrelative:clinic\\models\\service.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|D:\\Private-Clinic\\clinic\\models\\identitymodels.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|solutionrelative:clinic\\models\\identitymodels.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|D:\\Private-Clinic\\clinic\\models\\appointment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|solutionrelative:clinic\\models\\appointment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|D:\\Private-Clinic\\clinic\\models\\patientprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|solutionrelative:clinic\\models\\patientprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|D:\\Private-Clinic\\clinic\\models\\workinghour.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|solutionrelative:clinic\\models\\workinghour.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|D:\\Private-Clinic\\clinic\\models\\doctor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|solutionrelative:clinic\\models\\doctor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|D:\\Private-Clinic\\clinic\\resources\\css\\tooplate-style.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|solutionrelative:clinic\\resources\\css\\tooplate-style.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|D:\\Private-Clinic\\clinic\\views\\shared\\_header.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|solutionrelative:clinic\\views\\shared\\_header.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|D:\\Private-Clinic\\clinic\\content\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|solutionrelative:clinic\\content\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|D:\\Private-Clinic\\clinic\\views\\shared\\_loginpartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|solutionrelative:clinic\\views\\shared\\_loginpartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|D:\\Private-Clinic\\clinic\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|solutionrelative:clinic\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|D:\\Private-Clinic\\clinic\\views\\shared\\_footer.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|solutionrelative:clinic\\views\\shared\\_footer.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Views\\Shared\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "Clinic\\Views\\Shared\\_Layout.cshtml",
+              "ToolTip": "D:\\Private-Clinic\\Clinic\\Views\\Shared\\_Layout.cshtml",
+              "RelativeToolTip": "Clinic\\Views\\Shared\\_Layout.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-14T14:14:27.513Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ForgotPasswordConfirmation.cshtml",
+              "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Views\\Account\\ForgotPasswordConfirmation.cshtml",
+              "RelativeDocumentMoniker": "Clinic\\Views\\Account\\ForgotPasswordConfirmation.cshtml",
+              "ToolTip": "D:\\Private-Clinic\\Clinic\\Views\\Account\\ForgotPasswordConfirmation.cshtml",
+              "RelativeToolTip": "Clinic\\Views\\Account\\ForgotPasswordConfirmation.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-13T03:53:27.648Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ForgotPassword.cshtml",
+              "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Views\\Account\\ForgotPassword.cshtml",
+              "RelativeDocumentMoniker": "Clinic\\Views\\Account\\ForgotPassword.cshtml",
+              "ToolTip": "D:\\Private-Clinic\\Clinic\\Views\\Account\\ForgotPassword.cshtml",
+              "RelativeToolTip": "Clinic\\Views\\Account\\ForgotPassword.cshtml",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAcwCkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-13T03:52:50Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Register.cshtml",
+              "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Views\\Account\\Register.cshtml",
+              "RelativeDocumentMoniker": "Clinic\\Views\\Account\\Register.cshtml",
+              "ToolTip": "D:\\Private-Clinic\\Clinic\\Views\\Account\\Register.cshtml",
+              "RelativeToolTip": "Clinic\\Views\\Account\\Register.cshtml",
+              "ViewState": "AgIAABYAAAAAAAAAAAAcwDcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-13T03:49:53.825Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Configuration.cs",
+              "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Migrations\\IdentityMigrations\\Configuration.cs",
+              "RelativeDocumentMoniker": "Clinic\\Migrations\\IdentityMigrations\\Configuration.cs",
+              "ToolTip": "D:\\Private-Clinic\\Clinic\\Migrations\\IdentityMigrations\\Configuration.cs",
+              "RelativeToolTip": "Clinic\\Migrations\\IdentityMigrations\\Configuration.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAABQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-11T11:14:02.746Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Login.cshtml",
+              "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Views\\Account\\Login.cshtml",
+              "RelativeDocumentMoniker": "Clinic\\Views\\Account\\Login.cshtml",
+              "ToolTip": "D:\\Private-Clinic\\Clinic\\Views\\Account\\Login.cshtml",
+              "RelativeToolTip": "Clinic\\Views\\Account\\Login.cshtml",
+              "ViewState": "AgIAABkAAAAAAAAAAAAcwDoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-13T03:46:27.542Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "HealthController.cs",
+              "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Controllers\\HealthController.cs",
+              "RelativeDocumentMoniker": "Clinic\\Controllers\\HealthController.cs",
+              "ToolTip": "D:\\Private-Clinic\\Clinic\\Controllers\\HealthController.cs",
+              "RelativeToolTip": "Clinic\\Controllers\\HealthController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-11T11:49:26.537Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Configuration.cs",
+              "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Migrations\\ClinicMigrations\\Configuration.cs",
+              "RelativeDocumentMoniker": "Clinic\\Migrations\\ClinicMigrations\\Configuration.cs",
+              "ToolTip": "D:\\Private-Clinic\\Clinic\\Migrations\\ClinicMigrations\\Configuration.cs",
+              "RelativeToolTip": "Clinic\\Migrations\\ClinicMigrations\\Configuration.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-11T11:27:10.05Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Appointment.cs",
+              "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Models\\Appointment.cs",
+              "RelativeDocumentMoniker": "Clinic\\Models\\Appointment.cs",
+              "ToolTip": "D:\\Private-Clinic\\Clinic\\Models\\Appointment.cs",
+              "RelativeToolTip": "Clinic\\Models\\Appointment.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAA6AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-11T11:18:19.44Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "PatientProfile.cs",
+              "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Models\\PatientProfile.cs",
+              "RelativeDocumentMoniker": "Clinic\\Models\\PatientProfile.cs",
+              "ToolTip": "D:\\Private-Clinic\\Clinic\\Models\\PatientProfile.cs",
+              "RelativeToolTip": "Clinic\\Models\\PatientProfile.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-11T11:17:57.744Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "ClinicDbContext.cs",
+              "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Models\\ClinicDbContext.cs",
+              "RelativeDocumentMoniker": "Clinic\\Models\\ClinicDbContext.cs",
+              "ToolTip": "D:\\Private-Clinic\\Clinic\\Models\\ClinicDbContext.cs",
+              "RelativeToolTip": "Clinic\\Models\\ClinicDbContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-11T11:16:12.207Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "IdentityModels.cs",
+              "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Models\\IdentityModels.cs",
+              "RelativeDocumentMoniker": "Clinic\\Models\\IdentityModels.cs",
+              "ToolTip": "D:\\Private-Clinic\\Clinic\\Models\\IdentityModels.cs",
+              "RelativeToolTip": "Clinic\\Models\\IdentityModels.cs",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAUwBoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-11T11:08:34.029Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Service.cs",
+              "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Models\\Service.cs",
+              "RelativeDocumentMoniker": "Clinic\\Models\\Service.cs",
+              "ToolTip": "D:\\Private-Clinic\\Clinic\\Models\\Service.cs",
+              "RelativeToolTip": "Clinic\\Models\\Service.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-11T11:17:05.843Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "WorkingHour.cs",
+              "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Models\\WorkingHour.cs",
+              "RelativeDocumentMoniker": "Clinic\\Models\\WorkingHour.cs",
+              "ToolTip": "D:\\Private-Clinic\\Clinic\\Models\\WorkingHour.cs",
+              "RelativeToolTip": "Clinic\\Models\\WorkingHour.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-11T11:17:27.994Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "Doctor.cs",
+              "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Models\\Doctor.cs",
+              "RelativeDocumentMoniker": "Clinic\\Models\\Doctor.cs",
+              "ToolTip": "D:\\Private-Clinic\\Clinic\\Models\\Doctor.cs",
+              "RelativeToolTip": "Clinic\\Models\\Doctor.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-11T11:16:41.706Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "tooplate-style.css",
+              "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Resources\\css\\tooplate-style.css",
+              "RelativeDocumentMoniker": "Clinic\\Resources\\css\\tooplate-style.css",
+              "ToolTip": "D:\\Private-Clinic\\Clinic\\Resources\\css\\tooplate-style.css",
+              "RelativeToolTip": "Clinic\\Resources\\css\\tooplate-style.css",
+              "ViewState": "AgIAACkEAAAAAAAAAAAgwEgEAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2025-10-11T10:51:47.23Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "Site.css",
+              "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Content\\Site.css",
+              "RelativeDocumentMoniker": "Clinic\\Content\\Site.css",
+              "ToolTip": "D:\\Private-Clinic\\Clinic\\Content\\Site.css",
+              "RelativeToolTip": "Clinic\\Content\\Site.css",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2025-10-11T10:51:09.901Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "_LoginPartial.cshtml",
+              "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Views\\Shared\\_LoginPartial.cshtml",
+              "RelativeDocumentMoniker": "Clinic\\Views\\Shared\\_LoginPartial.cshtml",
+              "ToolTip": "D:\\Private-Clinic\\Clinic\\Views\\Shared\\_LoginPartial.cshtml",
+              "RelativeToolTip": "Clinic\\Views\\Shared\\_LoginPartial.cshtml",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAgwCIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-11T10:36:15.925Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "_Footer.cshtml",
+              "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Views\\Shared\\_Footer.cshtml",
+              "RelativeDocumentMoniker": "Clinic\\Views\\Shared\\_Footer.cshtml",
+              "ToolTip": "D:\\Private-Clinic\\Clinic\\Views\\Shared\\_Footer.cshtml",
+              "RelativeToolTip": "Clinic\\Views\\Shared\\_Footer.cshtml",
+              "ViewState": "AgIAADgAAAAAAAAAAAAgwFcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-11T10:21:32.133Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "_Header.cshtml",
+              "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Views\\Shared\\_Header.cshtml",
+              "RelativeDocumentMoniker": "Clinic\\Views\\Shared\\_Header.cshtml",
+              "ToolTip": "D:\\Private-Clinic\\Clinic\\Views\\Shared\\_Header.cshtml",
+              "RelativeToolTip": "Clinic\\Views\\Shared\\_Header.cshtml",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAACAAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-11T10:21:01.397Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Views\\Home\\Index.cshtml",
+              "RelativeDocumentMoniker": "Clinic\\Views\\Home\\Index.cshtml",
+              "ToolTip": "D:\\Private-Clinic\\Clinic\\Views\\Home\\Index.cshtml",
+              "RelativeToolTip": "Clinic\\Views\\Home\\Index.cshtml",
+              "ViewState": "AgIAAAsBAAAAAAAAAAAgwCEBAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-11T10:11:48.305Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

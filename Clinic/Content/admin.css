@@ -1,0 +1,103 @@
+﻿/* ====== Theme ====== */
+:root {
+    --brand: #0ea5e9; /* đổi để đồng bộ màu user (vd #198754, #0d6efd, ...) */
+    --brand-900: #0b8ec9;
+    --bg-sidebar: #0f172a; /* slate-900 */
+    --bg-header: #111827; /* gray-900 */
+    --text-muted: #6b7280;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    background: #f8fafc;
+}
+
+/* Layout */
+.admin-wrapper {
+    min-height: 100vh;
+}
+
+/* Sidebar */
+.admin-sidebar {
+    width: 250px;
+    background: var(--bg-sidebar);
+    color: #cbd5e1;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+}
+
+    .admin-sidebar .brand {
+        color: #fff;
+        border-bottom: 1px solid #1f2937;
+    }
+
+.icon-brand {
+    color: var(--brand);
+}
+
+.admin-sidebar .nav-link {
+    color: #cbd5e1;
+    padding: .65rem 1rem;
+    border-left: 3px solid transparent;
+}
+
+    .admin-sidebar .nav-link:hover {
+        background: #1f2937;
+        color: #fff;
+    }
+
+    .admin-sidebar .nav-link.active {
+        background: #111827;
+        color: #fff;
+        border-left-color: var(--brand);
+    }
+
+@media (max-width: 991.98px) {
+    .admin-sidebar {
+        position: fixed;
+        left: -260px;
+        z-index: 1030;
+        transition: left .2s ease;
+    }
+
+        .admin-sidebar.open {
+            left: 0;
+        }
+}
+
+/* Header */
+.admin-header {
+    background: var(--bg-header);
+    color: #fff;
+    min-height: 56px;
+    display: flex;
+    align-items: center;
+}
+
+.notif-dot {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 8px;
+    height: 8px;
+}
+
+/* Footer */
+.admin-footer {
+    border-top: 1px solid #e5e7eb;
+    background: #fff;
+}
+
+/* Helpers */
+.text-brand {
+    color: var(--brand) !important;
+}
+
+/* Cards */
+.card {
+    border-radius: .8rem;
+}

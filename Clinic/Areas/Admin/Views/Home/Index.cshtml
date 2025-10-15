@@ -1,0 +1,72 @@
+﻿@inherits System.Web.Mvc.WebViewPage<dynamic>
+@{
+    ViewBag.Title = "Dashboard";
+    ViewBag.Nav = "dashboard";
+}
+<div class="row g-3">
+    <div class="col-12 col-md-6 col-xl-3">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="text-muted small">Bệnh nhân hôm nay</div>
+                        <div class="fs-3 fw-semibold">24</div>
+                    </div>
+                    <i class="ti ti-users fs-1 text-brand"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6 col-xl-3">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="text-muted small">Lịch hẹn</div>
+                        <div class="fs-3 fw-semibold">12</div>
+                    </div>
+                    <i class="ti ti-calendar-event fs-1 text-brand"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6 col-xl-3">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="text-muted small">Bác sĩ trực</div>
+                        <div class="fs-3 fw-semibold">5</div>
+                    </div>
+                    <i class="ti ti-stethoscope fs-1 text-brand"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6 col-xl-3">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="text-muted small">Doanh thu</div>
+                        <div class="fs-3 fw-semibold">35.5M</div>
+                    </div>
+                    <i class="ti ti-currency-dollar fs-1 text-brand"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mt-4 shadow-sm border-0">
+    <div class="card-header bg-white border-0">
+        <h5 class="mb-0">Hoạt động gần đây</h5>
+    </div>
+    <div class="card-body">
+        <ul class="list-unstyled mb-0">
+            <li class="py-2 border-bottom">+ Tạo lịch hẹn mới cho <strong>Nguyễn A</strong> – 09:00</li>
+            <li class="py-2 border-bottom">+ Cập nhật hồ sơ <strong>Bác sĩ Trần B</strong></li>
+            <li class="py-2">+ Xác nhận thanh toán #INV-1024</li>
+        </ul>
+    </div>
+</div>

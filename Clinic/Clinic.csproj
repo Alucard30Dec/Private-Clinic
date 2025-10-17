@@ -194,6 +194,7 @@
       <DependentUpon>202510111146302_PopulateWorkingHourTable.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\ClinicMigrations\Configuration.cs" />
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\IdentityMigrations\202510111114582_InitialIdentity.cs" />
     <Compile Include="Migrations\IdentityMigrations\202510111114582_InitialIdentity.Designer.cs">
       <DependentUpon>202510111114582_InitialIdentity.cs</DependentUpon>

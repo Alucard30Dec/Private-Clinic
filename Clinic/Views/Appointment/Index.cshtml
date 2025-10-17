@@ -1,0 +1,74 @@
+﻿@model Clinic.Models.AppointmentRequest
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Make an appointment";
+}
+
+<section id="appointment" data-stellar-background-ratio="3">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-6 col-sm-6">
+                <img src="~/Resources/images/appointment-image.jpg" class="img-responsive" alt="">
+            </div>
+
+            <div class="col-md-6 col-sm-6">
+
+                @* THÔNG BÁO CẢM ƠN *@
+                @if (ViewBag.Success != null)
+                {
+                    <div class="alert alert-success" role="alert" style="margin-bottom:20px;">
+                        @ViewBag.Success
+                    </div>
+                }
+
+                @using (Html.BeginForm("Create", "Appointment", FormMethod.Post, new { id = "appointment-form", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="section-title wow fadeInUp" data-wow-delay="0.4s">
+                        <h2>Make an appointment</h2>
+                    </div>
+
+                    <div class="wow fadeInUp" data-wow-delay="0.8s">
+                        <div class="col-md-6 col-sm-6">
+                            @Html.LabelFor(m => m.Name, "Name")
+                            @Html.TextBoxFor(m => m.Name, new { @class = "form-control", placeholder = "Full Name" })
+                            @Html.ValidationMessageFor(m => m.Name, null, new { @class = "text-danger" })
+                        </div>
+
+                        <div class="col-md-6 col-sm-6">
+                            @Html.LabelFor(m => m.Email, "Email")
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", type = "email", placeholder = "Your Email" })
+                            @Html.ValidationMessageFor(m => m.Email, null, new { @class = "text-danger" })
+                        </div>
+
+                        <div class="col-md-6 col-sm-6">
+                            @Html.Label("DesiredDate", "Select Date")
+                            @Html.TextBoxFor(m => m.DesiredDate, new { @class = "form-control", type = "date" })
+                            @Html.ValidationMessageFor(m => m.DesiredDate, null, new { @class = "text-danger" })
+                        </div>
+
+                        <div class="col-md-6 col-sm-6">
+                            @Html.LabelFor(m => m.Department, "Select Department")
+                            @Html.DropDownListFor(m => m.Department,
+                                new SelectList(new[] { "General Health", "Cardiology", "Dental", "Medical Research" }),
+                                "-- Select --", new { @class = "form-control" })
+                        </div>
+
+                        <div class="col-md-12 col-sm-12">
+                            @Html.LabelFor(m => m.Phone, "Phone Number")
+                            @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", type = "tel", placeholder = "Phone" })
+
+                            @Html.LabelFor(m => m.Message, "Additional Message")
+                            @Html.TextAreaFor(m => m.Message, 5, 40, new { @class = "form-control", placeholder = "Message" })
+
+                            <button type="submit" class="form-control" id="cf-submit" name="submit">Submit Button</button>
+                        </div>
+                    </div>
+                }
+            </div>
+
+        </div>
+    </div>
+</section>

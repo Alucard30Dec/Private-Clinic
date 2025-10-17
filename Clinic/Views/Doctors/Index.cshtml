@@ -1,0 +1,167 @@
+﻿@model Clinic.Models.DoctorsIndexVm
+
+@{
+    ViewBag.Title = "Tìm bác sĩ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    // bật/tắt nút Đặt lịch theo role
+    var isPatient = Request.IsAuthenticated && User.IsInRole("Patient");
+
+    // Ảnh theo giới tính (bỏ qua PhotoUrl)
+    Func<string, string> GenderPhoto = (gender) =>
+    {
+        var g = (gender ?? "").Trim().ToLower();   // "nam" / "nữ" / ...
+        var path = g == "nữ"
+            ? "~/Resources/images/team-image3.jpg"   // nữ
+            : "~/Resources/images/team-image2.jpg";  // nam & mặc định
+        return Url.Content(path);
+    };
+
+    var count = Model?.Result?.TotalItems ?? 0;
+    var infoMsg = count > 0 ? $"Có {count} bác sĩ phù hợp."
+                            : "Không tìm thấy bác sĩ nào với tiêu chí hiện tại.";
+}
+
+<section id="doctors-list" style="padding:60px 0;">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-12">
+                <div class="section-title">
+                    <h2 class="wow fadeInUp" data-wow-delay="0.1s">Tìm kiếm bác sĩ</h2>
+                    <p class="text-muted">@infoMsg</p>
+                </div>
+            </div>
+
+            <!-- FORM TÌM KIẾM / LỌC -->
+            <div class="col-md-12">
+                @using (Html.BeginForm("Index", "Doctors", FormMethod.Get,
+                        new { @class = "row g-2 wow fadeInUp", data_wow_delay = "0.2s" }))
+                {
+                    <div class="col-md-6 col-sm-8">
+                        <input type="text"
+                               name="Query"
+                               value="@(Model?.Filter?.Query ?? "")"
+                               class="form-control"
+                               placeholder="Nhập tên bác sĩ…" />
+                    </div>
+
+                    <div class="col-md-3 col-sm-4">
+                        <select name="Specialty" class="form-control">
+                            <option value="">-- Tất cả khoa --</option>
+                            @foreach (var s in (Model?.Specialties ?? Enumerable.Empty<string>()))
+                            {
+                                var selected = (Model?.Filter?.Specialty == s) ? "selected" : "";
+                                <option value="@s" @selected>@s</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="col-md-3 col-sm-12">
+                        <button class="section-btn btn btn-default btn-blue" type="submit" style="width:100%;">
+                            Tìm bác sĩ
+                        </button>
+                    </div>
+                }
+            </div>
+
+            <div class="clearfix" style="margin-top:15px;"></div>
+
+            <!-- DANH SÁCH BÁC SĨ -->
+            @if (Model?.Result?.Items != null && Model.Result.Items.Any())
+            {
+                foreach (var d in Model.Result.Items)
+                {
+                    // URL đặt lịch đúng controller
+                    var bookingUrl = Url.Action("Create", "Bookings", new { doctorId = d.Id });
+                    var loginUrl = Url.Action("Login", "Account", new { area = "", ReturnUrl = bookingUrl });
+
+                    <div class="col-md-4 col-sm-6">
+                        <div class="team-thumb wow fadeInUp" data-wow-delay="0.1s">
+
+                            <!-- Ảnh click sang chi tiết (theo giới tính) -->
+                            <a href="@Url.Action("Details","Doctors", new { id = d.Id })" title="Xem chi tiết @d.Name">
+                                <img src="@GenderPhoto(d.Gender)" class="img-responsive" alt="@d.Name" />
+                            </a>
+
+                            <div class="team-info">
+                                <h3 style="margin-bottom:6px;">@d.Name</h3>
+                                <p class="text-muted" style="margin-bottom:10px;">@d.Specialty</p>
+
+                                <div class="team-contact-info" style="margin-bottom:10px;">
+                                    @if (!string.IsNullOrWhiteSpace(d.PhoneNumber))
+                                    {<p><i class="fa fa-phone"></i> @d.PhoneNumber</p>}
+                                    @if (!string.IsNullOrWhiteSpace(d.Email))
+                                    {<p><i class="fa fa-envelope-o"></i> <a href="mailto:@d.Email">@d.Email</a></p>}
+                                </div>
+
+                                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                                    <a class="section-btn btn btn-default"
+                                       href="@Url.Action("Details","Doctors", new { id = d.Id })">
+                                        Xem chi tiết
+                                    </a>
+
+                                    @if (isPatient)
+                                    {
+                                        <a class="section-btn btn btn-primary" href="@bookingUrl">Đặt lịch</a>
+                                    }
+                                    else
+                                    {
+                                        <a class="section-btn btn btn-primary" href="@loginUrl">Đăng nhập để đặt lịch</a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-md-12">
+                    <div class="alert alert-info wow fadeInUp" data-wow-delay="0.1s" style="margin-top:10px;">
+                        Không có dữ liệu hiển thị.
+                    </div>
+                </div>
+            }
+
+            <!-- PHÂN TRANG -->
+            <div class="col-md-12">
+                @{
+                    var r = Model?.Result;
+                    var f = Model?.Filter ?? new Clinic.Models.DoctorsFilterVm();
+                    var totalPages = r?.TotalPages ?? 0;
+                    var page = r?.Page ?? 1;
+                    var start = System.Math.Max(1, page - 2);
+                    var end = System.Math.Min(totalPages, page + 2);
+                    Func<int, object> link = i => new { Query = f.Query, Specialty = f.Specialty, Page = i, PageSize = f.PageSize };
+                }
+                @if (totalPages > 1)
+                {
+                    <nav aria-label="pagination" class="text-center" style="margin-top:10px;">
+                        <ul class="pagination">
+                            <li class="@(page==1?"disabled":"")">
+                                <a href="@Url.Action("Index", link(1))">«</a>
+                            </li>
+                            <li class="@(page==1?"disabled":"")">
+                                <a href="@Url.Action("Index", link(page-1 < 1 ? 1 : page-1))">‹</a>
+                            </li>
+                            @for (int i = start; i <= end; i++)
+                            {
+                                <li class="@(i==page?"active":"")">
+                                    <a href="@Url.Action("Index", link(i))">@i</a>
+                                </li>
+                            }
+                            <li class="@(page==totalPages?"disabled":"")">
+                                <a href="@Url.Action("Index", link(page+1 > totalPages ? totalPages : page+1))">›</a>
+                            </li>
+                            <li class="@(page==totalPages?"disabled":"")">
+                                <a href="@Url.Action("Index", link(totalPages))">»</a>
+                            </li>
+                        </ul>
+                    </nav>
+                }
+            </div>
+
+        </div>
+    </div>
+</section>

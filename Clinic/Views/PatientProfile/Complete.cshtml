@@ -1,0 +1,43 @@
+﻿@model Clinic.Models.PatientProfile
+@{
+    ViewBag.Title = "Bổ sung thông tin";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section style="padding:40px 0;">
+  <div class="container" style="max-width:720px;">
+    <h2>Bổ sung thông tin</h2>
+    @if (ViewBag.Warn != null) { <div class="alert alert-warning">@ViewBag.Warn</div> }
+    @if (TempData["ok"] != null) { <div class="alert alert-success">@TempData["ok"]</div> }
+
+    @using (Html.BeginForm("Complete","PatientProfile", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.Id)
+        <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.FullName)
+            @Html.TextBoxFor(m => m.FullName, new { @class="form-control" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.PhoneNumber, "Số điện thoại")
+            @Html.TextBoxFor(m => m.PhoneNumber, new { @class="form-control" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.DateOfBirth, "Ngày sinh")
+            @Html.TextBoxFor(m => m.DateOfBirth, "{0:yyyy-MM-dd}", new { @class="form-control", type="date" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Address, "Địa chỉ")
+            @Html.TextBoxFor(m => m.Address, new { @class="form-control" })
+        </div>
+
+        <button class="btn btn-success">Lưu thông tin</button>
+        <a class="btn btn-link" href="@Url.Action("Index","Doctors")">← Về danh sách bác sĩ</a>
+    }
+  </div>
+</section>

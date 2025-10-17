@@ -1,8 +1,13 @@
-﻿@inherits System.Web.Mvc.WebViewPage<dynamic>
+﻿
 @using System.Web.Mvc.Html
 @{
     Layout = null;
     var title = ViewBag.Title as string ?? "Admin";
+
+    // role flags
+    var isAdmin = User.IsInRole("Admin");
+    var isDoctor = User.IsInRole("Doctor");
+    var isReception = User.IsInRole("Receptionist");
 }
 <!DOCTYPE html>
 <html lang="vi">
@@ -32,8 +37,11 @@
                 <i class="ti ti-activity icon-brand me-2"></i>
                 <span class="fw-semibold">Clinic Admin</span>
             </div>
+
             <nav class="mt-2">
                 <ul class="nav flex-column">
+
+                    <!-- Chung cho mọi role -->
                     <li class="nav-item">
                         <a class="nav-link @(ViewBag.Nav == "dashboard" ? "active" : "")"
                            href="@Url.Action("Index","Home", new { area = "Admin" })">
@@ -41,17 +49,97 @@
                         </a>
                     </li>
 
-                    <li class="nav-item mt-2 text-uppercase small px-3 text-muted">Quản lý</li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="ti ti-stethoscope me-2"></i> Bác sĩ</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="ti ti-users me-2"></i> Bệnh nhân</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="ti ti-calendar-event me-2"></i> Lịch hẹn</a>
-                    </li>
+                    <!-- ====== KHỐI MENU CHO ADMIN ====== -->
+                    @if (isAdmin)
+                    {
+                        <li class="nav-item mt-2 text-uppercase small px-3 text-muted">Quản lý (Admin)</li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewBag.Nav == "doctors" ? "active" : "")"
+                               href="@Url.Action("Index","Doctors", new { area = "Admin" })">
+                                <i class="ti ti-stethoscope me-2"></i> Bác sĩ
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewBag.Nav == "patients" ? "active" : "")"
+                               href="@Url.Action("Index","Patients", new { area = "Admin" })">
+                                <i class="ti ti-users me-2"></i> Bệnh nhân
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewBag.Nav == "services" ? "active" : "")"
+                               href="@Url.Action("Index","Services", new { area = "Admin" })">
+                                <i class="ti ti-clipboard-heart me-2"></i> Dịch vụ
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewBag.Nav == "appointments" ? "active" : "")"
+                               href="@Url.Action("Index","Appointments", new { area = "Admin" })">
+                                <i class="ti ti-calendar-event me-2"></i> Lịch hẹn
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewBag.Nav == "reports" ? "active" : "")"
+                               href="@Url.Action("Index","Reports", new { area = "Admin" })">
+                                <i class="ti ti-chart-bar me-2"></i> Thống kê
+                            </a>
+                        </li>
+                    }
 
+                    <!-- ====== KHỐI MENU CHO BÁC SĨ ====== -->
+                    @if (isDoctor)
+                    {
+                        <li class="nav-item mt-2 text-uppercase small px-3 text-muted">Bác sĩ</li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewBag.Nav == "mySchedule" ? "active" : "")"
+                               href="@Url.Action("MySchedule","Doctor", new { area = "Admin" })">
+                                <i class="ti ti-calendar-share me-2"></i> Lịch khám của tôi
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewBag.Nav == "myPatients" ? "active" : "")"
+                               href="@Url.Action("MyPatients","Doctor", new { area = "Admin" })">
+                                <i class="ti ti-address-book me-2"></i> Bệnh nhân của tôi
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewBag.Nav == "encounters" ? "active" : "")"
+                               href="@Url.Action("Encounters","Doctor", new { area = "Admin" })">
+                                <i class="ti ti-notes me-2"></i> Hồ sơ khám
+                            </a>
+                        </li>
+                    }
+
+                    <!-- ====== KHỐI MENU CHO LỄ TÂN ====== -->
+                    @if (isReception)
+                    {
+                        <li class="nav-item mt-2 text-uppercase small px-3 text-muted">Lễ tân</li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewBag.Nav == "requests" ? "active" : "")"
+                               href="@Url.Action("Index","Requests", new { area = "Admin" })">
+                                <i class="ti ti-inbox me-2"></i> Đơn đăng ký (khách vãng lai)
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewBag.Nav == "today" ? "active" : "")"
+                               href="@Url.Action("Today","Reception", new { area = "Admin" })">
+                                <i class="ti ti-clock-hour-9 me-2"></i> Lịch hẹn hôm nay
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewBag.Nav == "create" ? "active" : "")"
+                               href="@Url.Action("Create","Reception", new { area = "Admin" })">
+                                <i class="ti ti-calendar-plus me-2"></i> Tạo lịch hẹn mới
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewBag.Nav == "search" ? "active" : "")"
+                               href="@Url.Action("Search","Reception", new { area = "Admin" })">
+                                <i class="ti ti-search me-2"></i> Tra cứu bệnh nhân
+                            </a>
+                        </li>
+                    }
+
+                    <!-- Hệ thống -->
                     <li class="nav-item mt-2 text-uppercase small px-3 text-muted">Hệ thống</li>
                     <li class="nav-item">
                         <a class="nav-link" href="@Url.Action("Index","Home", new { area = "" })">
@@ -59,9 +147,13 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-danger" href="@Url.Action("LogOff","Account", new { area = "" })">
-                            <i class="ti ti-logout me-2"></i> Đăng xuất
-                        </a>
+                        @using (Html.BeginForm("LogOff", "Account", new { area = "" }, FormMethod.Post, new { id = "logoutForm" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <a class="nav-link text-danger" href="javascript:document.getElementById('logoutForm').submit()">
+                                <i class="ti ti-logout me-2"></i> Đăng xuất
+                            </a>
+                        }
                     </li>
                 </ul>
             </nav>

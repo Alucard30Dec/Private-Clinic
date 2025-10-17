@@ -1,0 +1,5 @@
+﻿@{
+    // expects ViewBag.Pending
+    var p = (int)(ViewBag.Pending ?? 0);
+}
+<span class="badge rounded-pill @(p>0 ? "bg-danger" : "bg-secondary") notif-dot">@p</span>

@@ -1,0 +1,108 @@
+﻿@model Clinic.Models.Doctor
+@{
+    ViewBag.Title = "Thông tin bác sĩ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    if (Model == null)
+    {
+        <section style="padding:60px 0;">
+            <div class="container">
+                <div class="alert alert-danger">Không tìm thấy thông tin bác sĩ.</div>
+                <a href="@Url.Action("Index","Doctors")" class="btn btn-default">← Quay lại danh sách</a>
+            </div>
+        </section>
+        return;
+    }
+
+    // Ảnh theo giới tính
+    var g = (Model.Gender ?? "").Trim().ToLower();
+    var photoSrc = Url.Content(g.StartsWith("nư") || g.StartsWith("nu")
+        ? "~/Resources/images/team-image3.jpg"
+        : "~/Resources/images/team-image2.jpg");
+
+    var isPatient = Request.IsAuthenticated && User.IsInRole("Patient");
+    var bookingUrl = Url.Action("Create", "Bookings", new { doctorId = Model.Id });
+    var loginToBookUrl = Url.Action("Login", "Account", new { area = "", ReturnUrl = bookingUrl });
+}
+
+<section style="padding:60px 0;">
+    <div class="container">
+
+        @if (TempData["ok"] != null)
+        {<div class="alert alert-success">@TempData["ok"]</div>}
+        @if (TempData["err"] != null)
+        {<div class="alert alert-danger">@TempData["err"]</div>}
+
+        @if (TempData["profileNotice"] != null)
+        {
+            var completeUrl = Url.Action("Complete", "PatientProfile");
+            <div class="alert alert-info">
+                @TempData["profileNotice"]
+                <a class="btn btn-sm btn-primary ms-2" href="@completeUrl">Bổ sung ngay</a>
+            </div>
+        }
+
+        <div class="row">
+            <div class="col-md-4 col-sm-5">
+                <img src="@photoSrc" alt="@Model.Name" class="img-responsive"
+                     style="width:100%;border-radius:12px;object-fit:cover;aspect-ratio:4/5" />
+            </div>
+
+            <div class="col-md-8 col-sm-7">
+                <h2 style="margin-top:0;">@Model.Name</h2>
+                <p class="text-muted" style="margin-bottom:20px;">@Model.Specialty</p>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <p><strong>Ngày sinh: </strong>@(Model.DateOfBirth?.ToString("dd/MM/yyyy") ?? "—")</p>
+                        <p><strong>Giới tính: </strong>@(string.IsNullOrWhiteSpace(Model.Gender) ? "—" : Model.Gender)</p>
+                        <p><strong>Kinh nghiệm: </strong>@(Model.YearsOfExperience.HasValue ? (Model.YearsOfExperience + " năm") : "—")</p>
+                    </div>
+                    <div class="col-sm-6">
+                        <p><strong>Điện thoại: </strong>@(string.IsNullOrWhiteSpace(Model.PhoneNumber) ? "—" : Model.PhoneNumber)</p>
+
+                        <p>
+                            <strong>Email: </strong>
+                            @if (string.IsNullOrWhiteSpace(Model.Email))
+                            {
+                                @:—
+                            }
+                            else
+                            {
+                                <a href="mailto:@Model.Email">@Model.Email</a>
+                            }
+                        </p>
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrWhiteSpace(Model.Bio))
+                {
+                    <div class="well" style="background:#f8f9fa;border:1px solid #eee;border-radius:10px;">
+                        <h4>Giới thiệu</h4>
+                        <p style="margin-bottom:0;">@Model.Bio</p>
+                    </div>
+                }
+
+                @if (TempData["apptId"] != null)
+                {
+                    <div class="alert alert-info" style="margin-top:12px;">
+                        Mã lịch hẹn: <strong>#@TempData["apptId"]</strong>
+                    </div>
+                }
+
+                <div style="margin-top:18px;">
+                    <a href="@Url.Action("Index","Doctors")" class="btn btn-default">← Quay lại danh sách</a>
+
+                    @if (isPatient)
+                    {
+                        <a href="@bookingUrl" class="btn btn-primary">Đặt lịch</a>
+                    }
+                    else
+                    {
+                        <a href="@loginToBookUrl" class="btn btn-primary">Đăng nhập để đặt lịch</a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

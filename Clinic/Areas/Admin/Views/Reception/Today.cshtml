@@ -1,0 +1,31 @@
+﻿@model IEnumerable<Clinic.Models.Appointment>
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    ViewBag.Title = "Lịch hẹn hôm nay";
+}
+
+<h2>Lịch hẹn hôm nay</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Giờ</th>
+            <th>Bác sĩ</th>
+            <th>Bệnh nhân</th>
+            <th>Dịch vụ</th>
+            <th>Trạng thái</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var a in Model)
+        {
+            <tr>
+                <td>@a.StartTime.ToLocalTime().ToString("HH:mm")</td>
+                <td>@(a.Doctor != null ? a.Doctor.Name : "—")</td>
+                <td>@(a.PatientProfile != null ? a.PatientProfile.FullName : "—")</td>
+                <td>@(a.Service != null ? a.Service.Name : "—")</td>
+                <td>@a.Status</td>
+            </tr>
+        }
+    </tbody>
+</table>

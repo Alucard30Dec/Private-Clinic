@@ -1,4 +1,4 @@
-﻿using Clinic.Models; // chứa ClinicDbContext & Doctor
+﻿using Clinic.Models;                 // chứa ClinicDbContext
 using System;
 using System.Data.Entity;
 using System.IO;
@@ -7,6 +7,9 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+
+// === ĐẶT ALIAS TRÁNH TRÙNG TÊN VỚI NAMESPACE Clinic.Areas.Doctor ===
+using DoctorEntity = Clinic.Models.Doctor;
 
 namespace Clinic.Areas.Admin.Controllers
 {
@@ -50,7 +53,7 @@ namespace Clinic.Areas.Admin.Controllers
         // POST: Admin/Doctors/Create
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include =
-            "Name,Specialty,PhotoUrl,UserId,DateOfBirth,Gender,Email,PhoneNumber,YearsOfExperience,Bio")] Doctor doctor)
+            "Name,Specialty,PhotoUrl,UserId,DateOfBirth,Gender,Email,PhoneNumber,YearsOfExperience,Bio")] DoctorEntity doctor)
         {
             ViewBag.Nav = "doctors";
 
@@ -98,11 +101,10 @@ namespace Clinic.Areas.Admin.Controllers
         }
 
         // POST: Admin/Doctors/Edit/5
-        // POST: Admin/Doctors/Edit/5
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(
             [Bind(Include = "Id,Name,Specialty,PhotoUrl,UserId,DateOfBirth,Gender,Email,PhoneNumber,YearsOfExperience,Bio")]
-    Doctor input,
+            DoctorEntity input,
             HttpPostedFileBase photo // <-- file upload từ form
         )
         {

@@ -35,15 +35,26 @@ namespace Clinic.Controllers
             private set { _userManager = value; }
         }
 
-        // GET: /Account/Login
+        private IAuthenticationManager AuthenticationManager
+            => HttpContext.GetOwinContext().Authentication;
+
+        // ===================== LOGIN =====================
+
         [AllowAnonymous]
-        public ActionResult Login(string returnUrl)
+        public async Task<ActionResult> Login(string returnUrl)
         {
+            // Nếu đã đăng nhập thì điều hướng theo role luôn
+            if (User.Identity.IsAuthenticated)
+            {
+                var user = await UserManager.FindByNameAsync(User.Identity.Name)
+                           ?? await UserManager.FindByEmailAsync(User.Identity.Name);
+                if (user != null) return await RedirectByRoleAsync(user.Id, returnUrl);
+            }
+
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
 
-        // POST: /Account/Login
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -51,32 +62,43 @@ namespace Clinic.Controllers
         {
             if (!ModelState.IsValid) return View(model);
 
+            // Cho phép nhập Email hoặc Username
+            var user = await UserManager.FindByNameAsync(model.Email)
+                       ?? await UserManager.FindByEmailAsync(model.Email);
+
+            if (user == null)
+            {
+                ModelState.AddModelError("", "Tài khoản không tồn tại.");
+                return View(model);
+            }
+
+            // PasswordSignInAsync phải truyền UserName thật
             var result = await SignInManager.PasswordSignInAsync(
-                model.Email, model.Password, model.RememberMe, shouldLockout: false);
+                user.UserName, model.Password, model.RememberMe, shouldLockout: false);
 
             switch (result)
             {
                 case SignInStatus.Success:
-                    return await RedirectAfterLoginAsync(model.Email, returnUrl);
+                    return await RedirectByRoleAsync(user.Id, returnUrl);
 
                 case SignInStatus.LockedOut:
                     return View("Lockout");
 
                 case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, model.RememberMe });
 
                 case SignInStatus.Failure:
                 default:
-                    ModelState.AddModelError("", "Invalid login attempt.");
+                    ModelState.AddModelError("", "Đăng nhập không hợp lệ.");
                     return View(model);
             }
         }
 
-        // GET: /Account/Register
+        // ===================== REGISTER (tùy dùng) =====================
+
         [AllowAnonymous]
         public ActionResult Register() => View();
 
-        // POST: /Account/Register
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -84,82 +106,29 @@ namespace Clinic.Controllers
         {
             if (!ModelState.IsValid) return View(model);
 
-            var user = new ApplicationUser { UserName = model.Email, Email = model.Email, EmailConfirmed = true };
+            // Ở template mặc định: dùng Email làm UserName
+            var user = new ApplicationUser
+            {
+                UserName = model.Email,
+                Email = model.Email,
+                EmailConfirmed = true
+            };
+
             var result = await UserManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {
-                // GÁN ROLE MẶC ĐỊNH: PATIENT
+                // Mặc định: Patient
                 await UserManager.AddToRoleAsync(user.Id, "Patient");
-
                 await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                return RedirectToAction("Index", "Home"); // Patient về trang client
+                return await RedirectByRoleAsync(user.Id, null);
             }
 
             AddErrors(result);
             return View(model);
         }
 
-        // GET: /Account/ConfirmEmail
-        [AllowAnonymous]
-        public async Task<ActionResult> ConfirmEmail(string userId, string code)
-        {
-            if (userId == null || code == null) return View("Error");
-            var result = await UserManager.ConfirmEmailAsync(userId, code);
-            return View(result.Succeeded ? "ConfirmEmail" : "Error");
-        }
+        // ===================== EXTERNAL LOGIN =====================
 
-        // GET: /Account/ForgotPassword
-        [AllowAnonymous]
-        public ActionResult ForgotPassword() => View();
-
-        // POST: /Account/ForgotPassword
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model)
-        {
-            if (!ModelState.IsValid) return View(model);
-
-            var user = await UserManager.FindByNameAsync(model.Email);
-            if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
-            {
-                // Không tiết lộ thông tin
-                return View("ForgotPasswordConfirmation");
-            }
-
-            // TODO: bật gửi mail reset nếu cần
-            return View("ForgotPasswordConfirmation");
-        }
-
-        [AllowAnonymous]
-        public ActionResult ForgotPasswordConfirmation() => View();
-
-        // GET: /Account/ResetPassword
-        [AllowAnonymous]
-        public ActionResult ResetPassword(string code) => code == null ? View("Error") : View();
-
-        // POST: /Account/ResetPassword
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model)
-        {
-            if (!ModelState.IsValid) return View(model);
-
-            var user = await UserManager.FindByNameAsync(model.Email);
-            if (user == null) return RedirectToAction("ResetPasswordConfirmation", "Account");
-
-            var result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
-            if (result.Succeeded) return RedirectToAction("ResetPasswordConfirmation", "Account");
-
-            AddErrors(result);
-            return View();
-        }
-
-        [AllowAnonymous]
-        public ActionResult ResetPasswordConfirmation() => View();
-
-        // POST: /Account/ExternalLogin
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -168,31 +137,6 @@ namespace Clinic.Controllers
             return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
         }
 
-        // GET: /Account/SendCode
-        [AllowAnonymous]
-        public async Task<ActionResult> SendCode(string returnUrl, bool rememberMe)
-        {
-            var userId = await SignInManager.GetVerifiedUserIdAsync();
-            if (userId == null) return View("Error");
-
-            var userFactors = await UserManager.GetValidTwoFactorProvidersAsync(userId);
-            var factorOptions = userFactors.Select(purpose => new SelectListItem { Text = purpose, Value = purpose }).ToList();
-            return View(new SendCodeViewModel { Providers = factorOptions, ReturnUrl = returnUrl, RememberMe = rememberMe });
-        }
-
-        // POST: /Account/SendCode
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> SendCode(SendCodeViewModel model)
-        {
-            if (!ModelState.IsValid) return View();
-
-            if (!await SignInManager.SendTwoFactorCodeAsync(model.SelectedProvider)) return View("Error");
-            return RedirectToAction("VerifyCode", new { Provider = model.SelectedProvider, ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
-        }
-
-        // GET: /Account/ExternalLoginCallback
         [AllowAnonymous]
         public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
         {
@@ -203,8 +147,9 @@ namespace Clinic.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    // Đăng nhập thành công -> redirect theo role
-                    return await RedirectAfterLoginAsync(loginInfo.Email, returnUrl);
+                    var signedUser = await UserManager.FindAsync(loginInfo.Login);
+                    if (signedUser == null) return RedirectToAction("Login");
+                    return await RedirectByRoleAsync(signedUser.Id, returnUrl);
 
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -214,7 +159,6 @@ namespace Clinic.Controllers
 
                 case SignInStatus.Failure:
                 default:
-                    // Nếu chưa có tài khoản → cho tạo nhanh (mặc định Patient)
                     ViewBag.ReturnUrl = returnUrl;
                     ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
                     return View("ExternalLoginConfirmation",
@@ -222,7 +166,6 @@ namespace Clinic.Controllers
             }
         }
 
-        // POST: /Account/ExternalLoginConfirmation
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -242,14 +185,12 @@ namespace Clinic.Controllers
             var result = await UserManager.CreateAsync(user);
             if (result.Succeeded)
             {
-                // Mặc định Patient cho tài khoản tạo mới qua external login
                 await UserManager.AddToRoleAsync(user.Id, "Patient");
-
                 result = await UserManager.AddLoginAsync(user.Id, info.Login);
                 if (result.Succeeded)
                 {
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                    return await RedirectAfterLoginAsync(model.Email, returnUrl);
+                    return await RedirectByRoleAsync(user.Id, returnUrl);
                 }
             }
 
@@ -258,71 +199,64 @@ namespace Clinic.Controllers
             return View(model);
         }
 
-        // POST: /Account/LogOff
+        // ===================== LOGOFF =====================
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Home", new { area = "" });
         }
 
-        // GET: /Account/ExternalLoginFailure
         [AllowAnonymous]
         public ActionResult ExternalLoginFailure() => View();
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _userManager?.Dispose();
-                _signInManager?.Dispose();
-                _userManager = null;
-                _signInManager = null;
-            }
-            base.Dispose(disposing);
-        }
-
-        #region Helpers
-
-        private IAuthenticationManager AuthenticationManager
-            => HttpContext.GetOwinContext().Authentication;
+        // ===================== Helpers =====================
 
         private void AddErrors(IdentityResult result)
         {
             foreach (var error in result.Errors) ModelState.AddModelError("", error);
         }
 
-        private ActionResult RedirectToLocal(string returnUrl)
+        /// <summary>
+        /// Điều hướng sau đăng nhập theo role.
+        /// Ưu tiên ReturnUrl nếu là local URL và không trỏ vào file .cshtml.
+        /// </summary>
+        private async Task<ActionResult> RedirectByRoleAsync(string userId, string returnUrl)
         {
-            if (Url.IsLocalUrl(returnUrl)) return Redirect(returnUrl);
-            return RedirectToAction("Index", "Home");
+            if (IsSafeLocalUrl(returnUrl))
+                return Redirect(returnUrl);
+
+            var roles = await UserManager.GetRolesAsync(userId);
+
+            // Ưu tiên Admin > Doctor > Receptionist > Patient
+            if (roles.Contains("Admin"))
+                return RedirectToAction("Index", "Home", new { area = "Admin" });
+
+            if (roles.Contains("Doctor"))
+                return RedirectToAction("Index", "Home", new { area = "Doctors" });
+
+            if (roles.Contains("Receptionist"))
+                return RedirectToAction("Today", "Reception", new { area = "Admin" });
+
+            // Mặc định: Patient / no role
+            return RedirectToAction("Index", "Home", new { area = "" });
         }
 
         /// <summary>
-        /// Redirect sau đăng nhập theo role.
+        /// Chỉ chấp nhận URL nội bộ và không chứa đuôi .cshtml (tránh mở file view trực tiếp).
         /// </summary>
-        private async Task<ActionResult> RedirectAfterLoginAsync(string emailOrUserName, string returnUrl)
+        private bool IsSafeLocalUrl(string url)
         {
-            // Ưu tiên tìm theo Email; nếu null, thử UserName
-            var user = await UserManager.FindByEmailAsync(emailOrUserName)
-                       ?? await UserManager.FindByNameAsync(emailOrUserName);
+            if (string.IsNullOrWhiteSpace(url)) return false;
+            if (!Url.IsLocalUrl(url)) return false;
 
-            if (user != null)
-            {
-                var roles = await UserManager.GetRolesAsync(user.Id);
-                if (roles.Contains("Admin") || roles.Contains("Doctor") || roles.Contains("Receptionist"))
-                {
-                    // Staff → Admin Area
-                    if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
-                        return Redirect(returnUrl);
-                    return RedirectToAction("Index", "Home", new { area = "Admin" });
-                }
-            }
-            // Patient (hoặc không tìm thấy) → Client
-            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
-                return Redirect(returnUrl);
-            return RedirectToAction("Index", "Home");
+            // chặn việc truy cập trực tiếp view .cshtml
+            var lower = url.ToLowerInvariant();
+            if (lower.EndsWith(".cshtml")) return false;
+
+            return true;
         }
 
         // XSRF khi thêm external login
@@ -351,6 +285,5 @@ namespace Clinic.Controllers
                 context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
             }
         }
-        #endregion
     }
 }

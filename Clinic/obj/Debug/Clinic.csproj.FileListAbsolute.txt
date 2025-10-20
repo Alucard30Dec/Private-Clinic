@@ -231,7 +231,6 @@ D:\Private-Clinic\Clinic\obj\Debug\Clinic.csproj.Up2Date
 D:\Private-Clinic\Clinic\obj\Debug\Clinic.dll
 D:\Private-Clinic\Clinic\obj\Debug\Clinic.pdb
 D:\Private-Clinic\Clinic\obj\Debug\Clinic.Migrations.ClinicMigrations.SyncClinicModel.resources
-D:\Private-Clinic\Clinic\obj\Debug\Clinic.Migrations.ClinicMigrations.AddEmailAndCreatedAtToPatientProfile.resources
 D:\Private-Clinic\Clinic\obj\Debug\Clinic.Migrations.ClinicMigrations.SyncModel_NoChanges.resources
 E:\Study\WebApp\Project\Clinic\Clinic\bin\Clinic.dll.config
 E:\Study\WebApp\Project\Clinic\Clinic\bin\Clinic.dll
@@ -357,3 +356,7 @@ E:\Study\WebApp\Project\Clinic\Clinic\obj\Debug\Clinic.Migrations.ClinicMigratio
 E:\Study\WebApp\Project\Clinic\Clinic\obj\Debug\Clinic.Migrations.ClinicMigrations.Baseline_Sync.resources
 E:\Study\WebApp\Project\Clinic\Clinic\obj\Debug\Clinic.Migrations.ClinicMigrations.Baseline_Sync1.resources
 E:\Study\WebApp\Project\Clinic\Clinic\obj\Debug\Clinic.Migrations.ClinicMigrations.Baseline_Sync2.resources
+D:\Private-Clinic\Clinic\obj\Debug\Clinic.Migrations.ClinicMigrations.AddEmailAndCreatedAtToPatient.resources
+D:\Private-Clinic\Clinic\obj\Debug\Clinic.Migrations.ClinicMigrations.Baseline_Sync.resources
+D:\Private-Clinic\Clinic\obj\Debug\Clinic.Migrations.ClinicMigrations.Baseline_Sync1.resources
+D:\Private-Clinic\Clinic\obj\Debug\Clinic.Migrations.ClinicMigrations.Baseline_Sync2.resources

@@ -6,18 +6,21 @@ namespace Clinic.Migrations.ClinicMigrations
     {
         public override void Up()
         {
+            // --------- BATCH 1: Tạo cột Password nếu chưa có ----------
+            Sql(@"
+IF COL_LENGTH('dbo.Doctors','Password') IS NULL
+BEGIN
+    ALTER TABLE dbo.Doctors ADD Password NVARCHAR(128) NULL;
+END
+");
+
+            // --------- BATCH 2: Seed/Upsert dữ liệu bác sĩ -------------
             Sql(@"
 SET NOCOUNT ON;
 SET XACT_ABORT ON;
 
 BEGIN TRY
     BEGIN TRAN;
-
-    ----------------------------------------------------------------
-    -- 0) Đảm bảo có cột Password (cho mục đích seed demo)
-    ----------------------------------------------------------------
-    IF COL_LENGTH('dbo.Doctors', 'Password') IS NULL
-        ALTER TABLE dbo.Doctors ADD Password NVARCHAR(128) NULL;
 
     ----------------------------------------------------------------
     -- 1) Bổ sung thông tin cho các bác sĩ sẵn có: Id 1..3 (UPDATE)
@@ -61,7 +64,12 @@ BEGIN TRY
     ----------------------------------------------------------------
     -- 2) Upsert cho 4..15: Nếu đã có -> UPDATE; nếu chưa có -> INSERT
     ----------------------------------------------------------------
-    SET IDENTITY_INSERT dbo.Doctors ON;
+    DECLARE @turnOn bit = 0;
+    IF (SELECT OBJECTPROPERTY(OBJECT_ID('dbo.Doctors'),'TableHasIdentity')) = 1
+    BEGIN
+        SET @turnOn = 1;
+        SET IDENTITY_INSERT dbo.Doctors ON;
+    END
 
     -- 4
     IF EXISTS (SELECT 1 FROM dbo.Doctors WHERE Id = 4)
@@ -279,12 +287,15 @@ BEGIN TRY
         INSERT INTO dbo.Doctors (Id, Name, Specialty, PhotoUrl, DateOfBirth, Gender, Email, PhoneNumber, YearsOfExperience, Bio, Password)
         VALUES (15, N'Dr. Sơn', N'Chấn thương chỉnh hình', '/Resources/images/doctors/son.jpg', '1982-02-14', N'Nam', 'son@clinic.vn', '0915001500', 12, N'Gãy xương, trật khớp, thoát vị đĩa đệm; điều trị bảo tồn & phẫu thuật.', '12345678');
 
-    SET IDENTITY_INSERT dbo.Doctors OFF;
+    IF @turnOn = 1
+        SET IDENTITY_INSERT dbo.Doctors OFF;
 
     COMMIT;
 END TRY
 BEGIN CATCH
     IF @@TRANCOUNT > 0 ROLLBACK;
+    IF (SELECT OBJECTPROPERTY(OBJECT_ID('dbo.Doctors'),'TableHasIdentity')) = 1
+        BEGIN TRY SET IDENTITY_INSERT dbo.Doctors OFF END TRY BEGIN CATCH END CATCH;
     THROW;
 END CATCH;
 ");
@@ -292,10 +303,17 @@ END CATCH;
 
         public override void Down()
         {
-            // Thu hồi dữ liệu seed thêm cho 4..15 và xoá mật khẩu đã set
+            // Tách batch để tránh vấn đề compile tương tự
             Sql(@"
 UPDATE dbo.Doctors SET Password = NULL WHERE Id BETWEEN 1 AND 15;
 DELETE FROM dbo.Doctors WHERE Id BETWEEN 4 AND 15;
+");
+
+            Sql(@"
+IF COL_LENGTH('dbo.Doctors','Password') IS NOT NULL
+BEGIN
+    ALTER TABLE dbo.Doctors DROP COLUMN Password;
+END
 ");
         }
     }

@@ -1,0 +1,46 @@
+﻿@model Clinic.Areas.Doctors.Data.AppointmentDetailVM
+@{
+    ViewBag.Title = "Chi tiết lịch khám";
+    ViewBag.Nav = "schedules";
+    Func<int, string> statusText = s => new[] { "Chờ xác nhận", "Đã xác nhận", "Đã khám", "Huỷ" }
+                                      .ElementAtOrDefault(s) ?? "N/A";
+}
+<h4 class="mb-3">Chi tiết lịch khám</h4>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-3">Bệnh nhân</dt>
+            <dd class="col-sm-9">@Model.PatientName</dd>
+
+            <dt class="col-sm-3">SĐT / Email</dt>
+            <dd class="col-sm-9">@Model.PatientPhone @:( / ) @Model.PatientEmail</dd>
+
+            <dt class="col-sm-3">Dịch vụ</dt>
+            <dd class="col-sm-9">
+                <div class="fw-semibold">@Model.ServiceName</div>
+                <div class="text-muted">@Model.ServiceDesc</div>
+            </dd>
+
+            <dt class="col-sm-3">Thời gian</dt>
+            <dd class="col-sm-9">
+                @Model.StartTime.ToString("dd/MM/yyyy HH:mm") → @Model.EndTime.ToString("dd/MM/yyyy HH:mm")
+            </dd>
+
+            <dt class="col-sm-3">Trạng thái</dt>
+            <dd class="col-sm-9">@statusText(Model.Status)</dd>
+
+            <dt class="col-sm-3">Ghi chú</dt>
+            <dd class="col-sm-9">@Model.Notes</dd>
+
+            <dt class="col-sm-3">Tạo/Cập nhật</dt>
+            <dd class="col-sm-9">
+                @Model.CreatedAt?.ToString("dd/MM/yyyy HH:mm") / @Model.UpdatedAt?.ToString("dd/MM/yyyy HH:mm")
+            </dd>
+        </dl>
+    </div>
+</div>
+
+<div class="mt-3">
+    <a class="btn btn-light border" href="@Url.Action("Index")">← Quay lại danh sách</a>
+</div>

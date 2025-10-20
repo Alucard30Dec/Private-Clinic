@@ -47,7 +47,7 @@ namespace Clinic.Models
         [Display(Name = "Giới thiệu")]
         public string Bio { get; set; }
 
-        // >>> Thêm mới để seed demo (không dùng để xác thực thực tế)
+        // >>> Chỉ seed demo (KHÔNG dùng để xác thực thực tế)
         [StringLength(128)]
         [Display(Name = "Mật khẩu mặc định")]
         public string Password { get; set; }

@@ -2,7 +2,7 @@
 
 namespace Clinic.Areas.Admin
 {
-    public class AdminAreaRegistration : AreaRegistration
+    public class DashboardController : AreaRegistration
     {
         public override string AreaName => "Admin";
 

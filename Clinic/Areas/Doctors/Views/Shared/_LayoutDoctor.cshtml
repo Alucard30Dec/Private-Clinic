@@ -1,0 +1,68 @@
+﻿@{
+    Layout = null;
+    var title = string.IsNullOrEmpty(ViewBag.Title as string) ? "Clinic Doctor" : (ViewBag.Title + " · Clinic Doctor");
+    var nav = (ViewBag.Nav as string ?? "").ToLower();
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>@title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    @Styles.Render("~/Content/css")          @* dùng bundle giống Admin *@
+    @RenderSection("styles", required: false)
+</head>
+<body class="bg-light">
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <nav class="flex-shrink-0" style="width:260px;background:#0f1b2d;min-height:100vh;">
+            <div class="p-3 text-white fw-semibold">Clinic Doctor</div>
+            <ul class="nav nav-pills flex-column mb-auto px-2">
+                <li class="nav-item">
+                    <a class="nav-link text-white @(nav=="dashboard"?"active":"")"
+                       href="@Url.Action("Index","Home", new { area="Doctors" })">Dashboard</a>
+                </li>
+                <li>
+                    <a class="nav-link text-white @(nav=="schedules"?"active":"")"
+                       href="@Url.Action("Index","Schedules", new { area="Doctors" })">Lịch khám của tôi</a>
+                </li>
+                <li>
+                    <a class="nav-link text-white @(nav=="mypatients"?"active":"")"
+                       href="@Url.Action("Index","Patients", new { area="Doctors" })">Bệnh nhân của tôi</a>
+                </li>
+                <li>
+                    <a class="nav-link text-white @(nav=="records"?"active":"")"
+                       href="@Url.Action("Index","Records", new { area="Doctors" })">Hồ sơ khám</a>
+                </li>
+
+                <li class="mt-3 text-uppercase text-secondary small px-3">Hệ thống</li>
+                <li>
+                    <a class="nav-link text-white" href="@Url.Action("Index","Home", new { area = "" })">Về trang người dùng</a>
+                </li>
+                <li class="mt-2">
+                    @using (Html.BeginForm("LogOff", "Account", new { area = "" }, FormMethod.Post, new { id = "logoutFormDoctor" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <a class="nav-link text-white" href="javascript:document.getElementById('logoutFormDoctor').submit()">Đăng xuất</a>
+                    }
+                </li>
+            </ul>
+            <div class="text-secondary small px-3 py-3 mt-auto">© @DateTime.Now.Year Clinic Doctor</div>
+        </nav>
+
+        <!-- Main -->
+        <div class="flex-grow-1">
+            @Html.Partial("_HeaderDoctor")
+            <main class="container-fluid py-3">
+                @RenderBody()
+            </main>
+            @Html.Partial("_FooterDoctor")
+        </div>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

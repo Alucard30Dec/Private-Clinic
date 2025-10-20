@@ -169,11 +169,21 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
+    <Compile Include="Areas\Admin\Controllers\AppointmentsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ServicesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\PatientsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\DoctorController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ReceptionController.cs" />
+    <Compile Include="Areas\Admin\Controllers\RequestsController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AppointmentController.cs" />
+    <Compile Include="Controllers\BookingsController.cs" />
+    <Compile Include="Controllers\DoctorsController.cs" />
     <Compile Include="Controllers\HealthController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\PatientProfileController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -193,8 +203,47 @@
     <Compile Include="Migrations\ClinicMigrations\202510111146302_PopulateWorkingHourTable.Designer.cs">
       <DependentUpon>202510111146302_PopulateWorkingHourTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\ClinicMigrations\202510151550445_PopulateMoreDoctors.cs" />
+    <Compile Include="Migrations\ClinicMigrations\202510151550445_PopulateMoreDoctors.Designer.cs">
+      <DependentUpon>202510151550445_PopulateMoreDoctors.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\ClinicMigrations\202510151617368_AddDoctorProfileFields.cs" />
+    <Compile Include="Migrations\ClinicMigrations\202510151617368_AddDoctorProfileFields.Designer.cs">
+      <DependentUpon>202510151617368_AddDoctorProfileFields.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\ClinicMigrations\202510151624522_PopulateDoctorProfiles.cs" />
+    <Compile Include="Migrations\ClinicMigrations\202510151624522_PopulateDoctorProfiles.Designer.cs">
+      <DependentUpon>202510151624522_PopulateDoctorProfiles.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\ClinicMigrations\202510160909060_AddAppointmentRequest.cs" />
+    <Compile Include="Migrations\ClinicMigrations\202510160909060_AddAppointmentRequest.Designer.cs">
+      <DependentUpon>202510160909060_AddAppointmentRequest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\ClinicMigrations\202510161624413_SyncClinicModel.cs" />
+    <Compile Include="Migrations\ClinicMigrations\202510161624413_SyncClinicModel.Designer.cs">
+      <DependentUpon>202510161624413_SyncClinicModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\ClinicMigrations\202510161740591_AddEmailAndCreatedAtToPatientProfile.cs" />
+    <Compile Include="Migrations\ClinicMigrations\202510161740591_AddEmailAndCreatedAtToPatientProfile.Designer.cs">
+      <DependentUpon>202510161740591_AddEmailAndCreatedAtToPatientProfile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\ClinicMigrations\202510161823214_SyncModel_NoChanges.cs" />
+    <Compile Include="Migrations\ClinicMigrations\202510161823214_SyncModel_NoChanges.Designer.cs">
+      <DependentUpon>202510161823214_SyncModel_NoChanges.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\ClinicMigrations\202510192131434_Baseline_Sync.cs" />
+    <Compile Include="Migrations\ClinicMigrations\202510192131434_Baseline_Sync.Designer.cs">
+      <DependentUpon>202510192131434_Baseline_Sync.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\ClinicMigrations\202510192142442_Baseline_Sync1.cs" />
+    <Compile Include="Migrations\ClinicMigrations\202510192142442_Baseline_Sync1.Designer.cs">
+      <DependentUpon>202510192142442_Baseline_Sync1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\ClinicMigrations\202510192246259_Baseline_Sync2.cs" />
+    <Compile Include="Migrations\ClinicMigrations\202510192246259_Baseline_Sync2.Designer.cs">
+      <DependentUpon>202510192246259_Baseline_Sync2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\ClinicMigrations\Configuration.cs" />
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\IdentityMigrations\202510111114582_InitialIdentity.cs" />
     <Compile Include="Migrations\IdentityMigrations\202510111114582_InitialIdentity.Designer.cs">
       <DependentUpon>202510111114582_InitialIdentity.cs</DependentUpon>
@@ -202,11 +251,15 @@
     <Compile Include="Migrations\IdentityMigrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Appointment.cs" />
+    <Compile Include="Models\AppointmentRequest.cs" />
+    <Compile Include="Models\AppointmentService.cs" />
+    <Compile Include="Models\BookingVM.cs" />
     <Compile Include="Models\ClinicDbContext.cs" />
     <Compile Include="Models\Doctor.cs" />
+    <Compile Include="Models\DoctorsVm.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\PatientProfile.cs" />
+    <Compile Include="Models\Patient.cs" />
     <Compile Include="Models\Service.cs" />
     <Compile Include="Models\WorkingHour.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -280,6 +333,29 @@
     <Content Include="Areas\Admin\Views\Web.config" />
     <Content Include="Areas\Admin\Views\Shared\_HeaderAdmin.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_FooterAdmin.cshtml" />
+    <Content Include="Areas\Admin\Views\Requests\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Requests\_PendingBadge.cshtml" />
+    <Content Include="Areas\Admin\Views\Reception\Today.cshtml" />
+    <Content Include="Areas\Admin\Views\Doctor\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Doctor\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\Doctor\_DoctorForm.cshtml" />
+    <Content Include="Areas\Admin\Views\Doctor\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Doctor\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\Patients\_PatientForm.cshtml" />
+    <Content Include="Areas\Admin\Views\Patients\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\Patients\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\Patients\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Patients\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Services\_ServiceForm.cshtml" />
+    <Content Include="Areas\Admin\Views\Services\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\Services\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\Services\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Services\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Appointments\_AppointmentForm.cshtml" />
+    <Content Include="Areas\Admin\Views\Appointments\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\Appointments\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\Appointments\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Appointments\Index.cshtml" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
@@ -327,6 +403,11 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\_Header.cshtml" />
     <Content Include="Views\Shared\_Footer.cshtml" />
+    <Content Include="Views\Doctors\Index.cshtml" />
+    <Content Include="Views\Doctors\Details.cshtml" />
+    <Content Include="Views\Appointment\Index.cshtml" />
+    <Content Include="Views\Bookings\Create.cshtml" />
+    <Content Include="Views\PatientProfile\Complete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -370,6 +451,36 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\ClinicMigrations\202510111146302_PopulateWorkingHourTable.resx">
       <DependentUpon>202510111146302_PopulateWorkingHourTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ClinicMigrations\202510151550445_PopulateMoreDoctors.resx">
+      <DependentUpon>202510151550445_PopulateMoreDoctors.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ClinicMigrations\202510151617368_AddDoctorProfileFields.resx">
+      <DependentUpon>202510151617368_AddDoctorProfileFields.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ClinicMigrations\202510151624522_PopulateDoctorProfiles.resx">
+      <DependentUpon>202510151624522_PopulateDoctorProfiles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ClinicMigrations\202510160909060_AddAppointmentRequest.resx">
+      <DependentUpon>202510160909060_AddAppointmentRequest.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ClinicMigrations\202510161624413_SyncClinicModel.resx">
+      <DependentUpon>202510161624413_SyncClinicModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ClinicMigrations\202510161740591_AddEmailAndCreatedAtToPatientProfile.resx">
+      <DependentUpon>202510161740591_AddEmailAndCreatedAtToPatientProfile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ClinicMigrations\202510161823214_SyncModel_NoChanges.resx">
+      <DependentUpon>202510161823214_SyncModel_NoChanges.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ClinicMigrations\202510192131434_Baseline_Sync.resx">
+      <DependentUpon>202510192131434_Baseline_Sync.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ClinicMigrations\202510192142442_Baseline_Sync1.resx">
+      <DependentUpon>202510192142442_Baseline_Sync1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ClinicMigrations\202510192246259_Baseline_Sync2.resx">
+      <DependentUpon>202510192246259_Baseline_Sync2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\IdentityMigrations\202510111114582_InitialIdentity.resx">
       <DependentUpon>202510111114582_InitialIdentity.cs</DependentUpon>

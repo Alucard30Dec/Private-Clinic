@@ -1,0 +1,36 @@
+﻿@model Clinic.Models.Appointment
+@{
+    ViewBag.Title = "Xóa lịch hẹn";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid py-3">
+    <h2 class="text-danger mb-4">Xóa lịch hẹn</h2>
+
+    <dl class="row">
+        <dt class="col-sm-2">Bệnh nhân</dt>
+        <dd class="col-sm-10">@((Model?.Patient?.FullName) ?? "-")</dd>
+
+        <dt class="col-sm-2">Bác sĩ</dt>
+        <dd class="col-sm-10">@((Model?.Doctor?.Name) ?? "-")</dd>
+
+        <dt class="col-sm-2">Dịch vụ</dt>
+        <dd class="col-sm-10">@((Model?.Service?.Name) ?? "-")</dd>
+
+        <dt class="col-sm-2">Bắt đầu</dt>
+        <dd class="col-sm-10">@Model.StartTime.ToString("dd/MM/yyyy HH:mm")</dd>
+
+        <dt class="col-sm-2">Kết thúc</dt>
+        <dd class="col-sm-10">@Model.EndTime.ToString("dd/MM/yyyy HH:mm")</dd>
+
+        <dt class="col-sm-2">Trạng thái</dt>
+        <dd class="col-sm-10">@Model.Status.ToString()</dd>
+    </dl>
+
+    @using (Html.BeginForm("Delete", "Appointments", new { area = "Admin", id = Model.Id }, FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <button type="submit" class="btn btn-danger">Xóa</button>
+        <a class="btn btn-secondary" href="@Url.RouteUrl("Admin_Appointments_root")">Hủy</a>
+    }
+</div>

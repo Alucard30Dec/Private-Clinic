@@ -1,0 +1,116 @@
+﻿@model Clinic.Models.Doctor
+
+@Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="mb-3">
+            @Html.LabelFor(m => m.Name, new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.Name, new { @class = "form-control", placeholder = "Họ tên", required = "required" })
+            @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="mb-3">
+            @Html.LabelFor(m => m.Specialty, new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.Specialty, new { @class = "form-control", placeholder = "Chuyên khoa", required = "required" })
+            @Html.ValidationMessageFor(m => m.Specialty, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="mb-3">
+            @Html.LabelFor(m => m.Email, new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", type = "email", placeholder = "email@domain.com" })
+            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="mb-3">
+            @Html.LabelFor(m => m.PhoneNumber, new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control", placeholder = "SĐT" })
+            @Html.ValidationMessageFor(m => m.PhoneNumber, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="mb-3">
+            @Html.LabelFor(m => m.YearsOfExperience, new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.YearsOfExperience, new { @class = "form-control", type = "number", min = "0", step = "1", placeholder = "Số năm kinh nghiệm" })
+            @Html.ValidationMessageFor(m => m.YearsOfExperience, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="mb-3">
+            @Html.Label("Ảnh bác sĩ", new { @class = "form-label" })
+            <input type="file" name="photo" id="photo" class="form-control" accept=".jpg,.jpeg,.png,.gif,.webp" />
+            @Html.HiddenFor(m => m.PhotoUrl) @* giữ đường dẫn ảnh cũ nếu không upload mới *@
+
+            <div class="mt-2">
+                <img id="photoPreview"
+                     src="@(string.IsNullOrWhiteSpace(Model?.PhotoUrl) ? "" : Model.PhotoUrl)"
+                     alt="Ảnh bác sĩ"
+                     style="max-height:140px; display:@(string.IsNullOrWhiteSpace(Model?.PhotoUrl) ? "none" : "inline-block")"
+                     class="img-thumbnail" />
+            </div>
+        </div>
+
+        <div class="mb-3">
+            @Html.LabelFor(m => m.UserId, new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.UserId, new { @class = "form-control", placeholder = "UserId (nếu liên kết tài khoản)" })
+            @Html.ValidationMessageFor(m => m.UserId, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="mb-3">
+            @Html.LabelFor(m => m.DateOfBirth, new { @class = "form-label" })
+            @* Format MVC5 an toàn cho input type=date *@
+            @Html.TextBoxFor(m => m.DateOfBirth, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+            @Html.ValidationMessageFor(m => m.DateOfBirth, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="mb-3">
+            @Html.Label("Gender", "Giới tính", new { @class = "form-label" })
+            @Html.DropDownListFor(m => m.Gender,
+                new List<SelectListItem> {
+                    new SelectListItem { Value = "",       Text = "— Chọn —", Selected = string.IsNullOrEmpty(Model?.Gender) },
+                    new SelectListItem { Value = "Male",   Text = "Nam",      Selected = (Model?.Gender == "Male") },
+                    new SelectListItem { Value = "Female", Text = "Nữ",       Selected = (Model?.Gender == "Female") },
+                    new SelectListItem { Value = "Other",  Text = "Khác",     Selected = (Model?.Gender == "Other") }
+                },
+                new { @class = "form-select" })
+            @Html.ValidationMessageFor(m => m.Gender, "", new { @class = "text-danger" })
+        </div>
+    </div>
+</div>
+
+<div class="mb-3">
+    @Html.LabelFor(m => m.Bio, new { @class = "form-label" })
+    @Html.TextAreaFor(m => m.Bio, 4, 50, new { @class = "form-control", placeholder = "Giới thiệu ngắn" })
+    @Html.ValidationMessageFor(m => m.Bio, "", new { @class = "text-danger" })
+</div>
+
+@section Scripts {
+    <script>
+// Preview ảnh khi chọn file
+(function () {
+    var input = document.getElementById('photo');
+    var img   = document.getElementById('photoPreview');
+    if (!input || !img) return;
+
+    input.addEventListener('change', function (e) {
+        var file = this.files && this.files[0];
+        if (!file) return;
+
+        // kiểm tra nhanh định dạng client-side (server vẫn kiểm tra lại)
+        var ok = /\.(jpe?g|png|gif|webp)$/i.test(file.name);
+        if (!ok) {
+            alert('Định dạng ảnh không hợp lệ. Chỉ chấp nhận: jpg, jpeg, png, gif, webp.');
+            this.value = "";
+            return;
+        }
+
+        var reader = new FileReader();
+        reader.onload = function (ev) {
+            img.src = ev.target.result || "";
+            img.style.display = img.src ? "inline-block" : "none";
+        };
+        reader.readAsDataURL(file);
+    });
+})();
+    </script>
+}

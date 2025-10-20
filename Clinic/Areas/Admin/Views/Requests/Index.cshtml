@@ -1,0 +1,50 @@
+﻿@model IEnumerable<Clinic.Models.AppointmentRequest>
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    ViewBag.Title = "Đơn đăng ký (khách vãng lai)";
+    ViewBag.Nav = "requests";
+}
+
+<h2>Đơn đăng ký (khách vãng lai)</h2>
+
+@if (TempData["ok"] != null)
+{
+    <div class="alert alert-success">@TempData["ok"]</div>
+}
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Thời gian gửi</th>
+            <th>Tên</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Ngày mong muốn</th>
+            <th>Phòng ban</th>
+            <th>Trạng thái</th>
+            <th style="width:160px"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model)
+        {
+            <tr>
+                <td>@r.CreatedAt.ToLocalTime()</td>
+                <td>@r.Name</td>
+                <td>@r.Email</td>
+                <td>@r.Phone</td>
+                <td>@(r.DesiredDate.ToString("dd/MM/yyyy"))</td>
+                <td>@r.Department</td>
+                <td>@(r.IsHandled ? "Đã xử lý" : "Chưa xử lý")</td>
+                <td>
+                    @using (Html.BeginForm("MarkHandled", "Requests", FormMethod.Post, new { area = "Admin" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.Hidden("id", r.Id)
+                        <button class="btn btn-sm btn-success" @(r.IsHandled ? "disabled" : null)>Đánh dấu</button>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

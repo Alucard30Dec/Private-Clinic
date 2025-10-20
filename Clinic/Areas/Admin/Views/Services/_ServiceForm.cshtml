@@ -1,0 +1,17 @@
+﻿@model Clinic.Models.Service
+@Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+<div class="mb-3">
+    @Html.LabelFor(m => m.Name, new { @class = "form-label" })
+    @Html.TextBoxFor(m => m.Name, new { @class = "form-control", required = "required" })
+    @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
+</div>
+<div class="mb-3">
+    @Html.LabelFor(m => m.Fee, new { @class = "form-label" })
+    @Html.TextBoxFor(m => m.Fee, new { @class = "form-control", type = "number", step = "1000", min = "0" })
+    @Html.ValidationMessageFor(m => m.Fee, "", new { @class = "text-danger" })
+</div>
+<div class="mb-3">
+    @Html.LabelFor(m => m.DurationMinutes, new { @class = "form-label" })
+    @Html.TextBoxFor(m => m.DurationMinutes, new { @class = "form-control", type = "number", step = "5", min = "0" })
+    @Html.ValidationMessageFor(m => m.DurationMinutes, "", new { @class = "text-danger" })
+</div>

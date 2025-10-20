@@ -1,0 +1,38 @@
+﻿@model Clinic.Models.Patient
+@Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+<div class="row">
+    <div class="col-md-6">
+        <div class="mb-3">
+            @Html.LabelFor(m => m.FullName, new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.FullName, new { @class = "form-control", placeholder = "Họ tên", required = "required" })
+            @Html.ValidationMessageFor(m => m.FullName, "", new { @class = "text-danger" })
+        </div>
+        <div class="mb-3">
+            @Html.LabelFor(m => m.Email, new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", type = "email" })
+            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+        </div>
+        <div class="mb-3">
+            @Html.LabelFor(m => m.PhoneNumber, new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.PhoneNumber, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="mb-3">
+            @Html.LabelFor(m => m.UserId, new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.UserId, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.UserId, "", new { @class = "text-danger" })
+        </div>
+        <div class="mb-3">
+            @Html.LabelFor(m => m.DateOfBirth, new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.DateOfBirth, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+            @Html.ValidationMessageFor(m => m.DateOfBirth, "", new { @class = "text-danger" })
+        </div>
+        <div class="mb-3">
+            @Html.LabelFor(m => m.Address, new { @class = "form-label" })
+            @Html.TextAreaFor(m => m.Address, 3, 50, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })
+        </div>
+    </div>
+</div>

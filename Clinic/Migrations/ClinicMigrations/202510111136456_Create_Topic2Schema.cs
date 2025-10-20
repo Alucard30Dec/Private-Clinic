@@ -14,7 +14,7 @@
                         Id = c.Int(nullable: false, identity: true),
                         DoctorId = c.Int(nullable: false),
                         ServiceId = c.Int(nullable: false),
-                        PatientProfileId = c.Int(nullable: false),
+                        PatientId = c.Int(nullable: false),
                         StartTime = c.DateTime(nullable: false),
                         EndTime = c.DateTime(nullable: false),
                         Status = c.Int(nullable: false),
@@ -35,7 +35,7 @@
                 .PrimaryKey(t => t.Id);
             
             CreateTable(
-                "dbo.PatientProfiles",
+                "dbo.Patients",
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
@@ -74,7 +74,7 @@
         {
             DropTable("dbo.WorkingHours");
             DropTable("dbo.Services");
-            DropTable("dbo.PatientProfiles");
+            DropTable("dbo.Patients");
             DropTable("dbo.Doctors");
             DropTable("dbo.Appointments");
         }

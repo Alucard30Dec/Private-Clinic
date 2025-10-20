@@ -1,14 +1,21 @@
-﻿// Models/Service.cs
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-public class Service
+namespace Clinic.Models
 {
-    public int Id { get; set; }
-    [Required] public string Name { get; set; }
+    [Table("Services")] // map đúng bảng trong DB
+    public class Service
+    {
+        [Key]
+        public int Id { get; set; }
 
-    [Column(TypeName = "decimal")]          // <-- chỉ 'decimal'
-    public decimal Fee { get; set; }
+        [Required, StringLength(200)]
+        public string Name { get; set; }
 
-    public int DurationMinutes { get; set; }
+        // decimal(18,2) — nếu DB của bạn là money thì có thể đổi sang [Column(TypeName="money")]
+        [Column(TypeName = "decimal")]
+        public decimal Fee { get; set; }
+
+        public int? DurationMinutes { get; set; }
+    }
 }

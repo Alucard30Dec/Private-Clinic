@@ -1,0 +1,12 @@
+﻿@model Clinic.Models.Appointment
+@{ ViewBag.Title = "Sửa lịch hẹn"; Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml"; }
+<h2 class="mb-3">Sửa lịch hẹn</h2>
+@using (Html.BeginForm("Edit", "Appointments", new { area = "Admin" }, FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Id)
+    @Html.Partial("_AppointmentForm", Model)
+    <button class="btn btn-primary" type="submit">Cập nhật</button>
+    @Html.ActionLink("Hủy", "Index", "Appointments", new { area = "Admin" }, new { @class = "btn btn-secondary ms-2" })
+}
+@section Scripts{ @Scripts.Render("~/bundles/jqueryval") }

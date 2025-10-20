@@ -1,0 +1,11 @@
+﻿@model Clinic.Models.Service
+@{ ViewBag.Title = "Thêm dịch vụ"; Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml"; }
+<h2 class="mb-3">Thêm dịch vụ</h2>
+@using (Html.BeginForm("Create", "Services", new { area = "Admin" }, FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.Partial("_ServiceForm", Model)
+    <button class="btn btn-success" type="submit">Lưu</button>
+    @Html.ActionLink("Hủy", "Index", "Services", new { area = "Admin" }, new { @class = "btn btn-secondary ms-2" })
+}
+@section Scripts{ @Scripts.Render("~/bundles/jqueryval") }

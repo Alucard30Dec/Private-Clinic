@@ -1,0 +1,36 @@
+﻿@model Clinic.Models.BookingVM
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Book with " + Model.DoctorName;
+}
+<div class="container" style="padding:40px 0;">
+    <h2>Đặt lịch với @Model.DoctorName</h2>
+
+    @if (TempData["err"] != null)
+    {<div class="alert alert-danger">@TempData["err"]</div>}
+
+    @using (Html.BeginForm("Create", "Bookings", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.DoctorId)
+        @Html.HiddenFor(m => m.ServiceId)
+
+        <div class="mb-3">
+            <label class="form-label">Chọn khung giờ (7 ngày tới)</label>
+            <select class="form-control" name="SelectedStartLocal" required>
+                @foreach (var slot in Model.AvailableSlotsLocal)
+                {
+                    <option value="@slot.ToString("o")">@slot.ToString("ddd, dd/MM/yyyy HH:mm")</option>
+                }
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Ghi chú (tuỳ chọn)</label>
+            <textarea class="form-control" name="Notes" rows="3"></textarea>
+        </div>
+
+        <button class="btn btn-success">Xác nhận đặt lịch</button>
+        <a class="btn btn-link" href="@Url.Action("Index","Doctors")">Chọn bác sĩ khác</a>
+    }
+</div>

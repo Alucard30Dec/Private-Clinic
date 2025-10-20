@@ -1,0 +1,41 @@
+﻿@model Clinic.Models.Appointment
+@Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+<div class="row">
+    <div class="col-md-6">
+        <div class="mb-3">
+            @Html.Label("PatientId", "Bệnh nhân", new { @class = "form-label" })
+            @Html.DropDownList("PatientId", (SelectList)ViewBag.PatientId, new { @class = "form-select" })
+            @Html.ValidationMessage("PatientId", "", new { @class = "text-danger" })
+        </div>
+        <div class="mb-3">
+            @Html.Label("DoctorId", "Bác sĩ", new { @class = "form-label" })
+            @Html.DropDownList("DoctorId", (SelectList)ViewBag.DoctorId, new { @class = "form-select" })
+            @Html.ValidationMessage("DoctorId", "", new { @class = "text-danger" })
+        </div>
+        <div class="mb-3">
+            @Html.Label("ServiceId", "Dịch vụ", new { @class = "form-label" })
+            @Html.DropDownList("ServiceId", (SelectList)ViewBag.ServiceId, new { @class = "form-select" })
+            @Html.ValidationMessage("ServiceId", "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="mb-3">
+            @Html.LabelFor(m => m.StartTime, new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.StartTime, "{0:yyyy-MM-ddTHH\\:mm}", new { @class = "form-control", type = "datetime-local" })
+            @Html.ValidationMessageFor(m => m.StartTime, "", new { @class = "text-danger" })
+        </div>
+        <div class="mb-3">
+            @Html.LabelFor(m => m.EndTime, new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.EndTime, "{0:yyyy-MM-ddTHH\\:mm}", new { @class = "form-control", type = "datetime-local" })
+            @Html.ValidationMessageFor(m => m.EndTime, "", new { @class = "text-danger" })
+        </div>
+        <div class="mb-3">
+            @Html.Label("Status", "Trạng thái", new { @class = "form-label" })
+            @Html.DropDownList("Status", (SelectList)ViewBag.StatusList, new { @class = "form-select" })
+        </div>
+    </div>
+</div>
+<div class="mb-3">
+    @Html.LabelFor(m => m.Notes, new { @class = "form-label" })
+    @Html.TextAreaFor(m => m.Notes, 3, 50, new { @class = "form-control" })
+</div>

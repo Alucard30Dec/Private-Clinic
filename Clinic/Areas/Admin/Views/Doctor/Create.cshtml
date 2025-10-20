@@ -1,0 +1,14 @@
+﻿@model Clinic.Models.Doctor
+@{
+    ViewBag.Title = "Thêm bác sĩ";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+<h2 class="mb-3">Thêm bác sĩ</h2>
+@using (Html.BeginForm("Create", "Doctor", new { area = "Admin" }, FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.Partial("_DoctorForm", Model)
+    <button class="btn btn-success" type="submit">Lưu</button>
+    @Html.ActionLink("Hủy", "Index", "Doctor", new { area = "Admin" }, new { @class = "btn btn-secondary ms-2" })
+}
+@section Scripts { @Scripts.Render("~/bundles/jqueryval") }

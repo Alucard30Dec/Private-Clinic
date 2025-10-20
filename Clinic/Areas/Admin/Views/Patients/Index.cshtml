@@ -1,0 +1,66 @@
+﻿@using System.Linq
+@model IEnumerable<Clinic.Models.Patient>
+@{
+    ViewBag.Title = "Danh sách bệnh nhân";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    var q = Request["q"];
+    var createHref = Url.RouteUrl("Admin_Patients_actions", new { action = "Create" })
+                   ?? Url.Action("Create", "Patients", new { area = "Admin" });
+    bool hasData = Model != null && Model.Any();
+}
+<div class="container-fluid py-3">
+    @if (TempData["ok"] != null)
+    {<div class="alert alert-success">@TempData["ok"]</div>}
+    <div class="d-flex justify-content-between mb-3">
+        <h2>Danh sách bệnh nhân</h2>
+        <div class="d-flex gap-2">
+            <form method="get" class="d-flex">
+                <input name="q" value="@q" class="form-control" placeholder="Tìm theo tên, email, SĐT, địa chỉ" />
+                <button class="btn btn-primary ms-2">Tìm</button>
+            </form>
+            <a class="btn btn-success" href="@createHref">Thêm mới</a>
+        </div>
+    </div>
+    @if (!hasData)
+    {
+        <div class="text-muted">Chưa có bệnh nhân. <a href="@createHref">Thêm mới</a>.</div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-striped align-middle">
+                <thead>
+                    <tr>
+                        <th style="width:64px">#</th>
+                        <th>Họ tên</th>
+                        <th>Email</th>
+                        <th>SĐT</th>
+                        <th>Địa chỉ</th>
+                        <th class="text-end" style="white-space:nowrap">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ var i = 1; }
+                    @foreach (var p in Model)
+                    {
+                        var editHref = Url.RouteUrl("Admin_Patients_actions", new { action = "Edit", id = p.Id })
+                                      ?? Url.Action("Edit", "Patients", new { area = "Admin", id = p.Id });
+                        var delHref = Url.RouteUrl("Admin_Patients_actions", new { action = "Delete", id = p.Id })
+                                      ?? Url.Action("Delete", "Patients", new { area = "Admin", id = p.Id });
+                        <tr>
+                            <td>@(i++)</td>
+                            <td>@p.FullName</td>
+                            <td>@(string.IsNullOrWhiteSpace(p.Email)?"-":p.Email)</td>
+                            <td>@(string.IsNullOrWhiteSpace(p.PhoneNumber)?"-":p.PhoneNumber)</td>
+                            <td>@(string.IsNullOrWhiteSpace(p.Address)?"-":p.Address)</td>
+                            <td class="text-end">
+                                <a class="btn btn-sm btn-primary me-1" href="@editHref">Sửa</a>
+                                <a class="btn btn-sm btn-outline-danger" href="@delHref">Xóa</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

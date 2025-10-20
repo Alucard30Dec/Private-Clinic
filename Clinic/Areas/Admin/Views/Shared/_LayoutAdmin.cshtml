@@ -1,8 +1,25 @@
-﻿@inherits System.Web.Mvc.WebViewPage<dynamic>
-@using System.Web.Mvc.Html
+﻿@using System.Web.Mvc.Html
 @{
     Layout = null;
     var title = ViewBag.Title as string ?? "Admin";
+
+    // role flags
+    var isAdmin = User.IsInRole("Admin");
+    var isDoctor = User.IsInRole("Doctor");
+    var isReception = User.IsInRole("Receptionist");
+
+    // ======= TÍNH SẴN URL CHO MENU (alias trước, thiếu thì fallback) =======
+    Func<string> doctorsRoot = () => Url.RouteUrl("Admin_Doctors_root")
+                                   ?? Url.Action("Index", "Doctor", new { area = "Admin" });
+    var doctorsUrl = doctorsRoot();
+
+    // Bạn có thể làm tương tự cho các menu khác nếu muốn đồng nhất:
+    var patientsUrl = Url.Action("Index", "Patients", new { area = "Admin" });
+    var servicesUrl = Url.Action("Index", "Services", new { area = "Admin" });
+    var appointmentsUrl = Url.Action("Index", "Appointments", new { area = "Admin" });
+    var reportsUrl = Url.Action("Index", "Reports", new { area = "Admin" });
+    var adminHomeUrl = Url.Action("Index", "Home", new { area = "Admin" });
+    var siteHomeUrl = Url.Action("Index", "Home", new { area = "" });
 }
 <!DOCTYPE html>
 <html lang="vi">
@@ -11,15 +28,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@title</title>
 
-    <!-- Bootstrap (CDN) -->
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
-
-    <!-- Tabler Icons -->
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/%40tabler/icons-webfont@2.47.0/tabler-icons.min.css" />
-
-    <!-- CSS riêng -->
     <link rel="stylesheet" href="@Url.Content("~/Content/admin.css")" />
 
     @RenderSection("Styles", required: false)
@@ -32,36 +44,120 @@
                 <i class="ti ti-activity icon-brand me-2"></i>
                 <span class="fw-semibold">Clinic Admin</span>
             </div>
+
             <nav class="mt-2">
                 <ul class="nav flex-column">
+
+                    <!-- Chung cho mọi role -->
                     <li class="nav-item">
                         <a class="nav-link @(ViewBag.Nav == "dashboard" ? "active" : "")"
-                           href="@Url.Action("Index","Home", new { area = "Admin" })">
+                           href="@adminHomeUrl">
                             <i class="ti ti-layout-dashboard me-2"></i> Dashboard
                         </a>
                     </li>
 
-                    <li class="nav-item mt-2 text-uppercase small px-3 text-muted">Quản lý</li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="ti ti-stethoscope me-2"></i> Bác sĩ</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="ti ti-users me-2"></i> Bệnh nhân</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="ti ti-calendar-event me-2"></i> Lịch hẹn</a>
-                    </li>
+                    <!-- ====== KHỐI MENU CHO ADMIN ====== -->
+                    @if (isAdmin)
+                    {
+                        <li class="nav-item mt-2 text-uppercase small px-3 text-muted">Quản lý (Admin)</li>
+                        <li class="nav-item">
+                            <!-- DÙNG BIẾN doctorsUrl (alias /Admin/Doctors) -->
+                            <a class="nav-link @(ViewBag.Nav == "doctors" ? "active" : "")"
+                               href="@doctorsUrl">
+                                <i class="ti ti-stethoscope me-2"></i> Bác sĩ
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewBag.Nav == "patients" ? "active" : "")" href="@patientsUrl">
+                                <i class="ti ti-users me-2"></i> Bệnh nhân
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewBag.Nav == "services" ? "active" : "")" href="@servicesUrl">
+                                <i class="ti ti-clipboard-heart me-2"></i> Dịch vụ
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewBag.Nav == "appointments" ? "active" : "")" href="@appointmentsUrl">
+                                <i class="ti ti-calendar-event me-2"></i> Lịch hẹn
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewBag.Nav == "reports" ? "active" : "")" href="@reportsUrl">
+                                <i class="ti ti-chart-bar me-2"></i> Thống kê
+                            </a>
+                        </li>
+                    }
 
+                    <!-- ====== KHỐI MENU CHO BÁC SĨ ====== -->
+                    @if (isDoctor)
+                    {
+                        <li class="nav-item mt-2 text-uppercase small px-3 text-muted">Bác sĩ</li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewBag.Nav == "mySchedule" ? "active" : "")"
+                               href="@Url.Action("MySchedule","Doctor", new { area = "Admin" })">
+                                <i class="ti ti-calendar-share me-2"></i> Lịch khám của tôi
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewBag.Nav == "myPatients" ? "active" : "")"
+                               href="@Url.Action("MyPatients","Doctor", new { area = "Admin" })">
+                                <i class="ti ti-address-book me-2"></i> Bệnh nhân của tôi
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewBag.Nav == "encounters" ? "active" : "")"
+                               href="@Url.Action("Encounters","Doctor", new { area = "Admin" })">
+                                <i class="ti ti-notes me-2"></i> Hồ sơ khám
+                            </a>
+                        </li>
+                    }
+
+                    <!-- ====== KHỐI MENU CHO LỄ TÂN ====== -->
+                    @if (isReception)
+                    {
+                        <li class="nav-item mt-2 text-uppercase small px-3 text-muted">Lễ tân</li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewBag.Nav == "requests" ? "active" : "")"
+                               href="@Url.Action("Index","Requests", new { area = "Admin" })">
+                                <i class="ti ti-inbox me-2"></i> Đơn đăng ký (khách vãng lai)
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewBag.Nav == "today" ? "active" : "")"
+                               href="@Url.Action("Today","Reception", new { area = "Admin" })">
+                                <i class="ti ti-clock-hour-9 me-2"></i> Lịch hẹn hôm nay
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewBag.Nav == "create" ? "active" : "")"
+                               href="@Url.Action("Create","Reception", new { area = "Admin" })">
+                                <i class="ti ti-calendar-plus me-2"></i> Tạo lịch hẹn mới
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewBag.Nav == "search" ? "active" : "")"
+                               href="@Url.Action("Search","Reception", new { area = "Admin" })">
+                                <i class="ti ti-search me-2"></i> Tra cứu bệnh nhân
+                            </a>
+                        </li>
+                    }
+
+                    <!-- Hệ thống -->
                     <li class="nav-item mt-2 text-uppercase small px-3 text-muted">Hệ thống</li>
                     <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Index","Home", new { area = "" })">
+                        <a class="nav-link" href="@siteHomeUrl">
                             <i class="ti ti-home-2 me-2"></i> Về trang người dùng
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-danger" href="@Url.Action("LogOff","Account", new { area = "" })">
-                            <i class="ti ti-logout me-2"></i> Đăng xuất
-                        </a>
+                        @using (Html.BeginForm("LogOff", "Account", new { area = "" }, FormMethod.Post, new { id = "logoutForm" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <a class="nav-link text-danger" href="javascript:document.getElementById('logoutForm').submit()">
+                                <i class="ti ti-logout me-2"></i> Đăng xuất
+                            </a>
+                        }
                     </li>
                 </ul>
             </nav>
@@ -72,6 +168,16 @@
             @{ Html.RenderPartial("_HeaderAdmin"); }
 
             <div class="admin-content container-fluid py-4">
+                <!-- Flash messages -->
+                @if (TempData["ok"] != null)
+                {<div class="alert alert-success">@TempData["ok"]</div>}
+                @if (TempData["error"] != null)
+                {<div class="alert alert-danger">@TempData["error"]</div>}
+                @if (TempData["warn"] != null)
+                {<div class="alert alert-warning">@TempData["warn"]</div>}
+                @if (TempData["info"] != null)
+                {<div class="alert alert-info">@TempData["info"]</div>}
+
                 @RenderBody()
             </div>
 
@@ -79,7 +185,6 @@
         </main>
     </div>
 
-    <!-- JS: Bootstrap + file riêng -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="@Url.Content("~/Scripts/admin.js")"></script>
     @RenderSection("Scripts", required: false)

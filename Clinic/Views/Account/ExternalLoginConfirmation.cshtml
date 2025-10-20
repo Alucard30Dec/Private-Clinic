@@ -1,38 +1,70 @@
 ﻿@model Clinic.Models.ExternalLoginConfirmationViewModel
 @{
     ViewBag.Title = "Register";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<main aria-labelledby="title">
-    <h2 id="title">@ViewBag.Title.</h2>
-    <h3>Associate your @ViewBag.LoginProvider account.</h3>
 
-    @using (Html.BeginForm("ExternalLoginConfirmation", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form" }))
-    {
-        @Html.AntiForgeryToken()
-
-        <h4>Association Form</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <p class="text-info">
-            You've successfully authenticated with <strong>@ViewBag.LoginProvider</strong>.
-            Please enter a user name for this site below and click the Register button to finish
-            logging in.
-        </p>
+<section id="external-confirm" data-stellar-background-ratio="3" style="padding:60px 0;">
+    <div class="container">
         <div class="row">
-            @Html.LabelFor(m => m.Email, new { @class = "col-md-2 col-form-label" })
-            <div class="col-md-10">
-                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+            <div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1">
+
+                <!-- Tiêu đề giống Login -->
+                <div class="section-title wow fadeInUp" data-wow-delay="0.2s">
+                    <h2>@ViewBag.Title</h2>
+                    <p>Kết nối tài khoản @ViewBag.LoginProvider với hệ thống để hoàn tất đăng nhập.</p>
+                </div>
+
+                @using (Html.BeginForm("ExternalLoginConfirmation", "Account",
+                    new { ReturnUrl = ViewBag.ReturnUrl },
+                    FormMethod.Post,
+                    new { @class = "wow fadeInUp", role = "form", data_wow_delay = "0.4s" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger", @style = "margin-bottom:15px" })
+
+                    <!-- Thông tin mô tả (giữ nguyên nội dung) -->
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12">
+                            <p class="text-info" style="margin-bottom:15px;">
+                                You've successfully authenticated with
+                                <strong>@ViewBag.LoginProvider</strong>.
+                                Please enter a user name for this site below and click the
+                                <strong>Register</strong> button to finish logging in.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Form nhập Email (giữ nguyên binding) -->
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12">
+                            @Html.LabelFor(m => m.Email)
+                            @Html.TextBoxFor(m => m.Email,
+                                new { @class = "form-control", placeholder = "you@example.com", autofocus = "autofocus" })
+                            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <!-- Submit (giữ nguyên hành động, đồng bộ màu nút) -->
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12" style="margin-top:15px;">
+                            <button type="submit" class="form-control section-btn btn btn-primary">Register</button>
+                        </div>
+                    </div>
+                }
+
+                <!-- Link quay lại đăng nhập (tuỳ chọn, để giống không khí UI) -->
+                <div class="row" style="margin-top:12px;">
+                    <div class="col-md-12 col-sm-12 text-center">
+                        Đã có tài khoản?
+                        <a href="@Url.Action("Login","Account")">Đăng nhập</a>
+                    </div>
+                </div>
+
             </div>
         </div>
-        <div class="row">
-            <div class="offset-md-2 col-md-10">
-                <input type="submit" class="btn btn-outline-dark" value="Register" />
-            </div>
-        </div>
-    }
-</main>
+    </div>
+</section>
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+@section Scripts { @Scripts.Render("~/bundles/jqueryval") }

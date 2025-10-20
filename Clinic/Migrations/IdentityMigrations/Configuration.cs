@@ -34,23 +34,16 @@
 
             void EnsureEmailUser(string email, string password, params string[] roles)
             {
-                // Username = Email (chuẩn hoá)
                 var user = userMgr.FindByEmail(email);
                 if (user == null)
                 {
-                    user = new ApplicationUser
-                    {
-                        UserName = email,
-                        Email = email,
-                        EmailConfirmed = true
-                    };
+                    user = new ApplicationUser { UserName = email, Email = email, EmailConfirmed = true };
                     var create = userMgr.Create(user, password);
                     if (!create.Succeeded)
                         throw new System.Exception("Seed user failed: " + string.Join("; ", create.Errors));
                 }
                 else
                 {
-                    // nếu trước đây UserName khác Email -> đồng bộ
                     if (user.UserName != email)
                     {
                         user.UserName = email;
@@ -58,7 +51,6 @@
                     }
                 }
 
-                // gán role nếu thiếu
                 var currentRoles = userMgr.GetRoles(user.Id);
                 foreach (var r in roles)
                     if (!currentRoles.Contains(r))
@@ -69,14 +61,33 @@
             EnsureEmailUser("admin@clinic.local", "12345678", "Admin");
             EnsureEmailUser("recept01@clinic.local", "12345678", "Receptionist");
 
-            // 5 bác sĩ (Topic 2)
-            EnsureEmailUser("dr.john@clinic.local", "12345678", "Doctor");
-            EnsureEmailUser("dr.anna@clinic.local", "12345678", "Doctor");
-            EnsureEmailUser("dr.mike@clinic.local", "12345678", "Doctor");
-            EnsureEmailUser("dr.sara@clinic.local", "12345678", "Doctor");
-            EnsureEmailUser("dr.david@clinic.local", "12345678", "Doctor");
+            // 3) Seed 15 bác sĩ trùng email trong bảng Doctors (*.vn) + gán UserId
+            using (var clinic = new Clinic.Models.ClinicDbContext()) // <-- dùng domain context để truy cập Doctors
+            {
+                var doctorEmails = clinic.Doctors
+                    .Where(d => d.Email != null && d.Email != "")
+                    .Select(d => d.Email)
+                    .Distinct()
+                    .ToList();
 
-            // 2 bệnh nhân mẫu
+                foreach (var email in doctorEmails)
+                    EnsureEmailUser(email, "12345678", "Doctor");
+
+                // Đồng bộ UserId + set Password (thuộc tính trên Doctor) = '12345678' cho khớp mẫu
+                var doctors = clinic.Doctors.ToList();
+                foreach (var d in doctors.Where(x => !string.IsNullOrEmpty(x.Email)))
+                {
+                    var u = userMgr.FindByEmail(d.Email);
+                    if (u != null)
+                    {
+                        if (d.UserId != u.Id) d.UserId = u.Id;
+                        if (string.IsNullOrEmpty(d.Password)) d.Password = "12345678";
+                    }
+                }
+                clinic.SaveChanges();
+            }
+
+            // 4) Bệnh nhân mẫu
             EnsureEmailUser("patient01@clinic.local", "12345678", "Patient");
             EnsureEmailUser("patient02@clinic.local", "12345678", "Patient");
         }

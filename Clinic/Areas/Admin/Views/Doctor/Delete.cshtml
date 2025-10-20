@@ -1,0 +1,46 @@
+﻿@model Clinic.Models.Doctor
+@{
+    ViewBag.Title = "Xóa bác sĩ";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+<h2 class="mb-3 text-danger">Xóa bác sĩ</h2>
+<p>Bạn có chắc muốn xóa bác sĩ sau?</p>
+
+<div class="row">
+    <div class="col-md-3">
+        @if (!string.IsNullOrWhiteSpace(Model?.PhotoUrl))
+        {
+            <img src="@Model.PhotoUrl" alt="Ảnh bác sĩ" class="img-thumbnail mb-3" style="max-width:100%" />
+        }
+    </div>
+    <div class="col-md-9">
+        <dl class="row">
+            <dt class="col-sm-3">Họ tên</dt>
+            <dd class="col-sm-9">@Model.Name</dd>
+            <dt class="col-sm-3">Chuyên khoa</dt>
+            <dd class="col-sm-9">@Model.Specialty</dd>
+            <dt class="col-sm-3">Email</dt>
+            <dd class="col-sm-9">@Model.Email</dd>
+            <dt class="col-sm-3">SĐT</dt>
+            <dd class="col-sm-9">@Model.PhoneNumber</dd>
+            <dt class="col-sm-3">Ngày sinh</dt>
+            <dd class="col-sm-9">@((Model.DateOfBirth.HasValue ? Model.DateOfBirth.Value.ToString("dd/MM/yyyy") : "-"))</dd>
+            <dt class="col-sm-3">Giới tính</dt>
+            <dd class="col-sm-9">@(!string.IsNullOrWhiteSpace(Model.Gender) ? Model.Gender : "-")</dd>
+            <dt class="col-sm-3">UserId</dt>
+            <dd class="col-sm-9">@(!string.IsNullOrWhiteSpace(Model.UserId) ? Model.UserId : "-")</dd>
+            <dt class="col-sm-3">Kinh nghiệm (năm)</dt>
+            <dd class="col-sm-9">@(Model.YearsOfExperience.HasValue ? Model.YearsOfExperience.ToString() : "-")</dd>
+            <dt class="col-sm-3">Giới thiệu</dt>
+            <dd class="col-sm-9">@(!string.IsNullOrWhiteSpace(Model.Bio) ? Model.Bio : "-")</dd>
+        </dl>
+    </div>
+</div>
+
+@using (Html.BeginForm("Delete", "Doctor", new { area = "Admin", id = Model.Id }, FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Id)
+    <button class="btn btn-danger" type="submit">Xóa</button>
+    @Html.ActionLink("Hủy", "Index", "Doctor", new { area = "Admin" }, new { @class = "btn btn-secondary ms-2" })
+}

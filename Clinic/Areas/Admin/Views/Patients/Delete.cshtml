@@ -1,0 +1,20 @@
+﻿@model Clinic.Models.Patient
+@{ ViewBag.Title = "Xóa bệnh nhân"; Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml"; }
+<h2 class="mb-3 text-danger">Xóa bệnh nhân</h2>
+<dl class="row">
+    <dt class="col-sm-2">Họ tên</dt>
+    <dd class="col-sm-10">@Model.FullName</dd>
+    <dt class="col-sm-2">Email</dt>
+    <dd class="col-sm-10">@Model.Email</dd>
+    <dt class="col-sm-2">SĐT</dt>
+    <dd class="col-sm-10">@Model.PhoneNumber</dd>
+    <dt class="col-sm-2">Địa chỉ</dt>
+    <dd class="col-sm-10">@Model.Address</dd>
+</dl>
+@using (Html.BeginForm("Delete", "Patients", new { area = "Admin", id = Model.Id }, FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Id)
+    <button class="btn btn-danger" type="submit">Xóa</button>
+    @Html.ActionLink("Hủy", "Index", "Patients", new { area = "Admin" }, new { @class = "btn btn-secondary ms-2" })
+}

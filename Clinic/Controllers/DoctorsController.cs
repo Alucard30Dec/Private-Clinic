@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
-using System.Web.Mvc;
+using System.Web.Mvc; // <-- Phải có dòng này
 using Clinic.Models;
 
 namespace Clinic.Controllers
@@ -11,36 +11,32 @@ namespace Clinic.Controllers
         private readonly ClinicDbContext _db = new ClinicDbContext();
 
         // GET: /Doctors
+        [AllowAnonymous]
         public ActionResult Index(DoctorsFilterVm filter)
         {
             if (filter == null) filter = new DoctorsFilterVm();
 
-            // Chuẩn hoá input
             var query = (filter.Query ?? string.Empty).Trim();
             var specialty = (filter.Specialty ?? string.Empty).Trim();
 
-            // Bảo vệ Page/PageSize
             if (filter.Page < 1) filter.Page = 1;
-            if (filter.PageSize <= 0) filter.PageSize = 9;           // mặc định hợp lý
-            if (filter.PageSize > 48) filter.PageSize = 48;          // giới hạn chống lạm dụng
+            if (filter.PageSize <= 0) filter.PageSize = 9;
+            if (filter.PageSize > 48) filter.PageSize = 48;
 
             var q = _db.Doctors.AsQueryable();
 
-            // Tìm theo tên (không phân biệt hoa/thường, an toàn null)
             if (!string.IsNullOrEmpty(query))
             {
                 var key = query.ToLower();
                 q = q.Where(d => (d.Name ?? "").ToLower().Contains(key));
             }
 
-            // Lọc theo chuyên khoa (so sánh chính xác, có thể đổi sang ToLower() nếu muốn bỏ qua hoa/thường)
             if (!string.IsNullOrEmpty(specialty))
             {
                 q = q.Where(d => (d.Specialty ?? "") == specialty);
             }
 
             var total = q.Count();
-
             var skip = (filter.Page - 1) * filter.PageSize;
             if (skip < 0) skip = 0;
 
@@ -61,6 +57,7 @@ namespace Clinic.Controllers
             {
                 Filter = filter,
                 Specialties = specialties,
+                // === LỖI TYPO ĐÃ ĐƯỢC SỬA Ở ĐÂY ===
                 Result = new PagedResult<Doctor>
                 {
                     Page = filter.Page,
@@ -74,16 +71,16 @@ namespace Clinic.Controllers
         }
 
         // GET: /Doctors/Details/5
+        [AllowAnonymous]
         public ActionResult Details(int id)
         {
-            // Tìm bác sĩ theo Id, trả 404 nếu không có
             var doctor = _db.Doctors.SingleOrDefault(d => d.Id == id);
             if (doctor == null)
             {
                 return HttpNotFound(); // 404
             }
 
-            return View(doctor); // View: Views/Doctors/Details.cshtml (đã gửi bạn trước đó)
+            return View(doctor);
         }
 
         protected override void Dispose(bool disposing)

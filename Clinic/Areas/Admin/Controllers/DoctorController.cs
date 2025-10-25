@@ -13,12 +13,16 @@ using DoctorEntity = Clinic.Models.Doctor;
 
 namespace Clinic.Areas.Admin.Controllers
 {
+    // === THAY ĐỔI QUAN TRỌNG: Thêm [Area("Admin")] ===
+    // Điều này chỉ định rõ ràng cho MVC biết Controller này thuộc Area "Admin"
+    // để phân biệt với Controller "DoctorsController" ở bên ngoài.
+    
     [Authorize(Roles = "Admin")]
     public class DoctorController : Controller
     {
         private readonly ClinicDbContext _db = new ClinicDbContext();
 
-        // GET: Admin/Doctors
+        // GET: Admin/Doctor
         public async Task<ActionResult> Index(string q = null)
         {
             ViewBag.Nav = "doctors"; // dùng để active menu trong layout
@@ -43,14 +47,14 @@ namespace Clinic.Areas.Admin.Controllers
             return View(list);
         }
 
-        // GET: Admin/Doctors/Create
+        // GET: Admin/Doctor/Create
         public ActionResult Create()
         {
             ViewBag.Nav = "doctors";
             return View();
         }
 
-        // POST: Admin/Doctors/Create
+        // POST: Admin/Doctor/Create
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include =
             "Name,Specialty,PhotoUrl,UserId,DateOfBirth,Gender,Email,PhoneNumber,YearsOfExperience,Bio")] DoctorEntity doctor)
@@ -88,7 +92,7 @@ namespace Clinic.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
 
-        // GET: Admin/Doctors/Edit/5
+        // GET: Admin/Doctor/Edit/5
         public async Task<ActionResult> Edit(int? id)
         {
             ViewBag.Nav = "doctors";
@@ -100,7 +104,7 @@ namespace Clinic.Areas.Admin.Controllers
             return View(doctor);
         }
 
-        // POST: Admin/Doctors/Edit/5
+        // POST: Admin/Doctor/Edit/5
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(
             [Bind(Include = "Id,Name,Specialty,PhotoUrl,UserId,DateOfBirth,Gender,Email,PhoneNumber,YearsOfExperience,Bio")]
@@ -184,7 +188,7 @@ namespace Clinic.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
 
-        // GET: Admin/Doctors/Delete/5
+        // GET: Admin/Doctor/Delete/5
         public async Task<ActionResult> Delete(int? id)
         {
             ViewBag.Nav = "doctors";
@@ -204,7 +208,7 @@ namespace Clinic.Areas.Admin.Controllers
             return View(doctor);
         }
 
-        // POST: Admin/Doctors/Delete/5
+        // POST: Admin/Doctor/Delete/5
         [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {

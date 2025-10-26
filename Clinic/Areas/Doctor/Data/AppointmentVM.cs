@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Clinic.Areas.Doctors.Data
+namespace Clinic.Areas.Doctor.Data
 {
     public class AppointmentRowVM
     {

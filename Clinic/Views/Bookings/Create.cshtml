@@ -6,6 +6,7 @@
 <div class="container" style="padding:40px 0;">
     <h2>Đặt lịch với @Model.DoctorName</h2>
 
+    @* Hiển thị lỗi từ TempData (nếu có) *@
     @if (TempData["err"] != null)
     {<div class="alert alert-danger">@TempData["err"]</div>}
 
@@ -15,6 +16,11 @@
         @Html.HiddenFor(m => m.DoctorId)
         @Html.HiddenFor(m => m.ServiceId)
 
+        @* === THÊM DÒNG NÀY ĐỂ HIỂN THỊ LỖI CHUNG === *@
+        @* Nó sẽ hiển thị lỗi "Bạn đã có lịch hẹn..." khi ModelState có lỗi chung *@
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @* === KẾT THÚC THÊM === *@
+
         <div class="mb-3">
             <label class="form-label">Chọn khung giờ (7 ngày tới)</label>
             <select class="form-control" name="SelectedStartLocal" required>
@@ -23,14 +29,19 @@
                     <option value="@slot.ToString("o")">@slot.ToString("ddd, dd/MM/yyyy HH:mm")</option>
                 }
             </select>
+            @* Hiển thị lỗi cụ thể cho ô chọn giờ (nếu có) *@
+            @Html.ValidationMessageFor(m => m.SelectedStartLocal, "", new { @class = "text-danger" })
         </div>
 
         <div class="mb-3">
             <label class="form-label">Ghi chú (tuỳ chọn)</label>
-            <textarea class="form-control" name="Notes" rows="3"></textarea>
+            <textarea class="form-control" name="Notes" rows="3">@Model.Notes</textarea> @* Giữ lại ghi chú nếu form bị lỗi *@
         </div>
 
         <button class="btn btn-success">Xác nhận đặt lịch</button>
+        <a class="btn btn-default" href="@Url.Action("Details", "Doctors", new { id = Model.DoctorId })">
+            Hủy
+        </a>
         <a class="btn btn-link" href="@Url.Action("Index","Doctors")">Chọn bác sĩ khác</a>
     }
 </div>

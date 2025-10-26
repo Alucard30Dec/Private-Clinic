@@ -234,8 +234,11 @@ namespace Clinic.Controllers
             if (roles.Contains("Admin"))
                 return RedirectToAction("Index", "Home", new { area = "Admin" });
 
+            // === SỬA LỖI Ở ĐÂY ===
+            // Đã đổi "Doctors" (có 's') thành "Doctor" (không 's')
+            // để khớp với tên Area bạn vừa đổi.
             if (roles.Contains("Doctor"))
-                return RedirectToAction("Index", "Home", new { area = "Doctors" });
+                return RedirectToAction("Index", "Home", new { area = "Doctor" });
 
             if (roles.Contains("Receptionist"))
                 return RedirectToAction("Today", "Reception", new { area = "Admin" });

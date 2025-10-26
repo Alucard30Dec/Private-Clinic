@@ -2,7 +2,6 @@
 
 @if (!Request.IsAuthenticated)
 {
-    <!-- Hai nút thêm, đứng cạnh Make an appointment -->
     <li class="appointment-btn">
         <a href="@Url.Action("Login","Account", new { area = "" })"
            class="section-btn btn btn-blue">Đăng nhập</a>
@@ -14,19 +13,24 @@
 }
 else
 {
-    <!-- Khi đã đăng nhập: thay 2 nút bằng dropdown tài khoản -->
     <li class="appointment-btn dropdown">
         <a href="#" class="section-btn btn btn-primary dropdown-toggle" data-toggle="dropdown">
             Xin chào, @User.Identity.GetUserName() <span class="caret"></span>
         </a>
         <ul class="dropdown-menu dropdown-menu-right">
-            <li><a href="@Url.Action("Index","Manage", new { area = "" })">Tài khoản của tôi</a></li>
+
+            @* Ensure these are standard links without background classes *@
+           
+            <li>@Html.ActionLink("Tài khoản của tôi", "Index", "Manage", routeValues: new { area = "" }, htmlAttributes: null)</li>
+            @* Replaced the previous plain <a> tag with ActionLink for consistency *@
+
             <li class="divider"></li>
             <li>
                 @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", area = "" }))
                 {
                     @Html.AntiForgeryToken()
-                    <button type="submit" class="btn btn-link" style="width:100%;text-align:left;">Đăng xuất</button>
+                    @* This button uses btn-link to look like text *@
+                    <button type="submit" class="btn btn-link" style="width:100%;text-align:left; padding: 3px 20px; color: #333; background: none; border: none;">Đăng xuất</button>
                 }
             </li>
         </ul>

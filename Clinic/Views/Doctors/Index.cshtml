@@ -10,7 +10,8 @@
     // Ảnh theo giới tính (bỏ qua PhotoUrl)
     Func<string, string> GenderPhoto = (gender) =>
     {
-        var g = (gender ?? "").Trim().ToLower();   // "nam" / "nữ" / ...
+        var g = (gender ?? "").Trim().ToLower();
+        // "nam" / "nữ" / ...
         var path = g == "nữ"
             ? "~/Resources/images/team-image3.jpg"   // nữ
             : "~/Resources/images/team-image2.jpg";  // nam & mặc định
@@ -19,7 +20,7 @@
 
     var count = Model?.Result?.TotalItems ?? 0;
     var infoMsg = count > 0 ? $"Có {count} bác sĩ phù hợp."
-                            : "Không tìm thấy bác sĩ nào với tiêu chí hiện tại.";
+        : "Không tìm thấy bác sĩ nào với tiêu chí hiện tại.";
 }
 
 <section id="doctors-list" style="padding:60px 0;">
@@ -33,7 +34,6 @@
                 </div>
             </div>
 
-            <!-- FORM TÌM KIẾM / LỌC -->
             <div class="col-md-12">
                 @using (Html.BeginForm("Index", "Doctors", FormMethod.Get,
                         new { @class = "row g-2 wow fadeInUp", data_wow_delay = "0.2s" }))
@@ -67,7 +67,6 @@
 
             <div class="clearfix" style="margin-top:15px;"></div>
 
-            <!-- DANH SÁCH BÁC SĨ -->
             @if (Model?.Result?.Items != null && Model.Result.Items.Any())
             {
                 foreach (var d in Model.Result.Items)
@@ -79,7 +78,6 @@
                     <div class="col-md-4 col-sm-6">
                         <div class="team-thumb wow fadeInUp" data-wow-delay="0.1s">
 
-                            <!-- Ảnh click sang chi tiết (theo giới tính) -->
                             <a href="@Url.Action("Details","Doctors", new { id = d.Id })" title="Xem chi tiết @d.Name">
                                 <img src="@GenderPhoto(d.Gender)" class="img-responsive" alt="@d.Name" />
                             </a>
@@ -124,7 +122,6 @@
                 </div>
             }
 
-            <!-- PHÂN TRANG -->
             <div class="col-md-12">
                 @{
                     var r = Model?.Result;

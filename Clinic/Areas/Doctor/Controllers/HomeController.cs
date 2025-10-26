@@ -1,6 +1,6 @@
 ﻿using System.Web.Mvc;
 
-namespace Clinic.Areas.Doctors.Controllers
+namespace Clinic.Areas.Doctor.Controllers
 {
     [Authorize(Roles = "Doctor")]
     public class HomeController : Controller

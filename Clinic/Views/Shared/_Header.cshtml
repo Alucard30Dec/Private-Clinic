@@ -1,6 +1,4 @@
 ﻿@{
-    // Biến này không còn được sử dụng ở menu trái
-    // vì "Doctors" và "Make an appointment" đều hiển thị cho tất cả mọi người.
     var isPatient = Request.IsAuthenticated && User.IsInRole("Patient");
 }
 
@@ -11,9 +9,7 @@
                 <span class="icon icon-bar"></span>
                 <span class="icon icon-bar"></span>
                 <span class="icon icon-bar"></span>
-
             </button>
-
 
             <a href="@Url.Action("Index","Home")" class="navbar-brand">
                 <i class="fa fa-h-square"></i>ealth Center
@@ -23,35 +19,30 @@
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav nav-left">
 
-                @* --- Các link cũ (Home, About...) đã được ẩn đi (Đã đúng) --- *@
-                @*
-                    @if (!isPatient)
-                    {
-                        ... (code đã ẩn) ...
-                    }
-                *@
+                @* Show Home and About for guests, with smoothScroll *@
+                @if (!isPatient)
+                {
+                    @* === CORRECTED LINK TARGET HERE === *@
+                    <li><a href="@Url.Action("Index","Home")#home" class="smoothScroll">Home</a></li>
+                    <li><a href="@Url.Action("Index","Home")#about" class="smoothScroll">About Us</a></li>
+                }
 
-
-                @* --- LINK CHO KHÁCH VÀ BỆNH NHÂN --- *@
-
-                @* Đây là link "Doctors".
-                    Nó trỏ đến trang Index của DoctorsController (Views/Doctors/Index.cshtml).
-                    Nó hiển thị cho TẤT CẢ MỌI NGƯỜI (cả khách và bệnh nhân).
-                    Đây chính là logic bạn muốn.
-                *@
+                @* Always show Doctors link *@
                 <li>@Html.ActionLink("Doctors", "Index", "Doctors")</li>
 
-
-                @* Đây là link "Make an appointment".
-                    Nó trỏ đến trang Index của AppointmentController (Views/Appointment/Index.cshtml).
-                    Nó cũng hiển thị cho TẤT CẢ MỌI NGƯỜI.
-                *@
-                <li>@Html.ActionLink("Make an appointment", "Index", "Appointment")</li>
+                @* Show History (for Patient) or Make an appointment (for Guest) *@
+                @if (isPatient)
+                {
+                    <li>@Html.ActionLink("History", "Index", "Bookings")</li>
+                }
+                else
+                {
+                    <li>@Html.ActionLink("Make an appointment", "Index", "Appointment")</li>
+                }
             </ul>
 
             <ul class="nav navbar-nav navbar-right nav-right">
-                @* Chỗ này hiển thị "Đăng nhập" / "Xin chào" (Đã đúng) *@
-                @Html.Partial("_LoginPartial")
+                @Html.Partial("_LoginPartial") @* Renders Login/Register or User dropdown *@
             </ul>
         </div>
     </div>

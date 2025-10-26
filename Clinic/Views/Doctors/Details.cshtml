@@ -3,6 +3,10 @@
     ViewBag.Title = "Thông tin bác sĩ";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
+    // === THÊM BIẾN NÀY ĐỂ LẤY MÃ LỊCH HẸN VỪA ĐẶT ===
+    int? justBookedId = TempData["apptId"] as int?;
+
+    // (Kiểm tra Model null)
     if (Model == null)
     {
         <section style="padding:60px 0;">
@@ -19,7 +23,6 @@
     var photoSrc = Url.Content(g.StartsWith("nư") || g.StartsWith("nu")
         ? "~/Resources/images/team-image3.jpg"
         : "~/Resources/images/team-image2.jpg");
-
     var isPatient = Request.IsAuthenticated && User.IsInRole("Patient");
     var bookingUrl = Url.Action("Create", "Bookings", new { doctorId = Model.Id });
     var loginToBookUrl = Url.Action("Login", "Account", new { area = "", ReturnUrl = bookingUrl });
@@ -44,6 +47,7 @@
 
         <div class="row">
             <div class="col-md-4 col-sm-5">
+
                 <img src="@photoSrc" alt="@Model.Name" class="img-responsive"
                      style="width:100%;border-radius:12px;object-fit:cover;aspect-ratio:4/5" />
             </div>
@@ -60,7 +64,6 @@
                     </div>
                     <div class="col-sm-6">
                         <p><strong>Điện thoại: </strong>@(string.IsNullOrWhiteSpace(Model.PhoneNumber) ? "—" : Model.PhoneNumber)</p>
-
                         <p>
                             <strong>Email: </strong>
                             @if (string.IsNullOrWhiteSpace(Model.Email))
@@ -83,12 +86,24 @@
                     </div>
                 }
 
-                @if (TempData["apptId"] != null)
+                @* === SỬA ĐỔI: THÊM NÚT HỦY LỊCH VỪA ĐẶT VÀO ĐÂY === *@
+                @if (justBookedId.HasValue)
                 {
-                    <div class="alert alert-info" style="margin-top:12px;">
-                        Mã lịch hẹn: <strong>#@TempData["apptId"]</strong>
+                    <div class="alert alert-info" style="margin-top:12px; display: flex; justify-content: space-between; align-items: center;">
+                        <span>Mã lịch hẹn: <strong>#@justBookedId.Value</strong></span>
+
+                        @* Nút Hủy Lịch Vừa Đặt (POST đến Bookings/Cancel) *@
+                        @using (Html.BeginForm("Cancel", "Bookings", new { id = justBookedId.Value }, FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-sm btn-danger"
+                                    onclick="return confirm('Bạn có chắc chắn muốn hủy lịch hẹn này? Thao tác này sẽ chuyển bạn đến trang Lịch sử.');">
+                                Hủy lịch hẹn
+                            </button>
+                        }
                     </div>
                 }
+                @* === KẾT THÚC SỬA ĐỔI === *@
 
                 <div style="margin-top:18px;">
                     <a href="@Url.Action("Index","Doctors")" class="btn btn-default">← Quay lại danh sách</a>

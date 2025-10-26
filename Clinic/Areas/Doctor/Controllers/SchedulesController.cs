@@ -4,10 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
-using Clinic.Areas.Doctors.Data;
+using Clinic.Areas.Doctor.Data;
 using System;
 
-namespace Clinic.Areas.Doctors.Controllers
+namespace Clinic.Areas.Doctor.Controllers
 {
     [Authorize(Roles = "Doctor")]
     public class SchedulesController : Controller

@@ -11,22 +11,17 @@ namespace Clinic.Areas.Admin.Controllers
     {
         private readonly ClinicDbContext _db = new ClinicDbContext();
 
-        // MODIFIED: Accepts filter and search parameters
-        public ActionResult Index(string filter = "today", string doctorName = null, DateTime? date = null, string patientEmail = null, string serviceName = null)
+        // MODIFIED: Accepts filter and a single searchQuery
+        public ActionResult Index(string filter = "today", string searchQuery = null)
         {
             ViewBag.Nav = "reception_appointments";
             ViewBag.CurrentFilter = filter;
-
-            // Store search terms for the view
-            ViewBag.DoctorName = doctorName;
-            ViewBag.Date = date;
-            ViewBag.PatientEmail = patientEmail;
-            ViewBag.ServiceName = serviceName;
+            ViewBag.SearchQuery = searchQuery; // Pass search query back to view
 
             var query = _db.Appointments
                 .Include(a => a.Doctor)
                 .Include(a => a.Patient)
-                .Include(a => a.Service) // Make sure to include Service
+                .Include(a => a.Service)
                 .Where(a => a.Status != AppointmentStatus.Canceled);
 
             // Apply date filter ("today" or "all") first
@@ -45,35 +40,21 @@ namespace Clinic.Areas.Admin.Controllers
                 ViewBag.Title = "Tất cả Lịch hẹn";
             }
 
-            // --- ADD SEARCH FILTERING ---
-            if (!string.IsNullOrWhiteSpace(doctorName))
+            // --- UPDATED SEARCH FILTERING (Single Box) ---
+            if (!string.IsNullOrWhiteSpace(searchQuery))
             {
-                string nameLower = doctorName.ToLower().Trim();
-                query = query.Where(a => a.Doctor != null && a.Doctor.Name.ToLower().Contains(nameLower));
-            }
-            if (date.HasValue)
-            {
-                DateTime searchDate = date.Value.Date; // Get only the date part
-                // Compare date parts in UTC
-                query = query.Where(a => DbFunctions.TruncateTime(a.StartTime) == searchDate);
-            }
-            if (!string.IsNullOrWhiteSpace(patientEmail))
-            {
-                string emailLower = patientEmail.ToLower().Trim();
-                // Assuming Patient model has Email property linked via UserId -> ApplicationUser
-                // If Patient model directly has Email, use: a.Patient.Email.ToLower().Contains(emailLower)
-                query = query.Where(a => a.Patient != null && a.Patient.Email.ToLower().Contains(emailLower));
-            }
-            if (!string.IsNullOrWhiteSpace(serviceName))
-            {
-                string serviceLower = serviceName.ToLower().Trim();
-                query = query.Where(a => a.Service != null && a.Service.Name.ToLower().Contains(serviceLower));
+                string searchLower = searchQuery.ToLower().Trim();
+                query = query.Where(a =>
+                    (a.Doctor != null && a.Doctor.Name.ToLower().Contains(searchLower)) ||
+                    (a.Patient != null && a.Patient.FullName.ToLower().Contains(searchLower)) ||
+                    (a.Patient != null && a.Patient.Email.ToLower().Contains(searchLower)) ||
+                    (a.Service != null && a.Service.Name.ToLower().Contains(searchLower))
+                );
             }
             // --- END SEARCH FILTERING ---
 
-
             var list = query
-                .OrderBy(a => a.StartTime) // Keep chronological order
+                .OrderBy(a => a.StartTime)
                 .ToList();
 
             return View(list); // Returns Index.cshtml

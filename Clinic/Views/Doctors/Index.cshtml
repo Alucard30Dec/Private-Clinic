@@ -2,25 +2,20 @@
 
 @{
     ViewBag.Title = "Tìm bác sĩ";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml"; // Ensure correct layout
 
-    // bật/tắt nút Đặt lịch theo role
     var isPatient = Request.IsAuthenticated && User.IsInRole("Patient");
+    var loginUrl = Url.Action("Login", "Account", new { area = "" });
 
-    // Ảnh theo giới tính (bỏ qua PhotoUrl)
     Func<string, string> GenderPhoto = (gender) =>
     {
         var g = (gender ?? "").Trim().ToLower();
-        // "nam" / "nữ" / ...
-        var path = g == "nữ"
-            ? "~/Resources/images/team-image3.jpg"   // nữ
-            : "~/Resources/images/team-image2.jpg";  // nam & mặc định
+        var path = g == "nữ" ? "~/Resources/images/team-image3.jpg" : "~/Resources/images/team-image2.jpg";
         return Url.Content(path);
     };
 
     var count = Model?.Result?.TotalItems ?? 0;
-    var infoMsg = count > 0 ? $"Có {count} bác sĩ phù hợp."
-        : "Không tìm thấy bác sĩ nào với tiêu chí hiện tại.";
+    var infoMsg = count > 0 ? $"Có {count} bác sĩ phù hợp." : "Không tìm thấy bác sĩ nào với tiêu chí hiện tại.";
 }
 
 <section id="doctors-list" style="padding:60px 0;">
@@ -39,13 +34,9 @@
                         new { @class = "row g-2 wow fadeInUp", data_wow_delay = "0.2s" }))
                 {
                     <div class="col-md-6 col-sm-8">
-                        <input type="text"
-                               name="Query"
-                               value="@(Model?.Filter?.Query ?? "")"
-                               class="form-control"
-                               placeholder="Nhập tên bác sĩ…" />
+                        <input type="text" name="Query" value="@(Model?.Filter?.Query ?? "")"
+                               class="form-control" placeholder="Nhập tên bác sĩ…" />
                     </div>
-
                     <div class="col-md-3 col-sm-4">
                         <select name="Specialty" class="form-control">
                             <option value="">-- Tất cả khoa --</option>
@@ -56,7 +47,6 @@
                             }
                         </select>
                     </div>
-
                     <div class="col-md-3 col-sm-12">
                         <button class="section-btn btn btn-default btn-blue" type="submit" style="width:100%;">
                             Tìm bác sĩ
@@ -71,42 +61,30 @@
             {
                 foreach (var d in Model.Result.Items)
                 {
-                    // URL đặt lịch đúng controller
                     var bookingUrl = Url.Action("Create", "Bookings", new { doctorId = d.Id });
-                    var loginUrl = Url.Action("Login", "Account", new { area = "", ReturnUrl = bookingUrl });
+                    var loginToBookUrl = loginUrl + "?ReturnUrl=" + Url.Encode(bookingUrl);
+                    var detailUrl = Url.Action("Details", "Doctors", new { id = d.Id });
 
                     <div class="col-md-4 col-sm-6">
                         <div class="team-thumb wow fadeInUp" data-wow-delay="0.1s">
-
-                            <a href="@Url.Action("Details","Doctors", new { id = d.Id })" title="Xem chi tiết @d.Name">
+                            <a href="@detailUrl" title="Xem chi tiết @d.Name">
                                 <img src="@GenderPhoto(d.Gender)" class="img-responsive" alt="@d.Name" />
                             </a>
-
                             <div class="team-info">
-                                <h3 style="margin-bottom:6px;">@d.Name</h3>
-                                <p class="text-muted" style="margin-bottom:10px;">@d.Specialty</p>
-
-                                <div class="team-contact-info" style="margin-bottom:10px;">
+                                <h3>@d.Name</h3>
+                                <p class="text-muted">@d.Specialty</p>
+                                <div class="team-contact-info">
                                     @if (!string.IsNullOrWhiteSpace(d.PhoneNumber))
                                     {<p><i class="fa fa-phone"></i> @d.PhoneNumber</p>}
                                     @if (!string.IsNullOrWhiteSpace(d.Email))
                                     {<p><i class="fa fa-envelope-o"></i> <a href="mailto:@d.Email">@d.Email</a></p>}
                                 </div>
-
                                 <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                                    <a class="section-btn btn btn-default"
-                                       href="@Url.Action("Details","Doctors", new { id = d.Id })">
-                                        Xem chi tiết
-                                    </a>
-
+                                    <a class="section-btn btn btn-default" href="@detailUrl">Xem chi tiết</a>
                                     @if (isPatient)
-                                    {
-                                        <a class="section-btn btn btn-primary" href="@bookingUrl">Đặt lịch</a>
-                                    }
+                                    {<a class="section-btn btn btn-primary" href="@bookingUrl">Đặt lịch</a> }
                                     else
-                                    {
-                                        <a class="section-btn btn btn-primary" href="@loginUrl">Đăng nhập để đặt lịch</a>
-                                    }
+                                    { <a class="section-btn btn btn-primary" href="@loginToBookUrl">Đăng nhập để đặt lịch</a>}
                                 </div>
                             </div>
                         </div>
@@ -136,24 +114,14 @@
                 {
                     <nav aria-label="pagination" class="text-center" style="margin-top:10px;">
                         <ul class="pagination">
-                            <li class="@(page==1?"disabled":"")">
-                                <a href="@Url.Action("Index", link(1))">«</a>
-                            </li>
-                            <li class="@(page==1?"disabled":"")">
-                                <a href="@Url.Action("Index", link(page-1 < 1 ? 1 : page-1))">‹</a>
-                            </li>
+                            <li class="@(page==1?"disabled":"")"><a href="@Url.Action("Index", link(1))">«</a></li>
+                            <li class="@(page==1?"disabled":"")"><a href="@Url.Action("Index", link(page-1 < 1 ? 1 : page-1))">‹</a></li>
                             @for (int i = start; i <= end; i++)
                             {
-                                <li class="@(i==page?"active":"")">
-                                    <a href="@Url.Action("Index", link(i))">@i</a>
-                                </li>
-                            }
-                            <li class="@(page==totalPages?"disabled":"")">
-                                <a href="@Url.Action("Index", link(page+1 > totalPages ? totalPages : page+1))">›</a>
-                            </li>
-                            <li class="@(page==totalPages?"disabled":"")">
-                                <a href="@Url.Action("Index", link(totalPages))">»</a>
-                            </li>
+                                <li class="@(i==page?"active":"")"><a href="@Url.Action("Index", link(i))">@i</a></li>
+}
+                            <li class="@(page==totalPages?"disabled":"")"><a href="@Url.Action("Index", link(page+1 > totalPages ? totalPages : page+1))">›</a></li>
+                            <li class="@(page==totalPages?"disabled":"")"><a href="@Url.Action("Index", link(totalPages))">»</a></li>
                         </ul>
                     </nav>
                 }

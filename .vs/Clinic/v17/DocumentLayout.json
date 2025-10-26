@@ -3,12 +3,20 @@
   "WorkspaceRootPath": "D:\\Private-Clinic\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|d:\\private-clinic\\clinic\\views\\doctors\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|solutionrelative:clinic\\views\\doctors\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|d:\\private-clinic\\clinic\\areas\\admin\\views\\reception\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|solutionrelative:clinic\\areas\\admin\\views\\reception\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|d:\\private-clinic\\clinic\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|solutionrelative:clinic\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|d:\\private-clinic\\clinic\\areas\\admin\\controllers\\receptioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|solutionrelative:clinic\\areas\\admin\\controllers\\receptioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|d:\\private-clinic\\clinic\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|solutionrelative:clinic\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,36 +26,62 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 0,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Views\\Doctors\\Index.cshtml",
+              "RelativeDocumentMoniker": "Clinic\\Views\\Doctors\\Index.cshtml",
+              "ToolTip": "D:\\Private-Clinic\\Clinic\\Views\\Doctors\\Index.cshtml",
+              "RelativeToolTip": "Clinic\\Views\\Doctors\\Index.cshtml",
+              "ViewState": "AgIAAE4AAAAAAAAAAAAAAIMAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-26T18:59:40.658Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Areas\\Admin\\Views\\Reception\\Index.cshtml",
+              "RelativeDocumentMoniker": "Clinic\\Areas\\Admin\\Views\\Reception\\Index.cshtml",
+              "ToolTip": "D:\\Private-Clinic\\Clinic\\Areas\\Admin\\Views\\Reception\\Index.cshtml",
+              "RelativeToolTip": "Clinic\\Areas\\Admin\\Views\\Reception\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-26T18:56:21.875Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Areas\\Admin\\Views\\Reception\\Index.cshtml",
-              "RelativeDocumentMoniker": "Clinic\\Areas\\Admin\\Views\\Reception\\Index.cshtml",
-              "ToolTip": "D:\\Private-Clinic\\Clinic\\Areas\\Admin\\Views\\Reception\\Index.cshtml",
-              "RelativeToolTip": "Clinic\\Areas\\Admin\\Views\\Reception\\Index.cshtml",
-              "ViewState": "AgIAAE0AAAAAAAAAAAAuwGwAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-10-26T11:33:12.59Z",
+              "DocumentIndex": 2,
+              "Title": "ReceptionController.cs",
+              "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Areas\\Admin\\Controllers\\ReceptionController.cs",
+              "RelativeDocumentMoniker": "Clinic\\Areas\\Admin\\Controllers\\ReceptionController.cs",
+              "ToolTip": "D:\\Private-Clinic\\Clinic\\Areas\\Admin\\Controllers\\ReceptionController.cs",
+              "RelativeToolTip": "Clinic\\Areas\\Admin\\Controllers\\ReceptionController.cs",
+              "ViewState": "AgIAACcAAAAAAAAAAAAQwEQAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-26T18:55:43.597Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "AccountController.cs",
-              "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Controllers\\AccountController.cs",
-              "RelativeDocumentMoniker": "Clinic\\Controllers\\AccountController.cs",
-              "ToolTip": "D:\\Private-Clinic\\Clinic\\Controllers\\AccountController.cs",
-              "RelativeToolTip": "Clinic\\Controllers\\AccountController.cs",
-              "ViewState": "AgIAAEQAAAAAAAAAAAAYwFUAAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-26T11:25:24.913Z",
+              "DocumentIndex": 3,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\Private-Clinic\\Clinic\\Views\\Home\\Index.cshtml",
+              "RelativeDocumentMoniker": "Clinic\\Views\\Home\\Index.cshtml",
+              "ToolTip": "D:\\Private-Clinic\\Clinic\\Views\\Home\\Index.cshtml",
+              "RelativeToolTip": "Clinic\\Views\\Home\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-26T11:48:39.735Z",
               "EditorCaption": ""
             }
           ]

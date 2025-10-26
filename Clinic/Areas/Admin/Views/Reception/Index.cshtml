@@ -1,0 +1,109 @@
+﻿@model IEnumerable<Clinic.Models.Appointment>
+@using Clinic.Models
+@using System.Linq
+
+@{
+    // 1. Specify the Layout file this View should use
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+
+    // 2. Set the title (the Layout file will use this)
+    ViewBag.Title = "Tất cả Lịch hẹn"; // Or "Lịch hẹn Hôm nay" depending on Controller logic
+
+    // Retrieve filter/search terms for UI
+    string currentFilter = ViewBag.CurrentFilter ?? "today";
+    string doctorName = ViewBag.DoctorName;
+    DateTime? date = ViewBag.Date;
+    string patientEmail = ViewBag.PatientEmail;
+    string serviceName = ViewBag.ServiceName;
+}
+
+@* 3. Add the specific content for THIS page *@
+
+<h2>@ViewBag.Title</h2>
+
+@* Search Form *@
+<form method="get" action="@Url.Action("Index", "Reception")" class="form-inline" style="margin-bottom: 15px;">
+    <input type="hidden" name="filter" value="@currentFilter" />
+    <div class="form-group">
+        <input type="text" name="doctorName" class="form-control" placeholder="Tên Bác sĩ" value="@doctorName" />
+    </div>
+    <div class="form-group">
+        <input type="date" name="date" class="form-control" value="@(date.HasValue ? date.Value.ToString("yyyy-MM-dd") : "")" />
+    </div>
+    <div class="form-group">
+        <input type="text" name="patientEmail" class="form-control" placeholder="Email Bệnh nhân" value="@patientEmail" />
+    </div>
+    <div class="form-group">
+        <input type="text" name="serviceName" class="form-control" placeholder="Tên Dịch vụ" value="@serviceName" />
+    </div>
+    <button type="submit" class="btn btn-info">Tìm kiếm</button>
+    <a href="@Url.Action("Index", "Reception", new { filter = currentFilter })" class="btn btn-default">Xóa lọc</a>
+</form>
+
+@* Filter Buttons *@
+<div class="btn-group" role="group" style="margin-bottom: 15px;">
+    <a href="@Url.Action("Index", "Reception", new { filter = "today" })"
+       class="btn @(currentFilter == "today" ? "btn-primary" : "btn-default")">
+        Hôm nay
+    </a>
+    <a href="@Url.Action("Index", "Reception", new { filter = "all" })"
+       class="btn @(currentFilter == "all" ? "btn-primary" : "btn-default")">
+        Tất cả
+    </a>
+</div>
+
+@* Appointments Table *@
+<div class="table-responsive">
+    <table class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Ngày hẹn</th>
+                <th>Giờ</th>
+                <th>Bác sĩ</th>
+                <th>Bệnh nhân</th>
+                <th>Dịch vụ</th>
+                <th>Trạng thái</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!Model.Any())
+            {
+                <tr>
+                    <td colspan="6" class="text-center">Không có lịch hẹn nào phù hợp.</td>
+                </tr>
+            }
+            else
+            {
+                foreach (var a in Model)
+                {
+                    var localTime = a.StartTime.ToLocalTime();
+                    <tr>
+                        <td>@localTime.ToString("dd/MM/yyyy")</td>
+                        <td>@localTime.ToString("HH:mm")</td>
+                        <td>@(a.Doctor?.Name ?? "—")</td>
+                        <td>@(a.Patient?.FullName ?? a.Patient?.Email ?? "—")</td>
+                        <td>@(a.Service?.Name ?? "—")</td>
+                        <td>
+                            @{
+                                string statusClass = "label-default";
+                                if (a.Status == AppointmentStatus.Pending) { statusClass = "label-warning"; }
+                                else if (a.Status == AppointmentStatus.Confirmed) { statusClass = "label-success"; }
+                                else if (a.Status == AppointmentStatus.Canceled) { statusClass = "label-danger"; }
+                                else if (a.Status == AppointmentStatus.Completed) { statusClass = "label-info"; }
+                            }
+                            <span class="label @statusClass">@a.Status</span>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+@* Optional: Add section for scripts if needed by this specific view *@
+@section Scripts {
+    <script>
+        // Add any specific JavaScript for this page here
+        console.log("Reception Index page loaded.");
+    </script>
+}

@@ -334,7 +334,7 @@
     <Content Include="Areas\Admin\Views\Shared\_FooterAdmin.cshtml" />
     <Content Include="Areas\Admin\Views\Requests\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Requests\_PendingBadge.cshtml" />
-    <Content Include="Areas\Admin\Views\Reception\Today.cshtml" />
+    <Content Include="Areas\Admin\Views\Reception\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Doctor\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Doctor\Create.cshtml" />
     <Content Include="Areas\Admin\Views\Doctor\_DoctorForm.cshtml" />

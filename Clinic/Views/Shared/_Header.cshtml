@@ -1,5 +1,9 @@
 ﻿@{
     var isPatient = Request.IsAuthenticated && User.IsInRole("Patient");
+    var controller = (ViewContext.RouteData.Values["controller"] as string ?? "").ToLower();
+    var action = (ViewContext.RouteData.Values["action"] as string ?? "").ToLower();
+    var isHomePage = controller == "home" && action == "index";
+    var homeUrl = Url.Action("Index", "Home");
 }
 
 <section class="navbar navbar-default navbar-static-top" role="navigation">
@@ -19,25 +23,34 @@
 
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav nav-left">
-
-                @* Show Home and About for guests, with smoothScroll *@
-                @if (!isPatient)
+                @* HOME *@
+                @if (isHomePage)
                 {
-                    <li><a href="@Url.Action("Index","Home")#home" class="smoothScroll">Home</a></li>
-                    <li><a href="@Url.Action("Index","Home")#about" class="smoothScroll">About Us</a></li>
+                    <li><a href="#home" class="smoothScroll">Home</a></li>
+                }
+                else
+                {
+                    <li><a href="@homeUrl#home">Home</a></li>
                 }
 
-                @* Always show Doctors link *@
+                @* ABOUT US *@
+                @if (isHomePage)
+                {
+                    <li><a href="#about" class="smoothScroll">About Us</a></li>
+                }
+                else
+                {
+                    <li><a href="@homeUrl#about">About Us</a></li>
+                }
+
+                @* Doctors luôn hiển thị *@
                 <li>@Html.ActionLink("Doctors", "Index", "Doctors")</li>
 
-                @* Show History/Review (for Patient) or Make an appointment (for Guest) *@
+                @* Nút cho bệnh nhân / khách *@
                 @if (isPatient)
                 {
                     <li>@Html.ActionLink("History", "Index", "Bookings")</li>
-
-                    @* === CHANGED TEXT TO ENGLISH === *@
                     <li>@Html.ActionLink("Write Review", "ListReviewable", "Reviews")</li>
-                    @* === END CHANGE === *@
                 }
                 else
                 {

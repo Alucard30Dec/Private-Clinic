@@ -1,0 +1,72 @@
+﻿@model IEnumerable<Clinic.Models.AppointmentReview>
+@using Clinic.Models
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    // ViewBag.Title is now set by Controller
+    int? selectedRating = ViewBag.SelectedRating; // Get selected rating
+}
+
+<h2>@ViewBag.Title</h2>
+
+@if (TempData["ok"] != null)
+{<div class="alert alert-success">@TempData["ok"]</div>}
+@if (TempData["err"] != null)
+{<div class="alert alert-danger">@TempData["err"]</div>}
+
+@* === ADD RATING FILTER FORM === *@
+<form method="get" action="@Url.Action("Index", "Reviews")" class="form-inline" style="margin-bottom: 15px;">
+    <label style="margin-right: 10px;">Lọc theo sao:</label>
+    <div class="btn-group" role="group">
+        @* "All" Button *@
+        <a href="@Url.Action("Index", "Reviews")" class="btn @(selectedRating == null ? "btn-primary" : "btn-default")">
+            Tất cả
+        </a>
+        @* Star Buttons (1 to 5) *@
+        @for (int i = 1; i <= 5; i++)
+        {
+            <a href="@Url.Action("Index", "Reviews", new { rating = i })" class="btn @(selectedRating == i ? "btn-primary" : "btn-default")">
+                @i ★
+            </a>
+        }
+    </div>
+</form>
+@* === END RATING FILTER FORM === *@
+
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Ngày ĐG</th>
+                <th>Bệnh nhân</th>
+                <th>Bác sĩ</th>
+                <th>Lịch hẹn</th>
+                <th>Sao</th>
+                <th>Nội dung</th>
+                @* Columns for Status and Actions were removed as requested *@
+            </tr>
+        </thead>
+        <tbody>
+            @if (!Model.Any())
+            {
+            <td colspan="6" class="text-center">@(selectedRating.HasValue ? $"Không có đánh giá {selectedRating.Value} sao nào." : "Chưa có đánh giá nào.")</td>
+        }
+        else
+        {
+            foreach (var review in Model)
+            {
+                var appt = review.Appointment;
+                var localApptTime = appt?.StartTime.ToLocalTime();
+                <tr>
+                    <td>@review.ReviewDate.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>@(appt?.Patient?.FullName ?? appt?.Patient?.Email ?? "N/A")</td>
+                    <td>@(appt?.Doctor?.Name ?? "N/A")</td>
+                    <td>@localApptTime</td>
+                    <td class="text-center">@review.Rating ★</td>
+                    <td>@review.Comments</td>
+                </tr>
+            }
+        }
+            </tbody>
+        </table>
+    </div>

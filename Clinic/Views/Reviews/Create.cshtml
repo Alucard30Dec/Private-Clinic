@@ -1,0 +1,99 @@
+﻿@model Clinic.Models.ReviewCreateViewModel
+@{
+    ViewBag.Title = "Viết đánh giá";
+    Layout = "~/Views/Shared/_Layout.cshtml"; // Use the main site layout
+}
+
+<section id="review-create" style="padding: 60px 0;">
+    <div class="container" style="max-width: 720px;">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="section-title">
+                    <h2 class="wow fadeInUp" data-wow-delay="0.1s">Viết đánh giá cho Lịch hẹn</h2>
+                    @* Display appointment info for context *@
+                    <p>
+                        Lịch hẹn với Bác sĩ: <strong>@Model.DoctorName</strong><br />
+                        Vào lúc: <strong>@Model.AppointmentDate.ToString("HH:mm dd/MM/yyyy")</strong>
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                @using (Html.BeginForm("Create", "Reviews", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.AppointmentId)
+                    @Html.HiddenFor(m => m.DoctorName) @* Keep hidden values for repopulation if error *@
+                    @Html.HiddenFor(m => m.AppointmentDate)
+
+                    @* Display general validation errors (like "Already reviewed") *@
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    @* Star Rating Input *@
+                    <div class="form-group wow fadeInUp" data-wow-delay="0.2s">
+                        @Html.LabelFor(m => m.Rating, "Mức độ hài lòng (1-5 sao)")
+                        <div class="rating-stars">
+                            @* Use hidden radio buttons and star labels ★ *@
+                            @for (int i = 5; i >= 1; i--)
+                            {
+                                @* Mark as 'checked' if value matches Model.Rating *@
+                                <input type="radio" id="star@(i)" name="Rating" value="@i" @(Model.Rating == i ? "checked" : "") required />
+                                <label for="star@(i)" title="@(i) sao">★</label>
+                            }
+                        </div>
+                        @* Display validation error for Rating if any *@
+                        @Html.ValidationMessageFor(m => m.Rating, "", new { @class = "text-danger" })
+                    </div>
+
+                    @* Comments Input *@
+                    <div class="form-group wow fadeInUp" data-wow-delay="0.3s">
+                        @Html.LabelFor(m => m.Comments)
+                        @Html.TextAreaFor(m => m.Comments, new { @class = "form-control", rows = 5, placeholder = "Chia sẻ cảm nhận của bạn..." })
+                        @Html.ValidationMessageFor(m => m.Comments, "", new { @class = "text-danger" })
+                    </div>
+
+                    @* Submit and Cancel Buttons *@
+                    <div class="form-group wow fadeInUp" data-wow-delay="0.4s">
+                        <button type="submit" class="btn btn-primary">Gửi đánh giá</button>
+                        <a href="@Url.Action("ListReviewable", "Reviews")" class="btn btn-default">Quay lại</a> @* Link back to the list *@
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+@* Add CSS for star rating - Ideally, put this in your site's main CSS file *@
+@section Styles {
+    <style>
+        .rating-stars {
+            display: inline-block;
+            direction: rtl;
+        }
+            /* Reverse direction for hover effect */
+            .rating-stars > input {
+                display: none;
+            }
+            /* Hide radio buttons */
+            .rating-stars > label {
+                color: #ddd; /* Inactive star color */
+                font-size: 2em;
+                cursor: pointer;
+                transition: color 0.2s;
+                padding: 0 2px;
+            }
+            /* Color stars when input is checked or label/previous labels are hovered */
+            .rating-stars > input:checked ~ label,
+            .rating-stars:not(:checked) > label:hover,
+            .rating-stars:not(:checked) > label:hover ~ label {
+                color: #f5b301; /* Active/hover star color */
+            }
+                /* Special hover effect when already checked */
+                .rating-stars > input:checked + label:hover,
+                .rating-stars > input:checked ~ label:hover,
+                .rating-stars > label:hover ~ input:checked ~ label,
+                .rating-stars > input:checked ~ label:hover ~ label {
+                    color: #f59e0b; /* Slightly darker hover color */
+                }
+    </style>
+}

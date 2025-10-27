@@ -17,6 +17,8 @@ namespace Clinic.Models
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<AppointmentRequest> AppointmentRequests { get; set; }
 
+        public DbSet<AppointmentReview> AppointmentReviews { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

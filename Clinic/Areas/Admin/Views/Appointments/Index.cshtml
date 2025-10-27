@@ -8,23 +8,17 @@
     var routeName = "Admin_Appointments_actions";
     var q = Request["q"];
 
-    // Link tạo mới (ưu tiên route alias, fallback Url.Action)
+    // Link tạo mới
     var createHref = Url.RouteUrl(routeName, new { action = "Create" })
                    ?? Url.Action("Create", "Appointments", new { area = "Admin" });
 
-    // ---- Kiểm tra có dữ liệu an toàn, không phụ thuộc Linq.Any() ----
+    // Kiểm tra có dữ liệu
     bool hasData = false;
     if (Model != null)
     {
         var col = Model as ICollection<Clinic.Models.Appointment>;
-        if (col != null)
-        {
-            hasData = col.Count > 0;
-        }
-        else
-        {
-            foreach (var _ in Model) { hasData = true; break; }
-        }
+        if (col != null) { hasData = col.Count > 0; }
+        else { foreach (var _ in Model) { hasData = true; break; } }
     }
 }
 
@@ -56,7 +50,7 @@
         </div>
     </div>
 
-    @{ // Bọc toàn bộ nhánh if/else trong 1 khối Razor để tránh lỗi parser
+    @{
         if (!hasData)
         {
             <div class="text-muted fst-italic">
@@ -80,21 +74,19 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @{
-                            var i = 1;
-                        }
+                        @{ var i = 1; }
                         @foreach (var a in Model)
                         {
                             var editHref = Url.RouteUrl(routeName, new { action = "Edit", id = a.Id })
-                                           ?? Url.Action("Edit", "Appointments", new { area = "Admin", id = a.Id });
-
+                                         ?? Url.Action("Edit", "Appointments", new { area = "Admin", id = a.Id });
                             var delHref = Url.RouteUrl(routeName, new { action = "Delete", id = a.Id })
                                           ?? Url.Action("Delete", "Appointments", new { area = "Admin", id = a.Id });
-
                             <tr>
                                 <td>@(i++)</td>
-                                <td>@(a != null ? a.StartTime.ToString("dd/MM/yyyy HH:mm") : "-")</td>
-                                <td>@(a != null ? a.EndTime.ToString("dd/MM/yyyy HH:mm") : "-")</td>
+                                @* === SỬA LỖI Ở ĐÂY: Thêm .ToLocalTime() === *@
+                                <td>@(a != null ? a.StartTime.ToLocalTime().ToString("dd/MM/yyyy HH:mm") : "-")</td>
+                                <td>@(a != null ? a.EndTime.ToLocalTime().ToString("dd/MM/yyyy HH:mm") : "-")</td>
+                                @* === KẾT THÚC SỬA === *@
                                 <td>@(a?.Patient?.FullName ?? "-")</td>
                                 <td>@(a?.Doctor?.Name ?? "-")</td>
                                 <td>@(a?.Service?.Name ?? "-")</td>

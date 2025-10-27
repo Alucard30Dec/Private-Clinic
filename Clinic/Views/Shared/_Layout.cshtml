@@ -12,17 +12,21 @@
     <link rel="stylesheet" href="@Url.Content("~/Resources/css/owl.carousel.css")">
     <link rel="stylesheet" href="@Url.Content("~/Resources/css/owl.theme.default.min.css")">
     <link rel="stylesheet" href="@Url.Content("~/Resources/css/tooplate-style.css")">
+
+    @* === THÊM DÒNG NÀY VÀO ĐÂY === *@
+    @* Nó sẽ render CSS từ @section Styles trong các View con *@
+    @RenderSection("Styles", required: false)
+    @* === KẾT THÚC THÊM === *@
 </head>
 
 <body id="top" data-spy="scroll" data-target=".navbar-collapse" data-offset="50">
 
     @Html.Partial("_Header")
 
-    @RenderBody()
+    @RenderBody() @* Nội dung chính của View con sẽ được render ở đây *@
 
     @Html.Partial("_Footer")
 
-    <!-- SCRIPTS chung -->
     <script src="@Url.Content("~/Resources/js/jquery.js")"></script>
     <script src="@Url.Content("~/Resources/js/bootstrap.min.js")"></script>
     <script src="@Url.Content("~/Resources/js/jquery.sticky.js")"></script>
@@ -32,6 +36,7 @@
     <script src="@Url.Content("~/Resources/js/owl.carousel.min.js")"></script>
     <script src="@Url.Content("~/Resources/js/custom.js")"></script>
 
+    @* Chỗ này render section "scripts" (đã có sẵn) *@
     @RenderSection("scripts", required: false)
 </body>
 </html>

@@ -11,6 +11,7 @@
                 <span class="icon icon-bar"></span>
             </button>
 
+
             <a href="@Url.Action("Index","Home")" class="navbar-brand">
                 <i class="fa fa-h-square"></i>ealth Center
             </a>
@@ -22,7 +23,6 @@
                 @* Show Home and About for guests, with smoothScroll *@
                 @if (!isPatient)
                 {
-                    @* === CORRECTED LINK TARGET HERE === *@
                     <li><a href="@Url.Action("Index","Home")#home" class="smoothScroll">Home</a></li>
                     <li><a href="@Url.Action("Index","Home")#about" class="smoothScroll">About Us</a></li>
                 }
@@ -30,10 +30,14 @@
                 @* Always show Doctors link *@
                 <li>@Html.ActionLink("Doctors", "Index", "Doctors")</li>
 
-                @* Show History (for Patient) or Make an appointment (for Guest) *@
+                @* Show History/Review (for Patient) or Make an appointment (for Guest) *@
                 @if (isPatient)
                 {
                     <li>@Html.ActionLink("History", "Index", "Bookings")</li>
+
+                    @* === CHANGED TEXT TO ENGLISH === *@
+                    <li>@Html.ActionLink("Write Review", "ListReviewable", "Reviews")</li>
+                    @* === END CHANGE === *@
                 }
                 else
                 {

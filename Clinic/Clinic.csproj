@@ -163,6 +163,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\AppointmentsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ReviewsController.cs" />
     <Compile Include="Areas\Admin\Controllers\ServicesController.cs" />
     <Compile Include="Areas\Admin\Controllers\PatientsController.cs" />
     <Compile Include="Areas\Admin\Controllers\DoctorController.cs" />
@@ -183,6 +184,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\PatientProfileController.cs" />
+    <Compile Include="Controllers\ReviewsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -242,6 +244,10 @@
     <Compile Include="Migrations\ClinicMigrations\202510192246259_Baseline_Sync2.Designer.cs">
       <DependentUpon>202510192246259_Baseline_Sync2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\ClinicMigrations\202510270241490_AddAppointmentReviews.cs" />
+    <Compile Include="Migrations\ClinicMigrations\202510270241490_AddAppointmentReviews.Designer.cs">
+      <DependentUpon>202510270241490_AddAppointmentReviews.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\ClinicMigrations\Configuration.cs" />
     <Compile Include="Migrations\IdentityMigrations\202510111114582_InitialIdentity.cs" />
     <Compile Include="Migrations\IdentityMigrations\202510111114582_InitialIdentity.Designer.cs">
@@ -251,6 +257,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Appointment.cs" />
     <Compile Include="Models\AppointmentRequest.cs" />
+    <Compile Include="Models\AppointmentReview.cs" />
     <Compile Include="Models\AppointmentService.cs" />
     <Compile Include="Models\BookingVM.cs" />
     <Compile Include="Models\ClinicDbContext.cs" />
@@ -366,6 +373,7 @@
     <Content Include="Areas\Doctor\Views\Records\Index.cshtml" />
     <Content Include="Areas\Doctor\Views\Schedules\Index.cshtml" />
     <Content Include="Areas\Doctor\Views\Schedules\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\Reviews\Index.cshtml" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
@@ -419,6 +427,8 @@
     <Content Include="Views\Patient\Complete.cshtml" />
     <Content Include="Views\Doctors\Index.cshtml" />
     <Content Include="Views\Bookings\Index.cshtml" />
+    <Content Include="Views\Reviews\ListReviewable.cshtml" />
+    <Content Include="Views\Reviews\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -492,6 +502,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\ClinicMigrations\202510192246259_Baseline_Sync2.resx">
       <DependentUpon>202510192246259_Baseline_Sync2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ClinicMigrations\202510270241490_AddAppointmentReviews.resx">
+      <DependentUpon>202510270241490_AddAppointmentReviews.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\IdentityMigrations\202510111114582_InitialIdentity.resx">
       <DependentUpon>202510111114582_InitialIdentity.cs</DependentUpon>

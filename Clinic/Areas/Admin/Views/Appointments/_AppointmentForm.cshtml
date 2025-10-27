@@ -21,12 +21,16 @@
     <div class="col-md-6">
         <div class="mb-3">
             @Html.LabelFor(m => m.StartTime, new { @class = "form-label" })
-            @Html.TextBoxFor(m => m.StartTime, "{0:yyyy-MM-ddTHH\\:mm}", new { @class = "form-control", type = "datetime-local" })
+            @* === SỬA LỖI Ở ĐÂY: Dùng input thường + ToLocalTime() === *@
+            <input type="datetime-local" class="form-control" id="StartTime" name="StartTime"
+                   value="@(Model.StartTime.ToLocalTime().ToString("yyyy-MM-ddTHH:mm"))" required />
             @Html.ValidationMessageFor(m => m.StartTime, "", new { @class = "text-danger" })
         </div>
         <div class="mb-3">
             @Html.LabelFor(m => m.EndTime, new { @class = "form-label" })
-            @Html.TextBoxFor(m => m.EndTime, "{0:yyyy-MM-ddTHH\\:mm}", new { @class = "form-control", type = "datetime-local" })
+            @* === SỬA LỖI Ở ĐÂY: Dùng input thường + ToLocalTime() === *@
+            <input type="datetime-local" class="form-control" id="EndTime" name="EndTime"
+                   value="@(Model.EndTime.ToLocalTime().ToString("yyyy-MM-ddTHH:mm"))" required />
             @Html.ValidationMessageFor(m => m.EndTime, "", new { @class = "text-danger" })
         </div>
         <div class="mb-3">

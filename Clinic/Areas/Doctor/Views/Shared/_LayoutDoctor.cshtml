@@ -1,6 +1,8 @@
 ﻿@{
     Layout = null;
-    var title = string.IsNullOrEmpty(ViewBag.Title as string) ? "Clinic Doctor" : (ViewBag.Title + " · Clinic Doctor");
+    var title = string.IsNullOrEmpty(ViewBag.Title as string)
+        ? "Clinic Doctor"
+        : (ViewBag.Title + " · Clinic Doctor");
     var nav = (ViewBag.Nav as string ?? "").ToLower();
 }
 <!DOCTYPE html>
@@ -10,59 +12,87 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>@title</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    @Styles.Render("~/Content/css")          @* dùng bundle giống Admin *@
-    @RenderSection("styles", required: false)
+    @Styles.Render("~/Content/css")
+    @RenderSection("styles", false)
+
+    <style>
+        /* Căn style cho các item trong sidebar */
+        .sidebar a.nav-link {
+            display: block;
+            padding: 10px 14px;
+            border-radius: 8px;
+        }
+        /* Nút logout hiển thị giống a.nav-link */
+        .sidebar .logout-link {
+            display: block;
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 8px;
+            color: #fff;
+            background: transparent;
+            border: 0;
+            text-align: left;
+            cursor: pointer;
+        }
+
+            .sidebar .logout-link:hover {
+                background: #13243b;
+                text-decoration: none;
+            }
+    </style>
 </head>
 <body class="bg-light">
     <div class="d-flex">
         <!-- Sidebar -->
-        <nav class="flex-shrink-0" style="width:260px;background:#0f1b2d;min-height:100vh;">
+        <nav class="flex-shrink-0 sidebar" style="width:260px;background:#0f1b2d;min-height:100vh;">
             <div class="p-3 text-white fw-semibold">Clinic Doctor</div>
             <ul class="nav nav-pills flex-column mb-auto px-2">
                 <li class="nav-item">
                     <a class="nav-link text-white @(nav=="dashboard"?"active":"")"
-                       href="@Url.Action("Index","Home", new { area="Doctors" })">Dashboard</a>
+                       href="@Url.Action("Index","Home", new { area="Doctor" })">Dashboard</a>
                 </li>
                 <li>
                     <a class="nav-link text-white @(nav=="schedules"?"active":"")"
-                       href="@Url.Action("Index","Schedules", new { area="Doctors" })">Lịch khám của tôi</a>
+                       href="@Url.Action("Index","Schedules", new { area="Doctor" })">Lịch khám của tôi</a>
                 </li>
                 <li>
                     <a class="nav-link text-white @(nav=="mypatients"?"active":"")"
-                       href="@Url.Action("Index","Patients", new { area="Doctors" })">Bệnh nhân của tôi</a>
+                       href="@Url.Action("Index","Patients", new { area="Doctor" })">Bệnh nhân của tôi</a>
                 </li>
                 <li>
                     <a class="nav-link text-white @(nav=="records"?"active":"")"
-                       href="@Url.Action("Index","Records", new { area="Doctors" })">Hồ sơ khám</a>
+                       href="@Url.Action("Index","Records", new { area="Doctor" })">Hồ sơ khám</a>
                 </li>
 
-                <li class="mt-3 text-uppercase text-secondary small px-3">Hệ thống</li>
+                <li class="mt-3 text-uppercase text-muted small px-3">Hệ thống</li>
                 <li>
-                    <a class="nav-link text-white" href="@Url.Action("Index","Home", new { area = "" })">Về trang người dùng</a>
+                    <a class="nav-link text-white"
+                       href="@Url.Action("Index","Home", new { area="" })">Về trang người dùng</a>
                 </li>
-                <li class="mt-2">
-                    @using (Html.BeginForm("LogOff", "Account", new { area = "" }, FormMethod.Post, new { id = "logoutFormDoctor" }))
+
+                <!-- Đăng xuất (POST + AntiForgery) đã căn thẳng hàng -->
+                <li>
+                    @using (Html.BeginForm("LogOff", "Account", new { area = "" }, FormMethod.Post, new { id = "logoutForm", @class = "d-inline" }))
                     {
                         @Html.AntiForgeryToken()
-                        <a class="nav-link text-white" href="javascript:document.getElementById('logoutFormDoctor').submit()">Đăng xuất</a>
+                        <button type="submit" class="logout-link">Đăng xuất</button>
                     }
                 </li>
             </ul>
-            <div class="text-secondary small px-3 py-3 mt-auto">© @DateTime.Now.Year Clinic Doctor</div>
+            <div class="text-secondary small px-3 py-3">© @DateTime.Now.Year Clinic Doctor</div>
         </nav>
 
         <!-- Main -->
-        <div class="flex-grow-1">
-            @Html.Partial("_HeaderDoctor")
-            <main class="container-fluid py-3">
+        <main class="flex-grow-1">
+            @Html.Partial("~/Areas/Doctor/Views/Shared/_HeaderDoctor.cshtml")
+            <div class="container-fluid py-3">
                 @RenderBody()
-            </main>
-            @Html.Partial("_FooterDoctor")
-        </div>
+            </div>
+        </main>
     </div>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+    @RenderSection("scripts", false)
 </body>
 </html>

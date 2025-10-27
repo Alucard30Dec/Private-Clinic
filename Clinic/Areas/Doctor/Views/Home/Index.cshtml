@@ -1,25 +1,20 @@
 ﻿@{
     ViewBag.Title = "Bác sĩ Panel";
     ViewBag.Nav = "dashboard";
-    var todayPatients = ViewBag.TodayPatients as int? ?? 24;
-    var totalAppointments = ViewBag.TotalAppointments as int? ?? 12;
-    var onDutyDoctors = ViewBag.OnDutyDoctors as int? ?? 5;
-    var revenueLabel = ViewBag.RevenueLabel as string ?? "35.5M";
+    var todayPatients = ViewBag.TodayPatients as int? ?? 0;
+    var totalAppointments = ViewBag.TotalAppointments as int? ?? 0;
+    var onDutyDoctors = ViewBag.OnDutyDoctors as int? ?? 0;
+    var revenueLabel = ViewBag.RevenueLabel as string ?? "--";
 }
-
-<div class="row g-3">
-    <!-- 4 cards thống kê … -->
-</div>
-
-<div class="card mt-4 shadow-sm border-0">
-    <div class="card-header bg-white border-0">
+<div class="card">
+    <div class="card-header bg-white">
         <h5 class="mb-0">Hoạt động gần đây</h5>
     </div>
     <div class="card-body">
         <ul class="list-unstyled mb-0">
-            <li class="py-2 border-bottom">+ Tạo lịch hẹn mới cho <strong>Nguyễn A</strong> – 09:00</li>
-            <li class="py-2 border-bottom">+ Cập nhật hồ sơ <strong>Bác sĩ Trần B</strong></li>
-            <li class="py-2">+ Xác nhận thanh toán #INV-1024</li>
+            <li>+ Tạo lịch hẹn mới – 09:00</li>
+            <li>+ Cập nhật hồ sơ bệnh nhân</li>
+            <li>+ Xác nhận thanh toán #INV-1024</li>
         </ul>
     </div>
 </div>

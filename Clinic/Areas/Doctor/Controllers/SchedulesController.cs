@@ -1,11 +1,10 @@
-﻿using Clinic.Models;                      // ClinicDbContext
+﻿using Clinic.Models;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Clinic.Areas.Doctor.Data;
-using System;
 
 namespace Clinic.Areas.Doctor.Controllers
 {
@@ -14,7 +13,6 @@ namespace Clinic.Areas.Doctor.Controllers
     {
         private readonly ClinicDbContext _db = new ClinicDbContext();
 
-        // Lấy DoctorId từ user hiện tại
         private async Task<int?> GetCurrentDoctorIdAsync()
         {
             var uid = User.Identity.GetUserId();
@@ -25,7 +23,7 @@ namespace Clinic.Areas.Doctor.Controllers
             return dto?.Id;
         }
 
-        // GET: Doctors/Schedules
+        // GET: /Doctor/Schedules
         public async Task<ActionResult> Index()
         {
             ViewBag.Title = "Lịch khám của tôi";
@@ -40,9 +38,11 @@ namespace Clinic.Areas.Doctor.Controllers
                 .Select(a => new AppointmentRowVM
                 {
                     Id = a.Id,
-                    PatientFullName = a.Patient.FullName,  
+                    PatientFullName = a.Patient.FullName,
+                    ServiceFullName = a.Service.Name,
                     StartTime = a.StartTime,
                     EndTime = a.EndTime,
+                    Status = (int)a.Status,
                     Notes = a.Notes
                 })
                 .ToListAsync();
@@ -50,7 +50,7 @@ namespace Clinic.Areas.Doctor.Controllers
             return View(rows);
         }
 
-        // GET: Doctors/Schedules/Details/5
+        // GET: /Doctor/Schedules/Details/5
         public async Task<ActionResult> Details(int id)
         {
             ViewBag.Title = "Chi tiết lịch khám";
@@ -66,11 +66,13 @@ namespace Clinic.Areas.Doctor.Controllers
                 .Select(x => new AppointmentDetailVM
                 {
                     Id = x.Id,
-                    PatientFullName = x.Patient.FullName,   
+                    PatientFullName = x.Patient.FullName,
                     PatientPhone = x.Patient.PhoneNumber,
                     PatientEmail = x.Patient.Email,
+                    ServiceFullName = x.Service.Name,
                     StartTime = x.StartTime,
                     EndTime = x.EndTime,
+                    Status = (int)x.Status,
                     Notes = x.Notes,
                     CreatedAt = x.CreatedAt,
                     UpdatedAt = x.UpdatedAt
@@ -78,7 +80,6 @@ namespace Clinic.Areas.Doctor.Controllers
                 .FirstOrDefaultAsync();
 
             if (a == null) return HttpNotFound();
-
             return View(a);
         }
 

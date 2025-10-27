@@ -45,16 +45,12 @@
 
                 @* Doctors luôn hiển thị *@
                 <li>@Html.ActionLink("Doctors", "Index", "Doctors")</li>
-
+                <li>@Html.ActionLink("Make an appointment", "Index", "Appointment")</li>
                 @* Nút cho bệnh nhân / khách *@
                 @if (isPatient)
                 {
                     <li>@Html.ActionLink("History", "Index", "Bookings")</li>
                     <li>@Html.ActionLink("Write Review", "ListReviewable", "Reviews")</li>
-                }
-                else
-                {
-                    <li>@Html.ActionLink("Make an appointment", "Index", "Appointment")</li>
                 }
             </ul>
 

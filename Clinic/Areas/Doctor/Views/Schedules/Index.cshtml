@@ -1,34 +1,28 @@
-﻿@model IEnumerable<Clinic.Areas.Doctors.Data.AppointmentRowVM>
+﻿@model IEnumerable<Clinic.Areas.Doctor.Data.AppointmentRowVM>
 @{
     ViewBag.Title = "Lịch khám của tôi";
     ViewBag.Nav = "schedules";
-    Func<int, string> badge = s =>
-    {
-        switch (s)
-        {
-            case 0: return "<span class=\"badge bg-secondary\">Chờ xác nhận</span>";
-            case 1: return "<span class=\"badge bg-info\">Đã xác nhận</span>";
-            case 2: return "<span class=\"badge bg-success\">Đã khám</span>";
-            case 3: return "<span class=\"badge bg-danger\">Huỷ</span>";
-            default: return "<span class=\"badge bg-light text-dark\">N/A</span>";
-        }
-    };
+    Func<int, int, string> badge = (s, _) =>
+        s == 1 ? "<span class='badge bg-success'>Đã xác nhận</span>" :
+        s == 2 ? "<span class='badge bg-secondary'>Đã hoàn thành</span>" :
+               "<span class='badge bg-warning text-dark'>Đang chờ</span>";
 }
-<h4 class="mb-3">Lịch khám của tôi</h4>
-
-<div class="card shadow-sm border-0">
+<div class="card">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Danh sách lịch khám</h5>
+    </div>
     <div class="table-responsive">
         <table class="table table-hover align-middle mb-0">
-            <thead class="table-light">
+            <thead>
                 <tr>
-                    <th style="width:60px">#</th>
+                    <th>#</th>
                     <th>Bệnh nhân</th>
                     <th>Dịch vụ</th>
                     <th>Bắt đầu</th>
                     <th>Kết thúc</th>
                     <th>Trạng thái</th>
                     <th>Ghi chú</th>
-                    <th style="width:110px">Xem</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -38,11 +32,11 @@
                     {
                         <tr>
                             <td>@i</td>
-                            <td>@a.PatientName</td>
-                            <td>@a.ServiceName</td>
+                            <td>@a.PatientFullName</td>
+                            <td>@a.ServiceFullName</td>
                             <td>@a.StartTime.ToString("dd/MM/yyyy HH:mm")</td>
                             <td>@a.EndTime.ToString("dd/MM/yyyy HH:mm")</td>
-                            <td>@Html.Raw(badge(a.Status))</td>
+                            <td>@Html.Raw(badge(a.Status, 0))</td>
                             <td class="text-truncate" style="max-width:240px">@a.Notes</td>
                             <td>
                                 <a class="btn btn-sm btn-outline-primary"

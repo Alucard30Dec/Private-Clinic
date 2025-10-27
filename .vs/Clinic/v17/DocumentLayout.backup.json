@@ -5,6 +5,18 @@
     {
       "AbsoluteMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|e:\\study\\webapp\\project\\private-clinic\\clinic\\views\\shared\\_header.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|solutionrelative:clinic\\views\\shared\\_header.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|e:\\study\\webapp\\project\\private-clinic\\clinic\\migrations\\identitymigrations\\configuration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|solutionrelative:clinic\\migrations\\identitymigrations\\configuration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|e:\\study\\webapp\\project\\private-clinic\\clinic\\migrations\\clinicmigrations\\configuration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|solutionrelative:clinic\\migrations\\clinicmigrations\\configuration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|e:\\study\\webapp\\project\\private-clinic\\clinic\\migrations\\clinicmigrations\\202510151624522_populatedoctorprofiles.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|solutionrelative:clinic\\migrations\\clinicmigrations\\202510151624522_populatedoctorprofiles.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -24,9 +36,48 @@
               "RelativeDocumentMoniker": "Clinic\\Views\\Shared\\_Header.cshtml",
               "ToolTip": "E:\\Study\\WebApp\\Project\\Private-Clinic\\Clinic\\Views\\Shared\\_Header.cshtml",
               "RelativeToolTip": "Clinic\\Views\\Shared\\_Header.cshtml",
-              "ViewState": "AgIAABkAAAAAAAAAAAAuwCcAAAARAAAAAAAAAA==",
+              "ViewState": "AgIAACQAAAAAAAAAAAAAADUAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-10-27T17:06:32.504Z",
+              "WhenOpened": "2025-10-27T18:00:54.74Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Configuration.cs",
+              "DocumentMoniker": "E:\\Study\\WebApp\\Project\\Private-Clinic\\Clinic\\Migrations\\IdentityMigrations\\Configuration.cs",
+              "RelativeDocumentMoniker": "Clinic\\Migrations\\IdentityMigrations\\Configuration.cs",
+              "ToolTip": "E:\\Study\\WebApp\\Project\\Private-Clinic\\Clinic\\Migrations\\IdentityMigrations\\Configuration.cs",
+              "RelativeToolTip": "Clinic\\Migrations\\IdentityMigrations\\Configuration.cs",
+              "ViewState": "AgIAAFEAAAAAAAAAAAAowF8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-27T17:57:53.497Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Configuration.cs",
+              "DocumentMoniker": "E:\\Study\\WebApp\\Project\\Private-Clinic\\Clinic\\Migrations\\ClinicMigrations\\Configuration.cs",
+              "RelativeDocumentMoniker": "Clinic\\Migrations\\ClinicMigrations\\Configuration.cs",
+              "ToolTip": "E:\\Study\\WebApp\\Project\\Private-Clinic\\Clinic\\Migrations\\ClinicMigrations\\Configuration.cs",
+              "RelativeToolTip": "Clinic\\Migrations\\ClinicMigrations\\Configuration.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-27T17:57:50.3Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "202510151624522_PopulateDoctorProfiles.cs",
+              "DocumentMoniker": "E:\\Study\\WebApp\\Project\\Private-Clinic\\Clinic\\Migrations\\ClinicMigrations\\202510151624522_PopulateDoctorProfiles.cs",
+              "RelativeDocumentMoniker": "Clinic\\Migrations\\ClinicMigrations\\202510151624522_PopulateDoctorProfiles.cs",
+              "ToolTip": "E:\\Study\\WebApp\\Project\\Private-Clinic\\Clinic\\Migrations\\ClinicMigrations\\202510151624522_PopulateDoctorProfiles.cs",
+              "RelativeToolTip": "Clinic\\Migrations\\ClinicMigrations\\202510151624522_PopulateDoctorProfiles.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-27T17:57:36.879Z",
               "EditorCaption": ""
             }
           ]

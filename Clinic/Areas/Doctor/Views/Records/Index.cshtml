@@ -1,8 +1,78 @@
-﻿@{
+﻿@model IEnumerable<Clinic.Areas.Doctor.Data.RecordRowVM>
+@{
     ViewBag.Title = "Hồ sơ khám";
     ViewBag.Nav = "records";
+    var q = ViewBag.q as string;
+    var from = ViewBag.from as string;
+    var to = ViewBag.to as string;
+    int? status = ViewBag.status as int?;
+    Func<int, string> badge = s =>
+        s == 1 ? "badge bg-success" : s == 2 ? "badge bg-secondary" : "badge bg-warning text-dark";
 }
-<h4 class="mb-3">Hồ sơ khám</h4>
-<div class="card border-0 shadow-sm p-3">
-    <div class="text-muted">Danh sách hồ sơ (todo)…</div>
+<div class="card">
+    <div class="card-header bg-white">
+        <form method="get" class="row g-2">
+            <div class="col-md-3">
+                <input name="q" value="@q" class="form-control" placeholder="Tên bệnh nhân / Dịch vụ" />
+            </div>
+            <div class="col-md-2">
+                <input type="date" name="from" value="@from" class="form-control" />
+            </div>
+            <div class="col-md-2">
+                <input type="date" name="to" value="@to" class="form-control" />
+            </div>
+            <div class="col-md-2">
+                <select name="status" class="form-select">
+                    <option value="">-- Trạng thái --</option>
+                    <option value="0" @(status == 0 ? "selected" : "")>Đang chờ</option>
+                    <option value="1" @(status == 1 ? "selected" : "")>Đã xác nhận</option>
+                    <option value="2" @(status == 2 ? "selected" : "")>Đã hoàn thành</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <button class="btn btn-primary" type="submit">Lọc</button>
+                <a class="btn btn-outline-secondary ms-2" href="@Url.Action("Index")">Xoá lọc</a>
+            </div>
+        </form>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Bệnh nhân</th>
+                    <th>Dịch vụ</th>
+                    <th>Bắt đầu</th>
+                    <th>Kết thúc</th>
+                    <th>Trạng thái</th>
+                    <th>Ghi chú</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    var i = 1;
+                    foreach (var r in Model)
+                    {
+                        <tr>
+                            <td>@i</td>
+                            <td>@r.PatientName</td>
+                            <td>@r.ServiceName</td>
+                            <td>@r.StartTime.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>@r.EndTime.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td><span class="@badge(r.Status)">@r.Status</span></td>
+                            <td class="text-truncate" style="max-width:280px">@r.Notes</td>
+                            <td>
+                                @* Dùng lại trang chi tiết của lịch khám *@
+                                <a class="btn btn-sm btn-outline-primary"
+                                   href="@Url.Action("Details", "Schedules", new { area = "Doctor", id = r.AppointmentId })">Chi tiết</a>
+                            </td>
+                        </tr>
+                        i++;
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
 </div>

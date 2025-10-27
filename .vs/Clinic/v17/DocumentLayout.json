@@ -1,37 +1,12 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "E:\\Study\\WebApp\\Project\\Private-Clinic\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|e:\\study\\webapp\\project\\private-clinic\\clinic\\views\\shared\\_header.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{AF6B4032-744B-4FBF-805D-49EECBAB2BFB}|Clinic\\Clinic.csproj|solutionrelative:clinic\\views\\shared\\_header.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    }
-  ],
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": [
-        {
-          "DockedWidth": 200,
-          "SelectedChildIndex": 0,
-          "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "_Header.cshtml",
-              "DocumentMoniker": "E:\\Study\\WebApp\\Project\\Private-Clinic\\Clinic\\Views\\Shared\\_Header.cshtml",
-              "RelativeDocumentMoniker": "Clinic\\Views\\Shared\\_Header.cshtml",
-              "ToolTip": "E:\\Study\\WebApp\\Project\\Private-Clinic\\Clinic\\Views\\Shared\\_Header.cshtml",
-              "RelativeToolTip": "Clinic\\Views\\Shared\\_Header.cshtml",
-              "ViewState": "AgIAABkAAAAAAAAAAAAuwDEAAAAfAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-10-27T17:06:32.504Z",
-              "EditorCaption": ""
-            }
-          ]
-        }
-      ]
+      "DocumentGroups": []
     }
   ]
 }

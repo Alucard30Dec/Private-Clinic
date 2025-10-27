@@ -1,0 +1,57 @@
+﻿@model Clinic.Areas.Doctor.Data.PatientDetailVM
+@{
+    ViewBag.Title = "Hồ sơ bệnh nhân";
+    ViewBag.Nav = "mypatients";
+}
+<div class="card mb-3">
+    <div class="card-header bg-white"><h5 class="mb-0">Thông tin bệnh nhân</h5></div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6"><b>Họ tên:</b> @Model.FullName</div>
+            <div class="col-md-3"><b>SĐT:</b> @Model.PhoneNumber</div>
+            <div class="col-md-3"><b>Email:</b> @Model.Email</div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-md-3"><b>Ngày sinh:</b> @(Model.DOB?.ToString("dd/MM/yyyy") ?? "-")</div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header bg-white"><h5 class="mb-0">Lịch sử khám với bạn</h5></div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Dịch vụ</th>
+                    <th>Bắt đầu</th>
+                    <th>Kết thúc</th>
+                    <th>Trạng thái</th>
+                    <th>Ghi chú</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    var i = 1;
+                    foreach (var v in Model.Visits)
+                    {
+                        <tr>
+                            <td>@i</td>
+                            <td>@v.ServiceName</td>
+                            <td>@v.StartTime.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>@v.EndTime.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>@v.Status</td>
+                            <td class="text-truncate" style="max-width:320px">@v.Notes</td>
+                        </tr>
+;
+                        i++;
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="card-body">
+        <a class="btn btn-secondary" href="@Url.Action("Index")">← Quay lại danh sách</a>
+    </div>
+</div>

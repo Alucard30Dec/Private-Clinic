@@ -175,6 +175,7 @@
     <Compile Include="Areas\Doctor\Controllers\SchedulesController.cs" />
     <Compile Include="Areas\Doctor\Controllers\HomeController.cs" />
     <Compile Include="Areas\Doctor\Data\AppointmentVM.cs" />
+    <Compile Include="Areas\Doctor\Data\DoctorVMs.cs" />
     <Compile Include="Areas\Doctor\DoctorAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AppointmentController.cs" />
@@ -374,6 +375,7 @@
     <Content Include="Areas\Doctor\Views\Schedules\Index.cshtml" />
     <Content Include="Areas\Doctor\Views\Schedules\Details.cshtml" />
     <Content Include="Areas\Admin\Views\Reviews\Index.cshtml" />
+    <Content Include="Areas\Doctor\Views\Patients\Details.cshtml" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
@@ -432,6 +434,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Areas\Doctor\Views\DoctorVMs\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

@@ -1,4 +1,5 @@
-﻿@{
+﻿@using Microsoft.AspNet.Identity
+@{
     var isPatient = Request.IsAuthenticated && User.IsInRole("Patient");
     var controller = (ViewContext.RouteData.Values["controller"] as string ?? "").ToLower();
     var action = (ViewContext.RouteData.Values["action"] as string ?? "").ToLower();
@@ -43,16 +44,23 @@
                     <li><a href="@homeUrl#about">About Us</a></li>
                 }
 
-                @* Doctors luôn hiển thị *@
+                @* Doctors always shown *@
                 <li>@Html.ActionLink("Doctors", "Index", "Doctors")</li>
-                <li>@Html.ActionLink("Make an appointment", "Index", "Appointment")</li>
-                @* Nút cho bệnh nhân / khách *@
+
+                @* === MODIFICATION START === *@
+                @* Show History/Review for Patient, OR Make Appointment for Guest *@
                 @if (isPatient)
                 {
                     <li>@Html.ActionLink("History", "Index", "Bookings")</li>
                     <li>@Html.ActionLink("Write Review", "ListReviewable", "Reviews")</li>
                 }
+                else // Only show Make an Appointment if NOT a patient (i.e., guest)
+                {
+                    <li>@Html.ActionLink("Make an appointment", "Index", "Appointment")</li>
+                }
+                @* === MODIFICATION END === *@
             </ul>
+
 
             <ul class="nav navbar-nav navbar-right nav-right">
                 @Html.Partial("_LoginPartial") @* Renders Login/Register or User dropdown *@

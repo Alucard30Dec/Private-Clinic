@@ -4,43 +4,16 @@
 @{
     ViewBag.Title = "Lịch hẹn";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
-
     var routeName = "Admin_Appointments_actions";
     var q = Request["q"];
-
-    // Link tạo mới
-    var createHref = Url.RouteUrl(routeName, new { action = "Create" })
-                   ?? Url.Action("Create", "Appointments", new { area = "Admin" });
-
-    // Kiểm tra có dữ liệu
-    bool hasData = false;
-    if (Model != null)
-    {
-        var col = Model as ICollection<Clinic.Models.Appointment>;
-        if (col != null) { hasData = col.Count > 0; }
-        else { foreach (var _ in Model) { hasData = true; break; } }
-    }
+    var createHref = Url.RouteUrl(routeName, new { action = "Create" }) ?? Url.Action("Create", "Appointments", new { area = "Admin" });
+    bool hasData = Model?.Any() ?? false; // Dùng .Any() an toàn hơn
 }
 
 <div class="container-fluid py-3">
-    @if (TempData["ok"] != null)
-    {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            @TempData["ok"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    }
-    @if (TempData["warn"] != null)
-    {
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            @TempData["warn"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    }
-
+    @* ... (Phần thông báo TempData và Form tìm kiếm giữ nguyên) ... *@
     <div class="d-flex justify-content-between mb-3 align-items-center">
         <h2 class="mb-0">Danh sách lịch hẹn</h2>
-
         <div class="d-flex gap-2">
             <form method="get" class="d-flex" role="search">
                 <input name="q" value="@q" class="form-control" placeholder="Tìm theo bệnh nhân/bác sĩ/dịch vụ" />
@@ -53,9 +26,7 @@
     @{
         if (!hasData)
         {
-            <div class="text-muted fst-italic">
-                Chưa có lịch hẹn. Hãy bấm <a href="@createHref">Tạo mới</a>.
-            </div>
+            <div class="text-muted fst-italic"> Chưa có lịch hẹn. Hãy bấm <a href="@createHref">Tạo mới</a>. </div>
         }
         else
         {
@@ -77,10 +48,8 @@
                         @{ var i = 1; }
                         @foreach (var a in Model)
                         {
-                            var editHref = Url.RouteUrl(routeName, new { action = "Edit", id = a.Id })
-                                         ?? Url.Action("Edit", "Appointments", new { area = "Admin", id = a.Id });
-                            var delHref = Url.RouteUrl(routeName, new { action = "Delete", id = a.Id })
-                                          ?? Url.Action("Delete", "Appointments", new { area = "Admin", id = a.Id });
+                            var editHref = Url.RouteUrl(routeName, new { action = "Edit", id = a.Id }) ?? Url.Action("Edit", "Appointments", new { area = "Admin", id = a.Id });
+                            var delHref = Url.RouteUrl(routeName, new { action = "Delete", id = a.Id }) ?? Url.Action("Delete", "Appointments", new { area = "Admin", id = a.Id });
                             <tr>
                                 <td>@(i++)</td>
                                 @* === SỬA LỖI Ở ĐÂY: Thêm .ToLocalTime() === *@

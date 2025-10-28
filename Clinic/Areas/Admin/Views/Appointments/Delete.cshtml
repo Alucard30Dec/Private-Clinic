@@ -6,22 +6,22 @@
 
 <div class="container-fluid py-3">
     <h2 class="text-danger mb-4">Xóa lịch hẹn</h2>
+    <p>Bạn có chắc chắn muốn xóa lịch hẹn này?</p> @* Thêm câu hỏi xác nhận *@
 
     <dl class="row">
         <dt class="col-sm-2">Bệnh nhân</dt>
         <dd class="col-sm-10">@((Model?.Patient?.FullName) ?? "-")</dd>
-
         <dt class="col-sm-2">Bác sĩ</dt>
         <dd class="col-sm-10">@((Model?.Doctor?.Name) ?? "-")</dd>
-
         <dt class="col-sm-2">Dịch vụ</dt>
         <dd class="col-sm-10">@((Model?.Service?.Name) ?? "-")</dd>
 
+        @* === SỬA LỖI Ở ĐÂY: Thêm .ToLocalTime() === *@
         <dt class="col-sm-2">Bắt đầu</dt>
-        <dd class="col-sm-10">@Model.StartTime.ToString("dd/MM/yyyy HH:mm")</dd>
-
+        <dd class="col-sm-10">@Model.StartTime.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</dd>
         <dt class="col-sm-2">Kết thúc</dt>
-        <dd class="col-sm-10">@Model.EndTime.ToString("dd/MM/yyyy HH:mm")</dd>
+        <dd class="col-sm-10">@Model.EndTime.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</dd>
+        @* === KẾT THÚC SỬA === *@
 
         <dt class="col-sm-2">Trạng thái</dt>
         <dd class="col-sm-10">@Model.Status.ToString()</dd>
@@ -30,7 +30,7 @@
     @using (Html.BeginForm("Delete", "Appointments", new { area = "Admin", id = Model.Id }, FormMethod.Post))
     {
         @Html.AntiForgeryToken()
-        <button type="submit" class="btn btn-danger">Xóa</button>
-        <a class="btn btn-secondary" href="@Url.RouteUrl("Admin_Appointments_root")">Hủy</a>
+        <button type="submit" class="btn btn-danger">Xác nhận Xóa</button>
+        <a class="btn btn-secondary ms-2" href="@Url.Action("Index", "Appointments", new { area = "Admin"})">Hủy</a> @* Sửa link Hủy *@
     }
 </div>

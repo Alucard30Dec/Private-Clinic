@@ -376,6 +376,7 @@
     <Content Include="Areas\Doctor\Views\Schedules\Details.cshtml" />
     <Content Include="Areas\Admin\Views\Reviews\Index.cshtml" />
     <Content Include="Areas\Doctor\Views\Patients\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\Reception\CreateAppointmentForRequest.cshtml" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />

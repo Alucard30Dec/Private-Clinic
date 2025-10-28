@@ -130,37 +130,64 @@ namespace Clinic.Areas.Admin.Controllers
             return View(a);
         }
 
-        // POST: Admin/Appointments/Edit/5
+        // POST: /Admin/Appointments/Edit/5
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include =
-            "Id,PatientId,DoctorId,ServiceId,StartTime,EndTime,Status,Notes")] Appointment input)
+        public async Task<ActionResult> Edit([Bind(Include = "Id,PatientId,DoctorId,ServiceId,StartTime,EndTime,Status,Notes")] Appointment input)
         {
             ViewBag.Nav = "appointments";
 
             if (input.StartTime >= input.EndTime)
                 ModelState.AddModelError("EndTime", "Thời gian kết thúc phải sau thời gian bắt đầu.");
 
+            // Validate FKs
+            bool patientExists = await _db.Patients.AnyAsync(p => p.Id == input.PatientId);
+            if (!patientExists) ModelState.AddModelError("PatientId", "Bệnh nhân không hợp lệ.");
+            bool doctorExists = await _db.Doctors.AnyAsync(d => d.Id == input.DoctorId);
+            if (!doctorExists) ModelState.AddModelError("DoctorId", "Bác sĩ không hợp lệ.");
+            bool serviceExists = await _db.Services.AnyAsync(s => s.Id == input.ServiceId);
+            if (!serviceExists) ModelState.AddModelError("ServiceId", "Dịch vụ không hợp lệ.");
+
+
             if (!ModelState.IsValid)
             {
-                await FillSelects(input);
-                return View(input);
+                await FillSelects(input); // Tải lại SelectLists
+                return View(input); // Hiển thị lại form với lỗi
             }
 
+            // === SỬA LỖI: Chuyển đổi giờ LOCAL từ Form về UTC trước khi lưu ===
+            // 1. Đảm bảo DateTime Kind là Local (nếu nó là Unspecified từ form)
+            if (input.StartTime.Kind == DateTimeKind.Unspecified)
+                input.StartTime = DateTime.SpecifyKind(input.StartTime, DateTimeKind.Local);
+            if (input.EndTime.Kind == DateTimeKind.Unspecified)
+                input.EndTime = DateTime.SpecifyKind(input.EndTime, DateTimeKind.Local);
+
+            // 2. Chuyển đổi sang UTC để lưu vào CSDL
+            DateTime startTimeUtc = input.StartTime.ToUniversalTime();
+            DateTime endTimeUtc = input.EndTime.ToUniversalTime();
+            // === KẾT THÚC SỬA ===
+
+            // Lấy bản ghi gốc từ CSDL để cập nhật
             var a = await _db.Appointments.FindAsync(input.Id);
             if (a == null) return HttpNotFound();
 
+            // Cập nhật các trường từ input (dùng giá trị UTC đã chuyển đổi)
             a.PatientId = input.PatientId;
             a.DoctorId = input.DoctorId;
             a.ServiceId = input.ServiceId;
-            a.StartTime = input.StartTime;
-            a.EndTime = input.EndTime;
+            a.StartTime = startTimeUtc; // <-- Lưu giờ UTC
+            a.EndTime = endTimeUtc;     // <-- Lưu giờ UTC
             a.Status = input.Status;
             a.Notes = input.Notes;
+            a.UpdatedAt = DateTime.UtcNow; // Ghi nhận thời gian cập nhật
 
+            // Đánh dấu là đã sửa và lưu
+            _db.Entry(a).State = EntityState.Modified;
             await _db.SaveChangesAsync();
+
             TempData["ok"] = "Đã cập nhật lịch hẹn.";
-            return RedirectToAction("Index");
+            return RedirectToAction("Index"); // Về trang danh sách
         }
+        
 
         // GET: Admin/Appointments/Delete/5
         public async Task<ActionResult> Delete(int? id)

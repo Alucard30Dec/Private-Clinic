@@ -1,0 +1,2 @@
+Update-Database -ConfigurationTypeName Clinic.Migrations.IdentityMigrations.Configuration
+Update-Database -ConfigurationTypeName Clinic.Migrations.ClinicMigrations.Configuration

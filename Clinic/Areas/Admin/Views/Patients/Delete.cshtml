@@ -1,20 +1,61 @@
 ﻿@model Clinic.Models.Patient
 @{ ViewBag.Title = "Xóa bệnh nhân"; Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml"; }
-<h2 class="mb-3 text-danger">Xóa bệnh nhân</h2>
-<dl class="row">
-    <dt class="col-sm-2">Họ tên</dt>
-    <dd class="col-sm-10">@Model.FullName</dd>
-    <dt class="col-sm-2">Email</dt>
-    <dd class="col-sm-10">@Model.Email</dd>
-    <dt class="col-sm-2">SĐT</dt>
-    <dd class="col-sm-10">@Model.PhoneNumber</dd>
-    <dt class="col-sm-2">Địa chỉ</dt>
-    <dd class="col-sm-10">@Model.Address</dd>
-</dl>
-@using (Html.BeginForm("Delete", "Patients", new { area = "Admin", id = Model.Id }, FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
-    @Html.HiddenFor(m => m.Id)
-    <button class="btn btn-danger" type="submit">Xóa</button>
-    @Html.ActionLink("Hủy", "Index", "Patients", new { area = "Admin" }, new { @class = "btn btn-secondary ms-2" })
-}
+
+<div class="container-fluid py-3">
+    @* Thêm container-fluid và padding *@
+    <h2 class="mb-3 text-danger">Xóa bệnh nhân</h2>
+    <p>Bạn có chắc chắn muốn xóa hồ sơ bệnh nhân này không?</p> @* Thêm câu hỏi xác nhận *@
+
+    <div class="card shadow-sm border-0 mb-3">
+        @* Thêm card để bao thông tin *@
+        <div class="card-body">
+            <dl class="row mb-0">
+                @* Bỏ margin bottom của dl *@
+                <dt class="col-sm-3">ID</dt> @* Thêm ID *@
+                <dd class="col-sm-9">@Model.Id</dd>
+
+                <dt class="col-sm-3">Họ tên</dt>
+                <dd class="col-sm-9">@Model.FullName</dd>
+
+                <dt class="col-sm-3">Email</dt>
+                <dd class="col-sm-9">@(string.IsNullOrWhiteSpace(Model.Email) ? "-" : Model.Email)</dd>
+
+                <dt class="col-sm-3">SĐT</dt>
+                <dd class="col-sm-9">@(string.IsNullOrWhiteSpace(Model.PhoneNumber) ? "-" : Model.PhoneNumber)</dd>
+
+                <dt class="col-sm-3">Ngày sinh</dt>
+                <dd class="col-sm-9">@(Model.DateOfBirth.HasValue ? Model.DateOfBirth.Value.ToString("dd/MM/yyyy") : "-")</dd>
+
+                <dt class="col-sm-3">Giới tính</dt>
+                <dd class="col-sm-9">@(string.IsNullOrWhiteSpace(Model.Gender) ? "-" : Model.Gender)</dd>
+
+                <dt class="col-sm-3">Địa chỉ</dt>
+                <dd class="col-sm-9">@(string.IsNullOrWhiteSpace(Model.Address) ? "-" : Model.Address)</dd>
+
+                @* Thêm các trường mới khác nếu muốn hiển thị *@
+                <dt class="col-sm-3">Nhóm máu</dt>
+                <dd class="col-sm-9">@(string.IsNullOrWhiteSpace(Model.BloodType) ? "-" : Model.BloodType)</dd>
+
+                <dt class="col-sm-3">Liên hệ khẩn cấp</dt>
+                <dd class="col-sm-9">
+                    @if (!string.IsNullOrWhiteSpace(Model.EmergencyContactName))
+                    {
+                        @Model.EmergencyContactName @: (@(Model.EmergencyContactPhone ?? "-"))
+                    }
+                    else
+                    { @:- }
+                    </dd>
+
+                </dl>
+            </div>
+        </div>
+
+
+        @using (Html.BeginForm("Delete", "Patients", new { area = "Admin", id = Model.Id }, FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @* Không cần HiddenFor Id vì đã có trong routeValues *@
+            <button class="btn btn-danger" type="submit">Xác nhận Xóa</button>
+            @Html.ActionLink("Hủy", "Index", "Patients", new { area = "Admin" }, new { @class = "btn btn-secondary ms-2" })
+        }
+    </div>

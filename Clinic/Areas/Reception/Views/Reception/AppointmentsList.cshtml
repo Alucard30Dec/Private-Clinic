@@ -1,0 +1,110 @@
+﻿@model IEnumerable<Clinic.Models.Appointment>
+@using Clinic.Models
+@using System.Linq
+
+@{
+    // Layout được chỉ định bởi _ViewStart.cshtml
+    string currentFilter = ViewBag.CurrentFilter ?? "today";
+    string searchQuery = ViewBag.SearchQuery;
+    ViewBag.Title = (currentFilter == "today") ? "Lịch hẹn Hôm nay" : "Tất cả Lịch hẹn";
+    ViewBag.Nav = "reception_appointments"; // Key cho layout Reception
+}
+
+<h2>@ViewBag.Title</h2>
+
+<form method="get" action="@Url.Action("AppointmentsList", "Reception", new { area = "Reception"})" class="row g-2 align-items-center mb-3">
+    @* Giữ filter hiện tại khi tìm kiếm *@
+    <input type="hidden" name="filter" value="@currentFilter" />
+
+    <div class="col-md-5">
+        <label for="searchQuery" class="visually-hidden">Tìm kiếm</label>
+        <input type="text" name="searchQuery" id="searchQuery" class="form-control"
+               placeholder="Tìm theo tên BS, BN, Email, Dịch vụ..." value="@searchQuery" />
+    </div>
+
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary">
+            <i class="ti ti-search me-1"></i> Tìm kiếm
+        </button>
+        @* Nút Xóa lọc chỉ hiển thị khi có searchQuery *@
+        @if (!string.IsNullOrWhiteSpace(searchQuery))
+        {
+            <a href="@Url.Action("AppointmentsList", "Reception", new { area = "Reception", filter = currentFilter })" class="btn btn-outline-secondary ms-1">
+                <i class="ti ti-x me-1"></i> Xóa lọc
+            </a>
+        }
+    </div>
+
+    @* Nút lọc Hôm nay / Tất cả *@
+    <div class="col-auto ms-md-auto">
+        @* Đẩy sang phải trên màn hình lớn *@
+        <div class="btn-group" role="group">
+            <a href="@Url.Action("AppointmentsList", "Reception", new { area = "Reception", filter = "today", searchQuery = searchQuery })"
+               class="btn @(currentFilter == "today" ? "btn-primary active" : "btn-outline-primary")">
+                Hôm nay
+            </a>
+            <a href="@Url.Action("AppointmentsList", "Reception", new { area = "Reception", filter = "all", searchQuery = searchQuery })"
+               class="btn @(currentFilter == "all" ? "btn-primary active" : "btn-outline-primary")">
+                Tất cả
+            </a>
+        </div>
+    </div>
+</form>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped table-hover align-middle">
+        <thead>
+            <tr>
+                <th>Ngày hẹn</th>
+                <th>Giờ</th>
+                <th>Bác sĩ</th>
+                <th>Bệnh nhân</th>
+                <th>Dịch vụ</th>
+                <th>Trạng thái</th>
+                @* Có thể thêm cột Thao tác nếu cần *@
+            </tr>
+        </thead>
+        <tbody>
+            @if (!Model.Any())
+            {
+                <tr>
+                    <td colspan="6" class="text-center fst-italic text-muted">Không có lịch hẹn nào phù hợp.</td>
+                </tr>
+            }
+            else
+            {
+                foreach (var a in Model)
+                {
+                    var localTime = a.StartTime.ToLocalTime();
+                    <tr>
+                        <td>@localTime.ToString("dd/MM/yyyy")</td>
+                        <td class="fw-semibold">@localTime.ToString("HH:mm")</td>
+                        <td>@(a.Doctor?.Name ?? "—")</td>
+                        <td>@(a.Patient?.FullName ?? a.Patient?.Email ?? "—")</td>
+                        <td>@(a.Service?.Name ?? "—")</td>
+                        <td>
+                            @{
+                                string statusClass = "badge bg-secondary"; // default
+                                string statusText = a.Status.ToString();
+                                if (a.Status == AppointmentStatus.Pending) { statusClass = "badge bg-warning text-dark"; statusText = "Chờ xác nhận"; }
+                                else if (a.Status == AppointmentStatus.Confirmed) { statusClass = "badge bg-success"; statusText = "Đã xác nhận"; }
+                                else if (a.Status == AppointmentStatus.Completed) { statusClass = "badge bg-info text-dark"; statusText = "Đã hoàn thành"; }
+                                else if (a.Status == AppointmentStatus.Canceled) { statusClass = "badge bg-danger"; statusText = "Đã hủy"; }
+                            }
+                            <span class="@statusClass">@statusText</span>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+@* Optional: Add pagination controls here *@
+
+@section Scripts {
+    <script>
+        // Optional: Focus the search box on page load
+        document.getElementById('searchQuery')?.focus();
+    </script>
+}

@@ -16,41 +16,33 @@
 
 <header class="admin-header px-3">
     <div class="d-flex align-items-center justify-content-between">
-        <button class="btn btn-sm btn-outline-light d-lg-none" id="sidebarToggle">
+        @* Nút toggle sidebar cho mobile *@
+        <button class="btn btn-sm btn-outline-light d-lg-none me-2" id="sidebarToggle">
+            @* Thêm me-2 để có khoảng cách *@
             <i class="ti ti-menu-2"></i>
         </button>
 
-        <div class="d-none d-md-flex align-items-center gap-3">
+        @* Tên Panel (chỉ hiển thị trên desktop) *@
+        <div class="d-none d-lg-flex align-items-center">
+            @* Bỏ gap-3 *@
             <span class="text-white-50 small">@panelDisplay</span>
         </div>
 
-        <div class="d-flex align-items-center gap-2">
-            <button class="btn btn-sm btn-outline-light position-relative" title="Thông báo">
-                <i class="ti ti-bell"></i>
-                <span class="badge rounded-pill bg-danger notif-dot"></span>
+        @* Đẩy nút Thông báo sang hẳn bên phải *@
+        <div class="ms-auto">
+            @* Dùng ms-auto để đẩy sang phải *@
+            @* Nút Thông báo *@
+            <button class="btn btn-icon btn-sm btn-outline-light position-relative rounded-circle" title="Thông báo" style="width: 36px; height: 36px; line-height: 1;">
+                <i class="ti ti-bell fs-5"></i>
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6em; padding: .2em .4em;">
+                    1 @* Thay bằng số thông báo thực tế nếu có *@
+                    <span class="visually-hidden">New alerts</span>
+                </span>
             </button>
-
-            <div class="dropdown">
-                <a class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" href="#"
-                   data-bs-toggle="dropdown">
-                    <img src="https://i.pravatar.cc/36" class="rounded-circle me-2" width="32" height="32" alt="avatar" />
-                    <span class="small">@roleDisplay</span>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li class="dropdown-header">
-                        <div class="fw-semibold">@userName</div>
-                        <div class="text-muted small">@roleDisplay</div>
-                    </li>
-                    <li><a class="dropdown-item" href="#"><i class="ti ti-user me-2"></i>Hồ sơ</a></li>
-                    <li><a class="dropdown-item" href="#"><i class="ti ti-settings me-2"></i>Cài đặt</a></li>
-                    <li><hr class="dropdown-divider" /></li>
-                    <li>
-                        <a class="dropdown-item text-danger" href="@Url.Action("LogOff","Account", new { area = "" })">
-                            <i class="ti ti-logout me-2"></i>Đăng xuất
-                        </a>
-                    </li>
-                </ul>
-            </div>
         </div>
+
+        @* *** ĐÃ XÓA ẢNH AVATAR VÀ KHUNG TRÒN *** *@
+
     </div>
 </header>
+

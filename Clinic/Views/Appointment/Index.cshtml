@@ -2,7 +2,59 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Make an appointment";
+    var specialtiesList = ViewBag.Specialties as SelectList;
 }
+
+<style>
+    /* CSS cho các slot */
+    .slot-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .slot-btn {
+        padding: 10px 5px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background-color: #f9f9f9;
+        cursor: pointer;
+        text-align: center;
+        font-weight: 600;
+        color: #337ab7; /* Bootstrap primary color */
+        transition: all 0.2s;
+    }
+
+        .slot-btn:hover {
+            background-color: #e6e6e6;
+            border-color: #adadad;
+        }
+
+        .slot-btn.selected {
+            background-color: #337ab7;
+            color: #fff;
+            border-color: #2e6da4;
+        }
+
+        .slot-btn:disabled {
+            background-color: #f5f5f5;
+            color: #ccc;
+            cursor: not-allowed;
+            border-color: #eee;
+        }
+
+    #slot-message {
+        margin-top: 15px;
+        font-style: italic;
+        color: #888;
+    }
+
+    /* Làm mờ ngày chủ nhật */
+    input[type="date"]::-webkit-calendar-picker-indicator {
+        /* Bạn có thể thêm style cho picker indicator nếu muốn */
+    }
+</style>
 
 <section id="appointment" data-stellar-background-ratio="3">
     <div class="container">
@@ -31,33 +83,55 @@
                     </div>
 
                     <div class="wow fadeInUp" data-wow-delay="0.8s">
+
+                        @* Hiển thị lỗi validation (nếu có) *@
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger", @style = "margin-bottom: 15px;" })
+
+                        <!-- Hàng 1: Tên và Email -->
                         <div class="col-md-6 col-sm-6">
                             @Html.LabelFor(m => m.Name, "Name")
-                            @Html.TextBoxFor(m => m.Name, new { @class = "form-control", placeholder = "Full Name", required = "required" }) @* Added required *@
+                            @Html.TextBoxFor(m => m.Name, new { @class = "form-control", placeholder = "Full Name", required = "required" })
                             @Html.ValidationMessageFor(m => m.Name, null, new { @class = "text-danger" })
                         </div>
 
                         <div class="col-md-6 col-sm-6">
                             @Html.LabelFor(m => m.Email, "Email")
-                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", type = "email", placeholder = "Your Email", required = "required" }) @* Added required *@
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", type = "email", placeholder = "Your Email", required = "required" })
                             @Html.ValidationMessageFor(m => m.Email, null, new { @class = "text-danger" })
                         </div>
 
-                        @* Date field takes full width now *@
-                        <div class="col-md-12 col-sm-12">
-                            @Html.Label("DesiredDate", "Select Date")
-                            @Html.TextBoxFor(m => m.DesiredDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", required = "required" }) @* Added required and format *@
-                            @Html.ValidationMessageFor(m => m.DesiredDate, null, new { @class = "text-danger" })
+                        <!-- Hàng 2: Chuyên khoa và Ngày khám -->
+                        <div class="col-md-6 col-sm-6">
+                            @Html.LabelFor(m => m.Specialty, "Chuyên khoa")
+                            @Html.DropDownListFor(m => m.Specialty, specialtiesList, "-- Chọn chuyên khoa --", new { @class = "form-control", required = "required", id = "specialty-select" })
+                            @Html.ValidationMessageFor(m => m.Specialty, null, new { @class = "text-danger" })
                         </div>
 
-                        @* === DEPARTMENT DROPDOWN REMOVED === *@
+                        <div class="col-md-6 col-sm-6">
+                            @Html.Label("DateSelect", "Chọn ngày khám")
+                            <input type="date" class="form-control" id="date-select" name="DateSelect" required />
+                        </div>
 
+                        <!-- Hàng 3: Chọn giờ khám (Dynamic) -->
+                        <div class="col-md-12 col-sm-12">
+                            <label>Chọn giờ khám</label>
+                            <div id="slot-grid-container" class="slot-grid">
+                                <!-- Slots sẽ được load bằng JS -->
+                            </div>
+                            <div id="slot-message">Vui lòng chọn chuyên khoa và ngày khám.</div>
+
+                            @* Đây là trường ẩn lưu trữ giá trị ngày + giờ cuối cùng *@
+                            @Html.HiddenFor(m => m.RequestedSlot, new { id = "requested-slot-hidden" })
+                            @Html.ValidationMessageFor(m => m.RequestedSlot, null, new { @class = "text-danger" })
+                        </div>
+
+                        <!-- Hàng 4: SĐT và Lời nhắn -->
                         <div class="col-md-12 col-sm-12">
                             @Html.LabelFor(m => m.Phone, "Phone Number")
-                            @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", type = "tel", placeholder = "Phone" })
+                            @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", type = "tel", placeholder = "Phone (Optional)" })
 
                             @Html.LabelFor(m => m.Message, "Additional Message")
-                            @Html.TextAreaFor(m => m.Message, 5, 40, new { @class = "form-control", placeholder = "Message" })
+                            @Html.TextAreaFor(m => m.Message, 5, 40, new { @class = "form-control", placeholder = "Message (Optional)" })
 
                             <button type="submit" class="form-control" id="cf-submit" name="submit">Submit Button</button>
                         </div>
@@ -69,7 +143,176 @@
     </div>
 </section>
 
-@* Optional: Add client-side validation scripts if not already in _Layout *@
 @section scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script>
+         $(document).ready(function () {
+             var specialtySelect = $('#specialty-select');
+             var dateSelect = $('#date-select');
+             var slotContainer = $('#slot-grid-container');
+             var slotMessage = $('#slot-message');
+             var hiddenSlotInput = $('#requested-slot-hidden');
+
+             var selectedDateStr = '';
+             var selectedTimeStr = '';
+
+             // --- 1. Khởi tạo Date Picker ---
+             function initializeDatePicker(startDate) {
+                 var yyyy = startDate.getFullYear();
+                 var mm = ('0' + (startDate.getMonth() + 1)).slice(-2);
+                 var dd = ('0' + startDate.getDate()).slice(-2);
+                 var minDateStr = yyyy + '-' + mm + '-' + dd;
+
+                 dateSelect.val(minDateStr); // Set giá trị mặc định
+                 dateSelect.attr('min', minDateStr); // Set ngày tối thiểu
+                 selectedDateStr = minDateStr;
+             }
+
+             // Hàm kiểm tra ngày Chủ Nhật
+             function isSunday(date) {
+                 return date.getDay() === 0;
+             }
+
+             // Bắt đầu với ngày hôm nay
+             initializeDatePicker(new Date());
+
+             // --- 2. Hàm gọi API lấy Slots ---
+             async function fetchSlots(dateStr, specialty) {
+                 if (!dateStr || !specialty) {
+                     slotContainer.empty();
+                     slotMessage.text('Vui lòng chọn chuyên khoa và ngày khám.');
+                     return;
+                 }
+
+                 slotMessage.text('Đang tải lịch hẹn...');
+                 slotContainer.empty();
+                 selectedTimeStr = '';
+                 updateHiddenInput();
+
+                 try {
+                     var url = '@Url.Action("GetAvailableSlots", "Appointment")' +
+                               '?date=' + encodeURIComponent(dateStr) +
+                               '&specialty=' + encodeURIComponent(specialty);
+
+                     var response = await fetch(url);
+                     if (!response.ok) throw new Error('Network response was not ok');
+
+                     var data = await response.json();
+
+                     slotMessage.text(data.message || 'Chọn một khung giờ:');
+
+                     if (data.slots && data.slots.length > 0) {
+                         data.slots.forEach(function (slot) {
+                             // *** SỬA Ở ĐÂY: Thêm type="button" ***
+                             var btn = $('<button type="button" class="slot-btn"></button>');
+                             // *** KẾT THÚC SỬA ***
+                             btn.text(slot);
+                             btn.data('time', slot);
+                             slotContainer.append(btn);
+                         });
+                     } else {
+                         // Nếu ngày hiện tại không có slot, tự động thử ngày mai
+                         var currentDate = new Date(dateStr + 'T00:00:00'); // Đảm bảo parse đúng
+                         if (dateStr === new Date().toISOString().split('T')[0]) {
+                             var tomorrow = new Date(currentDate);
+                             tomorrow.setDate(tomorrow.getDate() + 1);
+
+                             // Bỏ qua chủ nhật
+                             if (isSunday(tomorrow)) {
+                                 tomorrow.setDate(tomorrow.getDate() + 1);
+                             }
+
+                             var tomorrowStr = tomorrow.toISOString().split('T')[0];
+                             dateSelect.val(tomorrowStr);
+                             selectedDateStr = tomorrowStr;
+
+                             slotMessage.text('Hôm nay đã hết lịch, tự động chuyển sang ngày mai...');
+
+                             // Đợi 1s rồi gọi lại
+                             setTimeout(function() {
+                                 fetchSlots(tomorrowStr, specialty);
+                             }, 1000);
+                         }
+                     }
+
+                 } catch (error) {
+                     console.error('Error fetching slots:', error);
+                     slotMessage.text('Không thể tải lịch hẹn. Vui lòng thử lại.');
+                 }
+             }
+
+             // --- 3. Cập nhật trường ẩn ---
+             function updateHiddenInput() {
+                 if (selectedDateStr && selectedTimeStr) {
+                     // Combine date and time
+                     // Output: "2025-10-29T09:30:00" (ISO 8601 local)
+                     var isoDateTimeLocal = selectedDateStr + 'T' + selectedTimeStr + ':00';
+                     hiddenSlotInput.val(isoDateTimeLocal);
+                 } else {
+                     hiddenSlotInput.val('');
+                 }
+                 // Trigger validation for the hidden field after updating its value
+                 hiddenSlotInput.trigger('change'); // Hoặc 'blur' nếu cần
+                 // Re-validate the form if using unobtrusive validation
+                 var form = $('#appointment-form');
+                 if (form.data('validator')) {
+                    form.validate().element('#requested-slot-hidden');
+                 }
+             }
+
+             // --- 4. Event Listeners ---
+
+             // Khi thay đổi chuyên khoa
+             specialtySelect.on('change', function () {
+                 var specialty = $(this).val();
+                 var dateStr = dateSelect.val();
+                 fetchSlots(dateStr, specialty);
+             });
+
+             // Khi thay đổi ngày
+             dateSelect.on('change', function () {
+                 var dateStr = $(this).val();
+                 selectedDateStr = dateStr;
+
+                 // Kiểm tra Chủ nhật
+                 var selectedDate = new Date(dateStr + 'T00:00:00');
+                 if (isSunday(selectedDate)) {
+                     slotContainer.empty();
+                     slotMessage.text('Phòng khám nghỉ Chủ nhật, vui lòng chọn ngày khác.');
+                     $(this).val(''); // Xóa ngày đã chọn
+                     selectedDateStr = '';
+                     updateHiddenInput(); // Clear hidden input
+                     return;
+                 }
+
+                 var specialty = specialtySelect.val();
+                 fetchSlots(dateStr, specialty);
+             });
+
+             // Khi bấm vào một slot
+             slotContainer.on('click', '.slot-btn', function (e) {
+                 e.preventDefault(); // Ngăn hành vi submit mặc định (thêm cho chắc)
+                 var $this = $(this);
+
+                 // Xóa class 'selected' của nút khác
+                 slotContainer.find('.slot-btn').removeClass('selected');
+
+                 // Thêm class 'selected' cho nút này
+                 $this.addClass('selected');
+
+                 // Lưu giờ đã chọn
+                 selectedTimeStr = $this.data('time');
+
+                 // Cập nhật trường hidden
+                 updateHiddenInput();
+             });
+
+             // Tự động gọi lần đầu khi load (nếu chuyên khoa đã được chọn sẵn - ví dụ khi form validation fail)
+             if (specialtySelect.val() && dateSelect.val()) {
+                 fetchSlots(dateSelect.val(), specialtySelect.val());
+             }
+
+         });
+    </script>
 }
+

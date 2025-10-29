@@ -1,0 +1,6 @@
+﻿@{
+    // expects ViewBag.Pending
+    var p = (int)(ViewBag.Pending ?? 0);
+}
+@* Thêm class text-dark nếu badge màu sáng *@
+<span class="badge rounded-pill @(p > 0 ? "bg-danger" : "bg-secondary") notif-dot @(p > 0 ? "" : "text-dark")">@p</span>

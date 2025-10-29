@@ -2,7 +2,8 @@
 
 namespace Clinic.Areas.Admin
 {
-    public class DashboardController : AreaRegistration
+    // Đổi tên class để tránh trùng với controller (nếu có)
+    public class AdminAreaRegistration : AreaRegistration
     {
         public override string AreaName => "Admin";
 
@@ -59,7 +60,7 @@ namespace Clinic.Areas.Admin
             );
             servicesActions.DataTokens["UseNamespaceFallback"] = false;
 
-            // ===== APPOINTMENTS =====
+            // ===== APPOINTMENTS (Quản lý chung bởi Admin) =====
             var appsRoot = context.MapRoute(
                 name: "Admin_Appointments_root",
                 url: "Admin/Appointments",
@@ -76,11 +77,32 @@ namespace Clinic.Areas.Admin
             );
             appsActions.DataTokens["UseNamespaceFallback"] = false;
 
+            // ===== REVIEWS (Quản lý bởi Admin) =====
+            var reviewsRoot = context.MapRoute(
+                name: "Admin_Reviews_root",
+                url: "Admin/Reviews",
+                defaults: new { controller = "Reviews", action = "Index" },
+                namespaces: new[] { "Clinic.Areas.Admin.Controllers" }
+            );
+            reviewsRoot.DataTokens["UseNamespaceFallback"] = false;
+
+            var reviewsActions = context.MapRoute(
+                name: "Admin_Reviews_actions",
+                url: "Admin/Reviews/{action}/{id}",
+                defaults: new { controller = "Reviews", action = "Index", id = UrlParameter.Optional },
+                namespaces: new[] { "Clinic.Areas.Admin.Controllers" }
+            );
+            reviewsActions.DataTokens["UseNamespaceFallback"] = false;
+
+
+            // --- ĐÃ XÓA CÁC ROUTE CHO Reception VÀ Requests ---
+
             // ===== DEFAULT (để CUỐI CÙNG) =====
+            // Route này sẽ bắt các URL Admin không khớp với các route cụ thể ở trên
             var adminDefault = context.MapRoute(
                 name: "Admin_default",
                 url: "Admin/{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },
+                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }, // Trang chủ mặc định của Admin
                 namespaces: new[] { "Clinic.Areas.Admin.Controllers" }
             );
             adminDefault.DataTokens["UseNamespaceFallback"] = false;

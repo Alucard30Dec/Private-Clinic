@@ -1,0 +1,28 @@
+﻿@model Clinic.Models.WorkingHour
+@{
+    ViewBag.Title = "Thêm ca làm việc";
+}
+
+<div class="container-fluid py-3">
+    <h2 class="mb-3">@ViewBag.Title</h2>
+
+    @using (Html.BeginForm("Create", "WorkShifts", new { area = "Admin" }, FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.Partial("_WorkShiftForm", Model)
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-success">
+                <i class="ti ti-device-floppy me-1"></i> Lưu
+            </button>
+            <a href="@Url.Action("Index", new { doctorIdFilter = Model?.DoctorId })" class="btn btn-secondary ms-2">
+                <i class="ti ti-arrow-back-up me-1"></i> Hủy
+            </a>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

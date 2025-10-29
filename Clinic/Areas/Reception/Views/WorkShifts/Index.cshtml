@@ -1,0 +1,107 @@
+﻿@model Clinic.Areas.Reception.Controllers.ReceptionWorkShiftViewModel
+@using Clinic.Models // For DayOfWeek enum
+@using System.Globalization // For CultureInfo
+@{
+    // Layout defined in _ViewStart.cshtml
+    ViewBag.Title = "Xem Ca làm việc Bác sĩ";
+    ViewBag.Nav = "reception_workshifts"; // Correct Nav key for Reception layout
+
+    var currentCulture = CultureInfo.CurrentCulture; // To get localized day names
+    int? selectedDoctorId = Model.SelectedDoctorId;
+    string selectedDoctorName = Model.SelectedDoctorName;
+}
+
+<div class="container-fluid py-3">
+
+    <h2 class="mb-3">@ViewBag.Title</h2>
+
+    @* Section 1: Doctor List Table *@
+    <h4>Danh sách Bác sĩ</h4>
+    @if (Model.AllDoctors == null || !Model.AllDoctors.Any()) // Added null check
+    {
+        <div class="alert alert-warning">Không có bác sĩ nào trong hệ thống.</div>
+    }
+    else
+    {
+        <div class="table-responsive mb-4">
+            <table class="table table-striped table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Bác sĩ</th>
+                        <th>Chuyên khoa</th>
+                        <th class="text-end">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ int doctorIndex = 1; }
+                    @foreach (var doctor in Model.AllDoctors)
+                    {
+                        // Highlight the selected doctor's row
+                        <tr class="@(doctor.Id == selectedDoctorId ? "table-info" : "")">
+                            <td>@(doctorIndex++)</td>
+                            <td>@doctor.Name</td>
+                            <td>@doctor.Specialty</td>
+                            <td class="text-end text-nowrap">
+                                @* === SỬA TẠI ĐÂY: Truyền doctorIdFilter = doctor.Id vào URL Action === *@
+                                <a href="@Url.Action("Index", "WorkShifts", new { area = "Reception", doctorIdFilter = doctor.Id })"
+                                   class="btn btn-sm @(doctor.Id == selectedDoctorId ? "btn-secondary disabled" : "btn-primary")">
+                                    @* Disable if already selected *@
+                                    <i class="ti ti-calendar-time me-1"></i> Xem Ca làm
+                                </a>
+                                @* === KẾT THÚC SỬA === *@
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    <hr /> @* Separator *@
+
+    @* Section 2: Work Shifts Table (only if a doctor is selected) *@
+    @if (!selectedDoctorId.HasValue)
+    {
+        <div class="alert alert-info">
+            Vui lòng chọn "Xem Ca làm" của một bác sĩ từ danh sách trên.
+        </div>
+    }
+    else if (Model.FilteredShifts == null || !Model.FilteredShifts.Any()) // Added null check for FilteredShifts
+    {
+        <div class="alert alert-warning">
+            Bác sĩ <strong>@selectedDoctorName</strong> chưa có ca làm nào được đăng ký.
+        </div>
+        @* Optional: Link back to clear selection *@
+        <a href="@Url.Action("Index", "WorkShifts", new { area = "Reception" })" class="btn btn-sm btn-link">Hiển thị lại danh sách bác sĩ</a>
+    }
+    else // Selected doctor has shifts
+    {
+        <h4 class="mb-3">Ca làm việc của Bác sĩ: <strong>@selectedDoctorName</strong></h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-sm table-striped table-hover align-middle" style="max-width: 500px;">
+                @* Added border, smaller size *@
+                <thead class="table-light">
+                    @* Lighter header *@
+                    <tr>
+                        <th>Thứ</th>
+                        <th>Bắt đầu</th>
+                        <th>Kết thúc</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var shift in Model.FilteredShifts)
+                    {
+                        <tr>
+                            <td>@currentCulture.DateTimeFormat.GetDayName(shift.DayOfWeek)</td> @* Display localized day name *@
+                            <td>@shift.Start.ToString(@"hh\:mm")</td>
+                            <td>@shift.End.ToString(@"hh\:mm")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        @* Link back to clear selection *@
+        <a href="@Url.Action("Index", "WorkShifts", new { area = "Reception" })" class="btn btn-sm btn-link mt-2">Hiển thị lại danh sách bác sĩ</a>
+    }
+</div>

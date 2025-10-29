@@ -1,12 +1,14 @@
-﻿using System;
+﻿using Clinic.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security;
+using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
-using Clinic.Models;
+using Microsoft.Owin;
 
 namespace Clinic.Controllers
 {
@@ -69,8 +71,24 @@ namespace Clinic.Controllers
                 return View(model);
             }
 
+            if (await UserManager.IsInRoleAsync(user.Id, "Doctor"))
+            {
+                using (var clinicDb = new ClinicDbContext())
+                {
+                    bool doctorProfileExists = await clinicDb.Doctors.AnyAsync(d => d.UserId == user.Id);
+                    if (!doctorProfileExists)
+                    {
+                        ModelState.AddModelError("", "Tài khoản bác sĩ chưa được liên kết với hồ sơ. Vui lòng liên hệ Admin.");
+                        return View(model);
+                    }
+                }
+            }
+
             var result = await SignInManager.PasswordSignInAsync(
-                user.UserName, model.Password, model.RememberMe, shouldLockout: false);
+                user.UserName,
+                model.Password,
+                model.RememberMe,
+                shouldLockout: false);
 
             switch (result)
             {
@@ -79,7 +97,7 @@ namespace Clinic.Controllers
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, model.RememberMe });
+                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
                 default:
                     ModelState.AddModelError("", "Đăng nhập không hợp lệ.");
                     return View(model);
@@ -89,23 +107,60 @@ namespace Clinic.Controllers
         [AllowAnonymous]
         public ActionResult Register() => View();
 
+        // [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
+        // public async Task<ActionResult> Register(RegisterViewModel model)
+        // {
+        //     if (!ModelState.IsValid) return View(model);
+
+        //     var user = new ApplicationUser { UserName = model.Email, Email = model.Email, EmailConfirmed = true };
+        //     var result = await UserManager.CreateAsync(user, model.Password);
+        //     if (result.Succeeded)
+        //     {
+        //         await UserManager.AddToRoleAsync(user.Id, "Patient");
+
+        //         // === SỬA ĐỔI QUAN TRỌNG: KHÔNG TỰ ĐỘNG ĐĂNG NHẬP VÀ CHUYỂN LOGIC TẠO PROFILE ===
+
+        //         // Dùng TempData để lưu UserId vừa tạo và chuyển hướng đến trang hoàn thiện hồ sơ (Patient/CompleteRequired)
+        //         TempData["NewPatientUserId"] = user.Id;
+        //         TempData["NewPatientEmail"] = user.Email;
+        //         // TempData["NewPatientName"] = user.UserName; // Không cần Name ở bước này
+
+        //         // Chuyển hướng đến trang hoàn thiện hồ sơ BẮT BUỘC
+        //         return RedirectToAction("CompleteRequired", "Patient", new { area = "" });
+        //     }
+
+        //     AddErrors(result);
+        //     return View(model);
+        // }
+
+        // === PHIÊN BẢN SỬA ĐỔI CỦA Register (POST) ===
         [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
 
-            var user = new ApplicationUser { UserName = model.Email, Email = model.Email, EmailConfirmed = true };
-            var result = await UserManager.CreateAsync(user, model.Password);
-            if (result.Succeeded)
+            // *** BƯỚC 1: Kiểm tra Email đã tồn tại chưa (quan trọng) ***
+            var existingUser = await UserManager.FindByEmailAsync(model.Email);
+            if (existingUser != null)
             {
-                await UserManager.AddToRoleAsync(user.Id, "Patient");
-                await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                return await RedirectByRoleAsync(user.Id, returnUrl: null);
+                ModelState.AddModelError("Email", "Địa chỉ email này đã được sử dụng.");
+                return View(model);
             }
 
-            AddErrors(result);
-            return View(model);
+            // *** BƯỚC 2: Chỉ mã hóa mật khẩu, KHÔNG tạo user ***
+            var hashedPassword = UserManager.PasswordHasher.HashPassword(model.Password);
+
+            // *** BƯỚC 3: Lưu thông tin tạm vào TempData ***
+            TempData["PendingRegEmail"] = model.Email;
+            TempData["PendingRegHashedPassword"] = hashedPassword;
+            // TempData["PendingRegUserName"] = model.Email; // Lưu UserName (chính là Email)
+
+            // *** BƯỚC 4: Chuyển hướng đến trang hoàn thiện hồ sơ ***
+            TempData["IsNewRegistrationProcess"] = true; // Đánh dấu đây là quy trình đăng ký mới
+            return RedirectToAction("CompleteRequired", "Patient", new { area = "" });
         }
+        // === KẾT THÚC SỬA ĐỔI ===
+
 
         [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
         public ActionResult ExternalLogin(string provider, string returnUrl)
@@ -120,12 +175,13 @@ namespace Clinic.Controllers
             if (loginInfo == null) return RedirectToAction("Login");
 
             var result = await SignInManager.ExternalSignInAsync(loginInfo, isPersistent: false);
+
             switch (result)
             {
                 case SignInStatus.Success:
                     var signedUser = await UserManager.FindAsync(loginInfo.Login);
                     if (signedUser == null) return RedirectToAction("Login");
-                    return await RedirectByRoleAsync(signedUser.Id, returnUrl);
+                    return await RedirectByRoleAsync(signedUser.Id, returnUrl); // RedirectByRoleAsync sẽ kiểm tra hồ sơ Patient
 
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -133,11 +189,17 @@ namespace Clinic.Controllers
                 case SignInStatus.RequiresVerification:
                     return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = false });
 
-                default:
+                default: // User chưa có tài khoản -> tạo mới và yêu cầu hoàn thiện hồ sơ
                     ViewBag.ReturnUrl = returnUrl;
                     ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
+                    // Chuyển đến trang xác nhận thông tin (nơi user nhập/confirm email)
                     return View("ExternalLoginConfirmation",
-                        new ExternalLoginConfirmationViewModel { Email = loginInfo.Email });
+                        new ExternalLoginConfirmationViewModel
+                        {
+                            Email = loginInfo.Email,
+                            // Lấy tên gợi ý từ thông tin external identity
+                            SuggestedName = loginInfo.ExternalIdentity?.Name
+                        });
             }
         }
 
@@ -146,6 +208,7 @@ namespace Clinic.Controllers
         {
             if (User.Identity.IsAuthenticated) return RedirectToAction("Index", "Manage");
 
+            // *** SỬA ĐỔI: Không tạo User ngay, chỉ lưu thông tin tạm ***
             if (!ModelState.IsValid)
             {
                 ViewBag.ReturnUrl = returnUrl;
@@ -155,41 +218,41 @@ namespace Clinic.Controllers
             var info = await AuthenticationManager.GetExternalLoginInfoAsync();
             if (info == null) return View("ExternalLoginFailure");
 
-            var user = new ApplicationUser { UserName = model.Email, Email = model.Email, EmailConfirmed = true };
-            var result = await UserManager.CreateAsync(user);
-            if (result.Succeeded)
+            // *** Kiểm tra Email đã tồn tại chưa ***
+            var existingUser = await UserManager.FindByEmailAsync(model.Email);
+            if (existingUser != null)
             {
-                await UserManager.AddToRoleAsync(user.Id, "Patient");
-                result = await UserManager.AddLoginAsync(user.Id, info.Login);
-                if (result.Succeeded)
-                {
-                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                    return await RedirectByRoleAsync(user.Id, returnUrl);
-                }
+                // Nếu email đã tồn tại và CÓ liên kết ngoài trùng khớp -> Lỗi logic (đáng lẽ phải Success ở Callback)
+                // Nếu email đã tồn tại nhưng CHƯA có liên kết ngoài này -> Có thể gợi ý user đăng nhập bằng email/pass rồi liên kết sau, HOẶC báo lỗi email đã dùng.
+                // --> Tạm thời báo lỗi email đã dùng cho đơn giản.
+                ModelState.AddModelError("Email", "Địa chỉ email này đã được sử dụng bởi một tài khoản khác.");
+                ViewBag.ReturnUrl = returnUrl;
+                return View(model);
             }
 
-            AddErrors(result);
-            ViewBag.ReturnUrl = returnUrl;
-            return View(model);
+            // *** Lưu thông tin tạm vào TempData ***
+            TempData["PendingExternalLoginInfo"] = info; // Lưu thông tin đăng nhập ngoài
+            TempData["PendingExternalEmail"] = model.Email; // Email user đã xác nhận/nhập
+            TempData["PendingExternalName"] = model.SuggestedName; // Tên gợi ý
+
+            // *** Chuyển hướng đến trang hoàn thiện hồ sơ ***
+            TempData["IsNewRegistrationProcess"] = true; // Đánh dấu là quy trình đăng ký mới
+            return RedirectToAction("CompleteRequired", "Patient", new { area = "" });
+            // *** KẾT THÚC SỬA ĐỔI ***
         }
 
-        // ======================== LOGOFF ===========================
+
         [HttpPost, ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
-            // Đăng xuất toàn bộ cookie xác thực
             AuthenticationManager.SignOut(
                 DefaultAuthenticationTypes.ApplicationCookie,
                 DefaultAuthenticationTypes.ExternalCookie,
                 DefaultAuthenticationTypes.TwoFactorCookie,
                 DefaultAuthenticationTypes.TwoFactorRememberBrowserCookie
             );
-
-            // Xoá session nếu dùng
             Session.Clear();
             Session.Abandon();
-
-            // Điều hướng về trang chủ ngoài Area
             return RedirectToAction("Index", "Home", new { area = "" });
         }
 
@@ -204,42 +267,67 @@ namespace Clinic.Controllers
 
         private bool IsSafeLocalUrl(string url)
         {
-            if (string.IsNullOrWhiteSpace(url)) return false;
-            if (!Url.IsLocalUrl(url)) return false;
-            if (url.EndsWith(".cshtml", StringComparison.OrdinalIgnoreCase)) return false;
-            return true;
+            return !string.IsNullOrWhiteSpace(url) && Url.IsLocalUrl(url);
         }
 
-        // === Redirect theo Role (sửa nhẹ cho rõ ràng) ===
         private async Task<ActionResult> RedirectByRoleAsync(string userId, string returnUrl)
         {
             var roles = await UserManager.GetRolesAsync(userId);
-            bool isStaff = roles.Contains("Admin") || roles.Contains("Doctor") || roles.Contains("Receptionist");
+            bool isAdmin = roles.Contains("Admin");
+            bool isDoctor = roles.Contains("Doctor");
+            bool isReceptionist = roles.Contains("Receptionist");
 
-            ActionResult defaultRedirect =
-                roles.Contains("Admin") ? RedirectToAction("Index", "Home", new { area = "Admin" }) :
-                roles.Contains("Doctor") ? RedirectToAction("Index", "Home", new { area = "Doctor" }) :
-                roles.Contains("Receptionist") ? RedirectToAction("Index", "Reception", new { area = "Admin" }) :
-                                                  RedirectToAction("Index", "Home", new { area = "" });
-
-            // Nhân sự (Admin/Doctor/Receptionist) luôn về dashboard mặc định
-            if (isStaff) return defaultRedirect;
-
-            // Với Patient: cho phép quay về trang trước nếu an toàn & không trỏ vào khu vực nội bộ
-            if (IsSafeLocalUrl(returnUrl))
+            ActionResult defaultRedirect;
+            if (isAdmin)
+                defaultRedirect = RedirectToAction("Index", "Home", new { area = "Admin" });
+            else if (isDoctor)
+                defaultRedirect = RedirectToAction("Index", "Home", new { area = "Doctor" });
+            else if (isReceptionist)
+                defaultRedirect = RedirectToAction("Index", "Dashboard", new { area = "Reception" });
+            else // Patient
             {
-                if (returnUrl.StartsWith("/Admin", StringComparison.OrdinalIgnoreCase) ||
-                    returnUrl.StartsWith("/Doctor", StringComparison.OrdinalIgnoreCase))
+                // *** KIỂM TRA HỒ SƠ BỆNH NHÂN (Patient Profile) BẮT BUỘC ***
+                using (var clinicDb = new ClinicDbContext())
                 {
-                    return RedirectToAction("Index", "Home", new { area = "" });
+                    bool patientProfileExists = await clinicDb.Patients.AnyAsync(p => p.UserId == userId);
+                    if (!patientProfileExists)
+                    {
+                        // Nếu chưa có hồ sơ, BẮT BUỘC ĐĂNG XUẤT và chuyển hướng đến trang hoàn thiện
+                        AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie); // Đăng xuất ngay
+                        TempData["ForceCompleteUserId"] = userId; // Gửi ID để hoàn thiện (dùng key khác để phân biệt)
+                        var user = await UserManager.FindByIdAsync(userId); // Lấy lại thông tin user để điền form
+                        TempData["ForceCompleteEmail"] = user?.Email;
+                        TempData["ForceCompleteName"] = user?.UserName; // Hoặc tên từ nguồn khác nếu có
+                        TempData["IsNewRegistrationProcess"] = false; // Đánh dấu không phải đăng ký mới từ đầu
+                        return RedirectToAction("CompleteRequired", "Patient", new { area = "" });
+                    }
                 }
-                return Redirect(returnUrl);
+                // Nếu đã có hồ sơ, về trang chủ người dùng
+                defaultRedirect = RedirectToAction("Index", "Home", new { area = "" });
             }
 
+
+            // Xử lý returnUrl an toàn
+            if (IsSafeLocalUrl(returnUrl))
+            {
+                // Ngăn Patient truy cập area của role khác
+                if (!isAdmin && !isDoctor && !isReceptionist)
+                {
+                    if (returnUrl.StartsWith("/Admin", StringComparison.OrdinalIgnoreCase) ||
+                        returnUrl.StartsWith("/Doctor", StringComparison.OrdinalIgnoreCase) ||
+                        returnUrl.StartsWith("/Reception", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return defaultRedirect; // Chuyển về trang mặc định của Patient nếu cố vào area khác
+                    }
+                }
+                return Redirect(returnUrl); // Cho phép truy cập returnUrl nếu hợp lệ
+            }
+
+            // Nếu returnUrl không an toàn hoặc không có, dùng defaultRedirect
             return defaultRedirect;
         }
 
-        // --- ChallengeResult giữ nguyên ---
+
         private const string XsrfKey = "XsrfId";
         internal class ChallengeResult : HttpUnauthorizedResult
         {
@@ -260,6 +348,25 @@ namespace Clinic.Controllers
                 if (UserId != null) properties.Dictionary[XsrfKey] = UserId;
                 context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
             }
+        }
+
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (_userManager != null)
+                {
+                    _userManager.Dispose();
+                    _userManager = null;
+                }
+                if (_signInManager != null)
+                {
+                    _signInManager.Dispose();
+                    _signInManager = null;
+                }
+            }
+            base.Dispose(disposing);
         }
     }
 }

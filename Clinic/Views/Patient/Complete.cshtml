@@ -1,45 +1,82 @@
 ﻿@model Clinic.Models.Patient
 @{
+    // Layout của Patient
     ViewBag.Title = "Bổ sung thông tin";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    // Biến để biết đây là form đăng ký mới hay chỉnh sửa
+    var isNewRegistration = ViewBag.IsNewRegistration as bool? ?? false;
+    // *** THÊM BIẾN NÀY ***
+    var isForcedCompletion = ViewBag.IsForcedCompletion as bool? ?? false;
 }
 
 <section style="padding:40px 0;">
     <div class="container" style="max-width:720px;">
-        <h2>Bổ sung thông tin</h2>
+
+        <h2 class="wow fadeInUp" data-wow-delay="0.1s">
+            @(isNewRegistration ? "Hoàn thiện Hồ sơ Bệnh nhân" : (isForcedCompletion ? "Hoàn thiện Hồ sơ Bệnh nhân" : "Chỉnh sửa Hồ sơ"))
+        </h2>
+
+        @if (isNewRegistration || isForcedCompletion) // Hiển thị thông báo cho cả 2 trường hợp cần hoàn thiện
+        {
+            <p>Vui lòng nhập đầy đủ thông tin @(isNewRegistration ? "để hoàn tất đăng ký tài khoản." : "để tiếp tục sử dụng dịch vụ.")</p>
+        }
+
         @if (ViewBag.Warn != null)
         {<div class="alert alert-warning">@ViewBag.Warn</div>}
         @if (TempData["ok"] != null)
         {<div class="alert alert-success">@TempData["ok"]</div>}
+        @if (TempData["err"] != null)
+        {<div class="alert alert-danger">@TempData["err"]</div>}
+
+        @Html.ValidationSummary(false, "", new { @class = "alert alert-danger" })
 
         @using (Html.BeginForm("Complete", "Patient", FormMethod.Post))
         {
             @Html.AntiForgeryToken()
-            @Html.HiddenFor(m => m.Id)
+
+            @* Trường ẩn UserId (RẤT QUAN TRỌNG) và Email (cần cho tạo mới) *@
+            @Html.HiddenFor(m => m.UserId)
+            @Html.HiddenFor(m => m.Email)
+            @* Trường ẩn để Controller biết là đăng ký mới *@
+            @Html.Hidden("isNewRegistration", isNewRegistration)
+
             <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
 
             <div class="form-group">
                 @Html.LabelFor(m => m.FullName)
-                @Html.TextBoxFor(m => m.FullName, new { @class = "form-control" })
+                @Html.TextBoxFor(m => m.FullName, new { @class = "form-control", placeholder = "Họ và tên bắt buộc", required = "required" })
+                @Html.ValidationMessageFor(m => m.FullName, "", new { @class = "text-danger" })
             </div>
 
             <div class="form-group">
                 @Html.LabelFor(m => m.PhoneNumber, "Số điện thoại")
-                @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control" })
+                @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control", required = "required", placeholder = "Số điện thoại bắt buộc" }) @* Thêm required và placeholder *@
+                @Html.ValidationMessageFor(m => m.PhoneNumber, "", new { @class = "text-danger" })
             </div>
 
             <div class="form-group">
                 @Html.LabelFor(m => m.DateOfBirth, "Ngày sinh")
                 @Html.TextBoxFor(m => m.DateOfBirth, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+                @Html.ValidationMessageFor(m => m.DateOfBirth, "", new { @class = "text-danger" })
             </div>
 
             <div class="form-group">
                 @Html.LabelFor(m => m.Address, "Địa chỉ")
                 @Html.TextBoxFor(m => m.Address, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })
             </div>
 
-            <button class="btn btn-success">Lưu thông tin</button>
-            <a class="btn btn-link" href="@Url.Action("Index","Doctors")">← Về danh sách bác sĩ</a>
+            <button class="btn btn-success">
+                @(isNewRegistration ? "Hoàn tất đăng ký" : (isForcedCompletion ? "Hoàn tất hồ sơ" : "Lưu thông tin"))
+            </button>
+
+            @* === SỬA LỖI Ở ĐÂY: Xóa @ trước if === *@
+            if (!isNewRegistration && !isForcedCompletion) // Chỉ hiển thị nút "Về danh sách" khi chỉnh sửa thông thường
+            {
+                <a class="btn btn-link" href="@Url.Action("Index","Doctors")">← Về danh sách bác sĩ</a>
+            }
+            @* === KẾT THÚC SỬA LỖI === *@
         }
     </div>
 </section>

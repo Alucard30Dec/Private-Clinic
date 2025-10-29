@@ -1,0 +1,65 @@
+﻿@model Clinic.Areas.Reception.Controllers.DoctorShiftDetailViewModel
+@using Clinic.Models // For DayOfWeek enum
+@using System.Globalization // For CultureInfo
+@{
+    // Layout defined in _ViewStart.cshtml
+    // ViewBag.Title đã được set trong Controller
+    ViewBag.Nav = "reception_workshifts";
+
+    var currentCulture = CultureInfo.CurrentCulture;
+    var doctor = Model.Doctor;
+}
+
+<div class="container-fluid py-3">
+
+    <h2 class="mb-3">Ca làm việc của Bác sĩ: <strong>@doctor.Name</strong></h2>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <p><strong>Chuyên khoa:</strong> @doctor.Specialty</p>
+            <p><strong>Số năm kinh nghiệm:</strong> @(doctor.YearsOfExperience.HasValue ? doctor.YearsOfExperience.Value + " năm" : "—")</p>
+        </div>
+        <div class="col-md-6 text-md-end">
+            @* Optional: Nút liên kết để xem hồ sơ bác sĩ (nếu có) *@
+            @* <a href="@Url.Action("Details", "Doctor", new { area = "Admin", id = doctor.Id })" class="btn btn-sm btn-info">Xem Hồ sơ</a> *@
+        </div>
+    </div>
+
+    @if (Model.Shifts == null || !Model.Shifts.Any())
+    {
+        <div class="alert alert-warning">
+            Bác sĩ <strong>@doctor.Name</strong> chưa có ca làm nào được đăng ký.
+        </div>
+    }
+    else
+    {
+        <h4 class="mb-3">Chi tiết Ca làm việc Đã Đăng ký</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-sm table-striped table-hover align-middle" style="max-width: 500px;">
+                <thead class="table-light">
+                    <tr>
+                        <th>Thứ</th>
+                        <th>Bắt đầu</th>
+                        <th>Kết thúc</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var shift in Model.Shifts)
+                    {
+                        <tr>
+                            <td>@currentCulture.DateTimeFormat.GetDayName(shift.DayOfWeek)</td> @* Display localized day name *@
+                            <td>@shift.Start.ToString(@"hh\:mm")</td>
+                            <td>@shift.End.ToString(@"hh\:mm")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    <hr class="mt-4" />
+
+    <a href="@Url.Action("Index", "WorkShifts", new { area = "Reception" })" class="btn btn-secondary mt-2">
+        <i class="ti ti-arrow-back me-1"></i> Quay lại Danh sách Bác sĩ
+    </a>
+</div>

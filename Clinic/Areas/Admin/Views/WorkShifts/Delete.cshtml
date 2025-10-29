@@ -1,0 +1,32 @@
+﻿@model Clinic.Models.WorkingHour
+@{
+    ViewBag.Title = "Xác nhận xóa ca làm";
+}
+
+<div class="container-fluid py-3">
+    <h2 class="mb-3 text-danger">@ViewBag.Title</h2>
+    <p>Bạn có chắc chắn muốn xóa ca làm việc sau?</p>
+
+    <dl class="row">
+        <dt class="col-sm-3">Bác sĩ</dt>
+        <dd class="col-sm-9">@(Model.Doctor?.Name ?? "N/A")</dd>
+        <dt class="col-sm-3">Thứ</dt>
+        <dd class="col-sm-9">@Model.DayOfWeek.ToString()</dd>
+        <dt class="col-sm-3">Giờ bắt đầu</dt>
+        <dd class="col-sm-9">@Model.Start.ToString(@"hh\:mm")</dd>
+        <dt class="col-sm-3">Giờ kết thúc</dt>
+        <dd class="col-sm-9">@Model.End.ToString(@"hh\:mm")</dd>
+    </dl>
+
+    @using (Html.BeginForm("Delete", "WorkShifts", new { area = "Admin", id = Model.Id }, FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.Id)
+        <button type="submit" class="btn btn-danger">
+            <i class="ti ti-trash me-1"></i> Xác nhận Xóa
+        </button>
+        <a href="@Url.Action("Index", new { doctorIdFilter = Model?.DoctorId })" class="btn btn-secondary ms-2">
+            <i class="ti ti-arrow-back-up me-1"></i> Hủy
+        </a>
+    }
+</div>

@@ -1,0 +1,50 @@
+﻿@model Clinic.Models.WorkingHour
+@{
+    var dayOfWeekListForDropdown = ViewBag.DayOfWeekList as SelectList;
+    var doctorListForDropdown = ViewBag.DoctorList as SelectList;
+
+    bool isEditing = Model != null && Model.Id > 0;
+}
+
+@Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+<div class="row g-3">
+    <div class="col-md-6">
+        @Html.LabelFor(m => m.DoctorId, "Bác sĩ", new { @class = "form-label" }) @* Sử dụng LabelFor *@
+        @*
+            *** SỬA Ở ĐÂY: Sử dụng DropDownListFor thay vì DropDownList ***
+            - Liên kết trực tiếp với thuộc tính m.DoctorId của Model.
+            - Truyền doctorListForDropdown làm nguồn dữ liệu.
+            - Giữ nguyên logic disabled khi sửa.
+        *@
+        @Html.DropDownListFor(m => m.DoctorId, doctorListForDropdown, "-- Chọn bác sĩ --",
+           new { @class = "form-select", required = "required", disabled = isEditing ? "disabled" : null })
+
+        @* HiddenFor vẫn cần thiết khi disabled *@
+        @if (isEditing)
+        {
+            @Html.HiddenFor(m => m.DoctorId)
+        }
+        @Html.ValidationMessageFor(m => m.DoctorId, "", new { @class = "text-danger small" }) @* Sử dụng ValidationMessageFor *@
+        @if (isEditing && Model.Doctor != null)
+        {
+            <small class="form-text text-muted">Không thể thay đổi bác sĩ khi sửa.</small>
+        }
+    </div>
+    <div class="col-md-6">
+        @Html.LabelFor(m => m.DayOfWeek, "Thứ", new { @class = "form-label" })
+        @Html.DropDownListFor(m => m.DayOfWeek, dayOfWeekListForDropdown, "-- Chọn thứ --", new { @class = "form-select", required = "required" })
+        @Html.ValidationMessageFor(m => m.DayOfWeek, "", new { @class = "text-danger small" })
+    </div>
+    <div class="col-md-6">
+        @Html.LabelFor(m => m.Start, "Giờ bắt đầu", new { @class = "form-label" })
+        @Html.TextBoxFor(m => m.Start, "{0:hh\\:mm}", new { @class = "form-control", type = "time", required = "required" })
+        @Html.ValidationMessageFor(m => m.Start, "", new { @class = "text-danger small" })
+    </div>
+    <div class="col-md-6">
+        @Html.LabelFor(m => m.End, "Giờ kết thúc", new { @class = "form-label" })
+        @Html.TextBoxFor(m => m.End, "{0:hh\\:mm}", new { @class = "form-control", type = "time", required = "required" })
+        @Html.ValidationMessageFor(m => m.End, "", new { @class = "text-danger small" })
+    </div>
+</div>
+

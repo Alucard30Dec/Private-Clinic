@@ -168,8 +168,10 @@
     <Compile Include="Areas\Admin\Controllers\PatientsController.cs" />
     <Compile Include="Areas\Admin\Controllers\DoctorController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
-    <Compile Include="Areas\Admin\Controllers\ReceptionController.cs" />
-    <Compile Include="Areas\Admin\Controllers\RequestsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\WorkShiftsController.cs" />
+    <Compile Include="Areas\Reception\Controllers\DashboardController.cs" />
+    <Compile Include="Areas\Reception\Controllers\ReceptionController.cs" />
+    <Compile Include="Areas\Reception\Controllers\RequestsController.cs" />
     <Compile Include="Areas\Doctor\Controllers\RecordsController.cs" />
     <Compile Include="Areas\Doctor\Controllers\PatientsController.cs" />
     <Compile Include="Areas\Doctor\Controllers\SchedulesController.cs" />
@@ -177,6 +179,9 @@
     <Compile Include="Areas\Doctor\Data\AppointmentVM.cs" />
     <Compile Include="Areas\Doctor\Data\DoctorVMs.cs" />
     <Compile Include="Areas\Doctor\DoctorAreaRegistration.cs" />
+    <Compile Include="Areas\Doctor\Controllers\WorkShiftsController.cs" />
+    <Compile Include="Areas\Reception\Controllers\WorkShiftsController.cs" />
+    <Compile Include="Areas\Reception\ReceptionAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AppointmentController.cs" />
     <Compile Include="Controllers\BookingsController.cs" />
@@ -248,6 +253,34 @@
     <Compile Include="Migrations\ClinicMigrations\202510270241490_AddAppointmentReviews.cs" />
     <Compile Include="Migrations\ClinicMigrations\202510270241490_AddAppointmentReviews.Designer.cs">
       <DependentUpon>202510270241490_AddAppointmentReviews.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\ClinicMigrations\202510281653563_UpdateAppointmentRequest.cs" />
+    <Compile Include="Migrations\ClinicMigrations\202510281653563_UpdateAppointmentRequest.Designer.cs">
+      <DependentUpon>202510281653563_UpdateAppointmentRequest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\ClinicMigrations\202510281809071_AddExamTypeToAppointmentAndService.cs" />
+    <Compile Include="Migrations\ClinicMigrations\202510281809071_AddExamTypeToAppointmentAndService.Designer.cs">
+      <DependentUpon>202510281809071_AddExamTypeToAppointmentAndService.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\ClinicMigrations\202510281839096_MakePatientUserIdNullable.cs" />
+    <Compile Include="Migrations\ClinicMigrations\202510281839096_MakePatientUserIdNullable.Designer.cs">
+      <DependentUpon>202510281839096_MakePatientUserIdNullable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\ClinicMigrations\202510281841329_UpdateSeedServicesExamType.cs" />
+    <Compile Include="Migrations\ClinicMigrations\202510281841329_UpdateSeedServicesExamType.Designer.cs">
+      <DependentUpon>202510281841329_UpdateSeedServicesExamType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\ClinicMigrations\202510281853375_ReflectPendingModelChanges.cs" />
+    <Compile Include="Migrations\ClinicMigrations\202510281853375_ReflectPendingModelChanges.Designer.cs">
+      <DependentUpon>202510281853375_ReflectPendingModelChanges.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\ClinicMigrations\202510290335442_SyncAfterIdentityFix.cs" />
+    <Compile Include="Migrations\ClinicMigrations\202510290335442_SyncAfterIdentityFix.Designer.cs">
+      <DependentUpon>202510290335442_SyncAfterIdentityFix.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\ClinicMigrations\202510290514429_AddExtendedPatientProperties.cs" />
+    <Compile Include="Migrations\ClinicMigrations\202510290514429_AddExtendedPatientProperties.Designer.cs">
+      <DependentUpon>202510290514429_AddExtendedPatientProperties.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\ClinicMigrations\Configuration.cs" />
     <Compile Include="Migrations\IdentityMigrations\202510111114582_InitialIdentity.cs" />
@@ -342,7 +375,6 @@
     <Content Include="Areas\Admin\Views\Shared\_FooterAdmin.cshtml" />
     <Content Include="Areas\Admin\Views\Requests\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Requests\_PendingBadge.cshtml" />
-    <Content Include="Areas\Admin\Views\Reception\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Doctor\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Doctor\Create.cshtml" />
     <Content Include="Areas\Admin\Views\Doctor\_DoctorForm.cshtml" />
@@ -376,7 +408,22 @@
     <Content Include="Areas\Doctor\Views\Schedules\Details.cshtml" />
     <Content Include="Areas\Admin\Views\Reviews\Index.cshtml" />
     <Content Include="Areas\Doctor\Views\Patients\Details.cshtml" />
-    <Content Include="Areas\Admin\Views\Reception\CreateAppointmentForRequest.cshtml" />
+    <Content Include="Areas\Reception\Views\web.config" />
+    <Content Include="Areas\Reception\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Reception\Views\Shared\_LayoutReception.cshtml" />
+    <Content Include="Areas\Reception\Views\Dashboard\Index.cshtml" />
+    <Content Include="Areas\Reception\Views\Requests\_PendingBadge.cshtml" />
+    <Content Include="Areas\Reception\Views\Requests\Index.cshtml" />
+    <Content Include="Areas\Reception\Views\Reception\AppointmentsList.cshtml" />
+    <Content Include="Areas\Reception\Views\Reception\CreateAppointmentForRequest.cshtml" />
+    <Content Include="Areas\Doctor\Views\WorkShifts\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\WorkShifts\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\WorkShifts\_WorkShiftForm.cshtml" />
+    <Content Include="Areas\Admin\Views\WorkShifts\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\WorkShifts\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\WorkShifts\Edit.cshtml" />
+    <Content Include="Areas\Reception\Views\WorkShifts\Index.cshtml" />
+    <Content Include="Areas\Reception\Views\WorkShifts\Details.cshtml" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
@@ -436,6 +483,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Doctor\Views\DoctorVMs\" />
+    <Folder Include="Areas\Reception\Data\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />
@@ -509,6 +557,27 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\ClinicMigrations\202510270241490_AddAppointmentReviews.resx">
       <DependentUpon>202510270241490_AddAppointmentReviews.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ClinicMigrations\202510281653563_UpdateAppointmentRequest.resx">
+      <DependentUpon>202510281653563_UpdateAppointmentRequest.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ClinicMigrations\202510281809071_AddExamTypeToAppointmentAndService.resx">
+      <DependentUpon>202510281809071_AddExamTypeToAppointmentAndService.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ClinicMigrations\202510281839096_MakePatientUserIdNullable.resx">
+      <DependentUpon>202510281839096_MakePatientUserIdNullable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ClinicMigrations\202510281841329_UpdateSeedServicesExamType.resx">
+      <DependentUpon>202510281841329_UpdateSeedServicesExamType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ClinicMigrations\202510281853375_ReflectPendingModelChanges.resx">
+      <DependentUpon>202510281853375_ReflectPendingModelChanges.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ClinicMigrations\202510290335442_SyncAfterIdentityFix.resx">
+      <DependentUpon>202510290335442_SyncAfterIdentityFix.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ClinicMigrations\202510290514429_AddExtendedPatientProperties.resx">
+      <DependentUpon>202510290514429_AddExtendedPatientProperties.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\IdentityMigrations\202510111114582_InitialIdentity.resx">
       <DependentUpon>202510111114582_InitialIdentity.cs</DependentUpon>

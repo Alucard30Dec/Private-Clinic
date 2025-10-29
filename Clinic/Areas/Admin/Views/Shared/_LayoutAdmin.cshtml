@@ -1,20 +1,32 @@
 ﻿@using System.Web.Mvc.Html
 @{
     Layout = null;
-    var title = ViewBag.Title as string ?? "Admin";
+    var title = ViewBag.Title as string ?? "Admin Panel"; // Đổi title mặc định
+    var currentNav = (ViewBag.Nav as string ?? "").ToLower(); // Dùng biến này để active menu
+
     // role flags
     var isAdmin = User.IsInRole("Admin");
     var isDoctor = User.IsInRole("Doctor");
-    var isReception = User.IsInRole("Receptionist");
-    // ======= TÍNH SẴN URL CHO MENU (alias trước, thiếu thì fallback) =======
-    Func<string> doctorsRoot = () => Url.RouteUrl("Admin_Doctors_root") ?? Url.Action("Index", "Doctor", new { area = "Admin" });
-    var doctorsUrl = doctorsRoot();
+    // Không cần isReception nữa vì Lễ tân có layout riêng
+
+    // URLs for Admin Area (Dùng Url.Action cho đơn giản, không cần alias phức tạp)
+    var adminHomeUrl = Url.Action("Index", "Home", new { area = "Admin" });
+    var doctorsUrl = Url.Action("Index", "Doctor", new { area = "Admin" });
     var patientsUrl = Url.Action("Index", "Patients", new { area = "Admin" });
     var servicesUrl = Url.Action("Index", "Services", new { area = "Admin" });
     var appointmentsUrl = Url.Action("Index", "Appointments", new { area = "Admin" });
-    var reportsUrl = Url.Action("Index", "Reports", new { area = "Admin" });
-    var adminHomeUrl = Url.Action("Index", "Home", new { area = "Admin" });
-    var siteHomeUrl = Url.Action("Index", "Home", new { area = "" });
+    var reviewsUrl = Url.Action("Index", "Reviews", new { area = "Admin" });
+    // *** THÊM URL CHO WORK SHIFTS ***
+    var workShiftsAdminUrl = Url.Action("Index", "WorkShifts", new { area = "Admin" });
+    // var reportsUrl = Url.Action("Index", "Reports", new { area = "Admin" }); // Giả sử chưa có ReportsController
+
+    // URLs for Doctor Area (nếu Doctor dùng chung layout này)
+    var myScheduleUrl = Url.Action("Index", "Schedules", new { area = "Doctor" }); // Schedule controller của Doctor
+    var myPatientsUrl = Url.Action("Index", "Patients", new { area = "Doctor" });   // Patient controller của Doctor
+    var recordsUrl = Url.Action("Index", "Records", new { area = "Doctor" });       // Record controller của Doctor
+    var workShiftsDoctorUrl = Url.Action("Index", "WorkShifts", new { area = "Doctor" }); // URL ca làm của Doctor
+
+    var siteHomeUrl = Url.Action("Index", "Home", new { area = "" }); // Về trang chủ public
 }
 <!DOCTYPE html>
 <html lang="vi">
@@ -33,15 +45,15 @@
     <div class="admin-wrapper d-flex">
         <aside class="admin-sidebar">
             <div class="brand px-3 py-3 d-flex align-items-center">
-                <i class="ti ti-activity icon-brand me-2"></i>
-                <span class="fw-semibold">Clinic Admin</span>
+                <i class="ti ti-settings icon-brand me-2"></i> @* Icon Admin *@
+                <span class="fw-semibold">Admin Panel</span>
             </div>
 
             <nav class="mt-2">
                 <ul class="nav flex-column">
 
                     <li class="nav-item">
-                        <a class="nav-link @(ViewBag.Nav == "dashboard" ? "active" : "")" href="@adminHomeUrl">
+                        <a class="nav-link @(currentNav == "dashboard" ? "active" : "")" href="@adminHomeUrl">
                             <i class="ti ti-layout-dashboard me-2"></i> Dashboard
                         </a>
                     </li>
@@ -50,88 +62,75 @@
                     {
                         <li class="nav-item mt-2 text-uppercase small px-3 text-muted">Quản lý (Admin)</li>
                         <li class="nav-item">
-                            <a class="nav-link @(ViewBag.Nav == "doctors" ? "active" : "")" href="@doctorsUrl">
+                            <a class="nav-link @(currentNav == "doctors" ? "active" : "")" href="@doctorsUrl">
                                 <i class="ti ti-stethoscope me-2"></i> Bác sĩ
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link @(ViewBag.Nav == "patients" ? "active" : "")" href="@patientsUrl">
+                            <a class="nav-link @(currentNav == "patients" ? "active" : "")" href="@patientsUrl">
                                 <i class="ti ti-users me-2"></i> Bệnh nhân
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link @(ViewBag.Nav == "services" ? "active" : "")" href="@servicesUrl">
+                            <a class="nav-link @(currentNav == "services" ? "active" : "")" href="@servicesUrl">
                                 <i class="ti ti-clipboard-heart me-2"></i> Dịch vụ
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link @(ViewBag.Nav == "appointments" ? "active" : "")" href="@appointmentsUrl">
-                                <i class="ti ti-calendar-event me-2"></i> Lịch hẹn
+                            <a class="nav-link @(currentNav == "appointments" ? "active" : "")" href="@appointmentsUrl">
+                                <i class="ti ti-calendar-event me-2"></i> Lịch hẹn (All)
                             </a>
                         </li>
-
-                        @* === THÊM MỤC MENU ĐÁNH GIÁ === *@
+                        @* *** THÊM MENU ITEM CHO WORK SHIFTS *** *@
                         <li class="nav-item">
-                            <a class="nav-link @(ViewBag.Nav == "reviews" ? "active" : "")"
-                               href="@Url.Action("Index", "Reviews", new { area = "Admin" })">
+                            <a class="nav-link @(currentNav == "workshifts" ? "active" : "")" href="@workShiftsAdminUrl">
+                                <i class="ti ti-clock-hour-4 me-2"></i> Ca làm việc
+                            </a>
+                        </li>
+                        @* *** KẾT THÚC THÊM *** *@
+                        <li class="nav-item">
+                            <a class="nav-link @(currentNav == "reviews" ? "active" : "")" href="@reviewsUrl">
                                 <i class="ti ti-message-star me-2"></i> Đánh giá
                             </a>
                         </li>
-                        @* === KẾT THÚC THÊM === *@
-
-                        <li class="nav-item">
-                            <a class="nav-link @(ViewBag.Nav == "reports" ? "active" : "")" href="@reportsUrl">
-                                <i class="ti ti-chart-bar me-2"></i> Thống kê
-                            </a>
-                        </li>
+                        @* Bỏ comment nếu có ReportsController
+                            <li class="nav-item">
+                                <a class="nav-link @(currentNav == "reports" ? "active" : "")" href="#"> @*reportsUrl*@
+                        @* <i class="ti ti-chart-bar me-2"></i> Thống kê *@ @* === Sửa dòng 90: Comment lại thẻ <i> === *@
+                        @* </a> *@ @* === Sửa dòng 91: Comment lại thẻ <a> === *@
+                        @* --- SỬA LỖI: Xóa thẻ </li> thừa ở đây --- *@
+                        @*</li>*@ @* Xóa thẻ li thừa này *@
                     }
 
-                    @if (isDoctor)
+                    @if (isDoctor) // Menu cho Doctor nếu dùng chung layout
                     {
                         <li class="nav-item mt-2 text-uppercase small px-3 text-muted">Bác sĩ</li>
                         <li class="nav-item">
-                            <a class="nav-link @(ViewBag.Nav == "mySchedule" ? "active" : "")" href="@Url.Action("MySchedule","Doctor", new { area = "Admin" })">
+                            @* Sửa lại link cho đúng controller/action của Doctor Area *@
+                            <a class="nav-link @(currentNav == "schedules" ? "active" : "")" href="@myScheduleUrl">
                                 <i class="ti ti-calendar-share me-2"></i> Lịch khám của tôi
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link @(ViewBag.Nav == "myPatients" ? "active" : "")" href="@Url.Action("MyPatients","Doctor", new { area = "Admin" })">
+                            <a class="nav-link @(currentNav == "mypatients" ? "active" : "")" href="@myPatientsUrl">
                                 <i class="ti ti-address-book me-2"></i> Bệnh nhân của tôi
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link @(ViewBag.Nav == "encounters" ? "active" : "")" href="@Url.Action("Encounters","Doctor", new { area = "Admin" })">
+                            <a class="nav-link @(currentNav == "records" ? "active" : "")" href="@recordsUrl">
                                 <i class="ti ti-notes me-2"></i> Hồ sơ khám
                             </a>
                         </li>
+                        @* *** THÊM MENU CA LÀM CHO BÁC SĨ *** *@
+                        <li class="nav-item">
+                            <a class="nav-link @(currentNav == "doctor_workshifts" ? "active" : "")" href="@workShiftsDoctorUrl">
+                                <i class="ti ti-clock-plus me-2"></i> Đăng ký ca làm
+                            </a>
+                        </li>
+                        @* *** KẾT THÚC THÊM *** *@
                     }
 
-                    @if (isReception)
-                    {
-                        <li class="nav-item mt-2 text-uppercase small px-3 text-muted">Lễ tân</li>
-                        <li class="nav-item">
-                            <a class="nav-link @(ViewBag.Nav == "requests" ? "active" : "")" href="@Url.Action("Index","Requests", new { area = "Admin" })">
-                                <i class="ti ti-inbox me-2"></i> Đơn đăng ký (khách vãng lai)
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            @* Link đã trỏ đến Index action *@
-                            <a class="nav-link @(ViewBag.Nav == "reception_appointments" ? "active" : (ViewBag.Nav == "today" ? "active" : ""))"
-                               href="@Url.Action("Index","Reception", new { area = "Admin" })">
-                                <i class="ti ti-clock-hour-9 me-2"></i> Lịch hẹn
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link @(ViewBag.Nav == "create" ? "active" : "")" href="@Url.Action("Create","Reception", new { area = "Admin" })">
-                                <i class="ti ti-calendar-plus me-2"></i> Tạo lịch hẹn mới
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link @(ViewBag.Nav == "search" ? "active" : "")" href="@Url.Action("Search","Reception", new { area = "Admin" })">
-                                <i class="ti ti-search me-2"></i> Tra cứu bệnh nhân
-                            </a>
-                        </li>
-                    }
+                    @* --- ĐÃ XÓA MENU CỦA LỄ TÂN --- *@
 
                     <li class="nav-item mt-2 text-uppercase small px-3 text-muted">Hệ thống</li>
                     <li class="nav-item">
@@ -140,10 +139,10 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        @using (Html.BeginForm("LogOff", "Account", new { area = "" }, FormMethod.Post, new { id = "logoutForm" }))
+                        @using (Html.BeginForm("LogOff", "Account", new { area = "" }, FormMethod.Post, new { id = "logoutFormAdmin" })) // Đổi id để tránh trùng
                         {
                             @Html.AntiForgeryToken()
-                            <a class="nav-link text-danger" href="javascript:document.getElementById('logoutForm').submit()">
+                            <a class="nav-link text-danger" href="javascript:document.getElementById('logoutFormAdmin').submit()">
                                 <i class="ti ti-logout me-2"></i> Đăng xuất
                             </a>
                         }
@@ -153,22 +152,24 @@
         </aside>
 
         <main class="admin-main flex-fill d-flex flex-column">
-            @{ Html.RenderPartial("_HeaderAdmin"); }
+            @Html.Partial("~/Areas/Admin/Views/Shared/_HeaderAdmin.cshtml")
 
             <div class="admin-content container-fluid py-4">
+                @* Giữ lại phần hiển thị TempData *@
                 @if (TempData["ok"] != null)
-                {<div class="alert alert-success">@TempData["ok"]</div>}
-                @if (TempData["error"] != null)
-                {<div class="alert alert-danger">@TempData["error"]</div>}
+                {<div class="alert alert-success alert-dismissible fade show" role="alert">@TempData["ok"]<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>}
+                @if (TempData["error"] != null || TempData["err"] != null)
+                {<div class="alert alert-danger alert-dismissible fade show" role="alert">@(TempData["error"] ?? TempData["err"])<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>}
                 @if (TempData["warn"] != null)
-                {<div class="alert alert-warning">@TempData["warn"]</div>}
+                {<div class="alert alert-warning alert-dismissible fade show" role="alert">@TempData["warn"]<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>}
                 @if (TempData["info"] != null)
-                {<div class="alert alert-info">@TempData["info"]</div>}
+                {<div class="alert alert-info alert-dismissible fade show" role="alert">@TempData["info"]<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>}
+
 
                 @RenderBody()
             </div>
 
-            @{ Html.RenderPartial("_FooterAdmin"); }
+            @Html.Partial("~/Areas/Admin/Views/Shared/_FooterAdmin.cshtml")
         </main>
     </div>
 

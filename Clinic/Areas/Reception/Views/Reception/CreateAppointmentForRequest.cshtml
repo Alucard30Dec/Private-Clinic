@@ -1,0 +1,176 @@
+﻿@model Clinic.Models.Appointment
+@using Clinic.Models
+@{
+    ViewBag.Title = "Đặt lịch cho Khách vãng lai";
+    var request = ViewBag.RequestInfo as Clinic.Models.AppointmentRequest;
+    ViewBag.Nav = "requests";
+    // Lấy SelectList cho Status (đã dùng int làm value)
+    var statusList = ViewBag.StatusList as SelectList;
+    // Lấy SelectList cho DoctorId (giữ nguyên)
+    var doctorList = ViewBag.DoctorId as SelectList;
+    // *** LẤY ExamTypeList RA BIẾN CỤC BỘ ĐỂ ĐẢM BẢO ***
+    var examTypeListForDropdown = ViewBag.ExamTypeList as SelectList;
+
+    // ========= DEBUG CODE START =========
+    // Kiểm tra xem biến examTypeListForDropdown có null không và kiểu dữ liệu là gì
+    if (examTypeListForDropdown == null)
+    {
+        <p style="color:red; font-weight:bold; border: 1px dashed red; padding: 5px; margin-bottom:10px;">
+            DEBUG: Biến 'examTypeListForDropdown' đang bị NULL! Kiểm tra lại Controller.
+        </p>
+    }
+    else
+    {
+        <p style="color:blue; font-weight:bold; border: 1px dashed blue; padding: 5px; margin-bottom:10px;">
+            DEBUG: Biến 'examTypeListForDropdown' có kiểu: @examTypeListForDropdown.GetType().FullName <br />
+            DEBUG: Số lượng item: @examTypeListForDropdown.Count()
+        </p>
+    }
+    // ========= DEBUG CODE END =========
+
+}
+
+<h2>@ViewBag.Title</h2>
+
+@* Thông tin Yêu cầu gốc (giữ nguyên) *@
+@if (request != null)
+{
+    <h4>Thông tin Yêu cầu gốc</h4>
+    <div class="card mb-3 shadow-sm border-0">
+        <div class="card-body">
+            <dl class="row mb-0">
+                <dt class="col-sm-3">Tên:</dt>
+                <dd class="col-sm-9">@request.Name</dd>
+                <dt class="col-sm-3">Email:</dt>
+                <dd class="col-sm-9">@request.Email</dd>
+                <dt class="col-sm-3">SĐT:</dt>
+                <dd class="col-sm-9">@(request.Phone ?? "—")</dd>
+                <dt class="col-sm-3">Chuyên khoa YC:</dt>
+                <dd class="col-sm-9">@request.Specialty</dd>
+                <dt class="col-sm-3">Giờ hẹn YC:</dt>
+                <dd class="col-sm-9">@request.RequestedSlot.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</dd>
+                @if (!string.IsNullOrWhiteSpace(request.Message))
+                {
+                    <dt class="col-sm-3">Lời nhắn:</dt>
+                    <dd class="col-sm-9">@request.Message</dd>
+                }
+            </dl>
+        </div>
+    </div>
+    <hr />
+}
+
+@* Form Tạo Lịch hẹn *@
+@using (Html.BeginForm("CreateAppointmentForRequest", "Reception", new { area = "Reception" }, FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.Hidden("requestId", request?.Id ?? 0)
+
+    <h4>Nhập thông tin Lịch hẹn mới</h4>
+
+    @* Hiển thị lỗi chung nếu có *@
+    @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+    <div class="row">
+        <div class="col-md-6">
+            @* Bác sĩ *@
+            <div class="mb-3">
+                @Html.Label("DoctorId", "Bác sĩ thực hiện", new { @class = "form-label" })
+                @Html.DropDownList("DoctorId", doctorList, "-- Chọn bác sĩ --", new { @class = "form-select", required = "required" })
+                @Html.ValidationMessage("DoctorId", "", new { @class = "text-danger" })
+                <small class="form-text text-muted">Lọc theo chuyên khoa: @request?.Specialty</small>
+            </div>
+
+            @* Dropdown Loại hình khám *@
+            <div class="mb-3">
+                @Html.LabelFor(m => m.ExamType, "Loại hình khám", new { @class = "form-label" })
+                @Html.DropDownListFor(m => m.ExamType, examTypeListForDropdown, "-- Chọn loại hình --", new { @class = "form-select", required = "required", id = "examTypeSelect" }) @* <-- Sử dụng biến cục bộ *@
+                @Html.ValidationMessageFor(m => m.ExamType, "", new { @class = "text-danger" })
+                <div id="service-price-info" class="form-text text-muted mt-1" style="font-style: italic;"></div> @* Hiển thị giá *@
+            </div>
+
+            @* Trạng thái *@
+            <div class="mb-3">
+                @Html.Label("Status", "Trạng thái lịch hẹn", new { @class = "form-label" })
+                @Html.DropDownList("Status", statusList, new { @class = "form-select" }) @* <-- Sử dụng statusList *@
+                @Html.ValidationMessage("Status", "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="col-md-6">
+            @* Giờ bắt đầu/kết thúc *@
+            <div class="mb-3">
+                @Html.LabelFor(m => m.StartTime, "Giờ bắt đầu", new { @class = "form-label" })
+                <input type="datetime-local" class="form-control" id="StartTime" name="StartTime" value="@(Model.StartTime.ToLocalTime().ToString("yyyy-MM-ddTHH:mm"))" required />
+                @Html.ValidationMessageFor(m => m.StartTime, "", new { @class = "text-danger" })
+            </div>
+            <div class="mb-3">
+                @Html.LabelFor(m => m.EndTime, "Giờ kết thúc", new { @class = "form-label" })
+                <input type="datetime-local" class="form-control" id="EndTime" name="EndTime" value="@(Model.EndTime.ToLocalTime().ToString("yyyy-MM-ddTHH:mm"))" required />
+                @Html.ValidationMessageFor(m => m.EndTime, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    @* Ghi chú *@
+    <div class="mb-3">
+        @Html.LabelFor(m => m.Notes, "Ghi chú thêm (nếu có)", new { @class = "form-label" })
+        @Html.TextAreaFor(m => m.Notes, 5, 90, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Notes, "", new { @class = "text-danger" })
+    </div>
+
+    @* Nút bấm *@
+    <div class="mt-3">
+        <button type="submit" class="btn btn-primary">
+            <i class="ti ti-calendar-check me-1"></i> Tạo lịch hẹn
+        </button>
+        <a href="@Url.Action("Index", "Requests", new { area = "Reception"})" class="btn btn-secondary ms-2">
+            <i class="ti ti-arrow-back me-1"></i> Hủy
+        </a>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        // ... (JavaScript giữ nguyên) ...
+         $(document).ready(function() {
+            var examTypeSelect = $('#examTypeSelect');
+            var priceInfoDiv = $('#service-price-info');
+            var specialty = '@(request?.Specialty ?? "")';
+
+            function updatePriceInfo() {
+                var selectedExamTypeValue = examTypeSelect.val();
+                if (!selectedExamTypeValue) {
+                     priceInfoDiv.text('');
+                     return;
+                }
+                priceInfoDiv.text('Đang tải giá...');
+
+                 var apiUrl = '@Url.Action("GetServicePrice", "Reception", new { area = "Reception" })';
+                 fetch(apiUrl + '?specialty=' + encodeURIComponent(specialty) + '&examType=' + selectedExamTypeValue)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response error');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data && data.success && data.price !== null && data.serviceName) {
+                             priceInfoDiv.text(data.serviceName + ' - Chi phí dự kiến: ' + data.price.toLocaleString('vi-VN') + ' VNĐ');
+                        } else {
+                            priceInfoDiv.text(data.message || 'Không tìm thấy thông tin giá.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Lỗi lấy giá:", error);
+                        priceInfoDiv.text('Lỗi khi tải giá dịch vụ.');
+                    });
+            }
+
+            if (examTypeSelect.val()) {
+                 updatePriceInfo();
+            }
+            examTypeSelect.on('change', updatePriceInfo);
+        });
+    </script>
+}
+

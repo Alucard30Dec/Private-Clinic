@@ -1,0 +1,104 @@
+﻿@model IEnumerable<Clinic.Models.Appointment>
+    @* Nhận danh sách lịch hẹn hôm nay *@
+    @using Clinic.Models
+
+    @{
+        ViewBag.Title = "Reception Dashboard";
+        ViewBag.Nav = "dashboard";
+        int pendingRequests = ViewBag.PendingRequests ?? 0;
+        int todayAppointments = ViewBag.TodayAppointments ?? 0;
+        int totalPatients = ViewBag.TotalPatients ?? 0;
+    }
+
+    <div class="row g-3 mb-4">
+        <div class="col-12 col-md-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="text-muted small">Đơn chờ xử lý</div>
+                            <div class="fs-3 fw-semibold @(pendingRequests > 0 ? "text-danger" : "")">@pendingRequests</div>
+                        </div>
+                        <i class="ti ti-inbox fs-1 text-warning"></i>
+                    </div>
+                    <a href="@Url.Action("Index", "Requests", new { area = "Reception"})" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="text-muted small">Lịch hẹn hôm nay</div>
+                            <div class="fs-3 fw-semibold">@todayAppointments</div>
+                        </div>
+                        <i class="ti ti-calendar-event fs-1 text-primary"></i>
+                    </div>
+                    <a href="@Url.Action("AppointmentsList", "Reception", new { area = "Reception", filter="today"})" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="text-muted small">Tổng số bệnh nhân</div>
+                            <div class="fs-3 fw-semibold">@totalPatients</div>
+                        </div>
+                        <i class="ti ti-users fs-1 text-success"></i>
+                    </div>
+                    @* Link đến trang quản lý bệnh nhân (nếu có) *@
+                    @* <a href="@Url.Action("Index", "Patients", new { area = "Reception"})" class="stretched-link"></a> *@
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h4>Lịch hẹn hôm nay (@Model.Count())</h4>
+    @if (!Model.Any())
+    {
+        <p class="text-muted fst-italic">Không có lịch hẹn nào hôm nay.</p>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-sm table-striped table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Giờ</th>
+                        <th>Bác sĩ</th>
+                        <th>Bệnh nhân</th>
+                        <th>Dịch vụ</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var a in Model)
+                    {
+                        var localTime = a.StartTime.ToLocalTime();
+                        <tr>
+                            <td class="fw-semibold">@localTime.ToString("HH:mm")</td>
+                            <td>@(a.Doctor?.Name ?? "—")</td>
+                            <td>@(a.Patient?.FullName ?? a.Patient?.Email ?? "—")</td>
+                            <td>@(a.Service?.Name ?? "—")</td>
+                            <td>
+                                @{
+                                    string statusClass = "badge bg-secondary"; // default
+                                    if (a.Status == AppointmentStatus.Pending) { statusClass = "badge bg-warning text-dark"; }
+                                    else if (a.Status == AppointmentStatus.Confirmed) { statusClass = "badge bg-success"; }
+                                    else if (a.Status == AppointmentStatus.Completed) { statusClass = "badge bg-info text-dark"; }
+                                    // Canceled đã bị lọc ra
+                                }
+                                <span class="@statusClass">@a.Status</span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="mt-2">
+            <a href="@Url.Action("AppointmentsList", "Reception", new { area = "Reception", filter="today"})">Xem tất cả lịch hẹn hôm nay</a>
+        </div>
+    }

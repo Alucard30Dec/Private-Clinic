@@ -1,57 +1,132 @@
 ﻿@model Clinic.Areas.Doctor.Data.PatientDetailVM
+@using Clinic.Models // Thêm để dùng AppointmentStatus enum
 @{
     ViewBag.Title = "Hồ sơ bệnh nhân";
     ViewBag.Nav = "mypatients";
 }
-<div class="card mb-3">
-    <div class="card-header bg-white"><h5 class="mb-0">Thông tin bệnh nhân</h5></div>
-    <div class="card-body">
-        <div class="row">
-            <div class="col-md-6"><b>Họ tên:</b> @Model.FullName</div>
-            <div class="col-md-3"><b>SĐT:</b> @Model.PhoneNumber</div>
-            <div class="col-md-3"><b>Email:</b> @Model.Email</div>
-        </div>
-        <div class="row mt-2">
-            <div class="col-md-3"><b>Ngày sinh:</b> @(Model.DOB?.ToString("dd/MM/yyyy") ?? "-")</div>
-        </div>
+<div class="card mb-3 shadow-sm border-0">
+    @* Thêm shadow, border *@
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Thông tin bệnh nhân: @Model.FullName</h5>
+        <a class="btn btn-sm btn-secondary" href="@Url.Action("Index")">
+            <i class="ti ti-arrow-left me-1"></i> Quay lại danh sách
+        </a>
     </div>
-</div>
+    <div class="card-body">
+        <div class="row g-3">
+            @* Thêm g-3 để tạo khoảng cách giữa các cột *@
+            @* --- Cột 1 --- *@
+            <div class="col-md-6">
+                <dl class="row mb-0">
+                    @* Bỏ margin bottom *@
+                    <dt class="col-sm-4">Họ tên:</dt>
+                    <dd class="col-sm-8">@Model.FullName</dd>
 
-<div class="card">
-    <div class="card-header bg-white"><h5 class="mb-0">Lịch sử khám với bạn</h5></div>
-    <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Dịch vụ</th>
-                    <th>Bắt đầu</th>
-                    <th>Kết thúc</th>
-                    <th>Trạng thái</th>
-                    <th>Ghi chú</th>
-                </tr>
-            </thead>
-            <tbody>
-                @{
-                    var i = 1;
-                    foreach (var v in Model.Visits)
-                    {
+                    <dt class="col-sm-4">SĐT:</dt>
+                    <dd class="col-sm-8">@(Model.PhoneNumber ?? "-")</dd>
+
+                    <dt class="col-sm-4">Email:</dt>
+                    <dd class="col-sm-8">@(Model.Email ?? "-")</dd>
+
+                    <dt class="col-sm-4">Ngày sinh:</dt>
+                    <dd class="col-sm-8">@(Model.DOB?.ToString("dd/MM/yyyy") ?? "-") (@(Model.Age.HasValue ? Model.Age + " tuổi" : "-"))</dd> @* Hiển thị tuổi *@
+
+                    <dt class="col-sm-4">Giới tính:</dt>
+                    <dd class="col-sm-8">@(Model.Gender ?? "-")</dd>
+
+                    <dt class="col-sm-4">Nhóm máu:</dt>
+                    <dd class="col-sm-8">@(Model.BloodType ?? "-")</dd>
+
+                    <dt class="col-sm-4">Địa chỉ:</dt>
+                    <dd class="col-sm-8">@(Model.Address ?? "-")</dd>
+
+                </dl>
+            </div>
+            @* --- Cột 2 --- *@
+            <div class="col-md-6">
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Tiền sử bệnh:</dt>
+                    <dd class="col-sm-8">@(string.IsNullOrWhiteSpace(Model.MedicalHistory) ? "-" : Model.MedicalHistory)</dd>
+
+                    <dt class="col-sm-4">Dị ứng:</dt>
+                    <dd class="col-sm-8">@(string.IsNullOrWhiteSpace(Model.Allergies) ? "-" : Model.Allergies)</dd>
+
+                    <dt class="col-sm-4">Liên hệ khẩn cấp:</dt>
+                    <dd class="col-sm-8">
+                        @if (!string.IsNullOrWhiteSpace(Model.EmergencyContactName))
+                        {
+                            @Model.EmergencyContactName @: (@(Model.EmergencyContactPhone ?? "-"))
+                        }
+                        else
+                        { @:- }
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        @* Thêm shadow, border *@
+        <div class="card-header bg-white"><h5 class="mb-0">Lịch sử khám với bạn</h5></div>
+        @if (Model.Visits == null || !Model.Visits.Any())@* Thêm kiểm tra null *@
+        {
+            <div class="card-body">
+                <p class="text-muted fst-italic">Bệnh nhân này chưa có lịch sử khám với bạn.</p>
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-hover table-striped align-middle mb-0">
+                    @* Thêm striped *@
+                    <thead>
                         <tr>
-                            <td>@i</td>
-                            <td>@v.ServiceName</td>
-                            <td>@v.StartTime.ToString("dd/MM/yyyy HH:mm")</td>
-                            <td>@v.EndTime.ToString("dd/MM/yyyy HH:mm")</td>
-                            <td>@v.Status</td>
-                            <td class="text-truncate" style="max-width:320px">@v.Notes</td>
+                            <th style="width: 50px;">#</th> @* Thu nhỏ cột STT *@
+                            <th>Dịch vụ</th>
+                            <th>Ngày khám</th> @* Đổi tên cột *@
+                            <th>Giờ khám</th> @* Thêm cột giờ *@
+                            <th>Trạng thái</th>
+                            <th>Ghi chú của bác sĩ</th> @* Đổi tên cột *@
+                            <th class="text-end">Thao tác</th> @* Thêm cột thao tác *@
                         </tr>
-;
-                        i++;
-                    }
-                }
-            </tbody>
-        </table>
+                    </thead>
+                    <tbody>
+                        @{ var i = 1; }
+                        @foreach (var v in Model.Visits)
+                        {
+                            var localStartTime = v.StartTime.ToLocalTime(); // Chuyển sang giờ địa phương
+                            <tr>
+                                <td>@i</td>
+                                <td>@v.ServiceName</td>
+                                <td>@localStartTime.ToString("dd/MM/yyyy")</td> @* Hiển thị ngày *@
+                                <td>@localStartTime.ToString("HH:mm")</td> @* Hiển thị giờ *@
+                                <td>
+                                    @{
+                                        // Chuyển int status thành Enum để dễ đọc
+                                        var statusEnum = (AppointmentStatus)v.Status;
+                                        string statusClass = "badge bg-secondary"; // default
+                                        if (statusEnum == AppointmentStatus.Pending) { statusClass = "badge bg-warning text-dark"; }
+                                        else if (statusEnum == AppointmentStatus.Confirmed) { statusClass = "badge bg-success"; }
+                                        else if (statusEnum == AppointmentStatus.Completed) { statusClass = "badge bg-primary"; } // Đổi sang primary
+                                        else if (statusEnum == AppointmentStatus.Canceled) { statusClass = "badge bg-danger"; }
+                                    }
+                                    <span class="@statusClass">@statusEnum</span> @* Hiển thị tên Enum *@
+                                </td>
+                                <td class="text-truncate" style="max-width:320px">@(v.Notes ?? "-")</td> @* Thêm ?? "-" *@
+                                <td class="text-end text-nowrap">
+                                    @* Link đến trang chi tiết lịch hẹn (nếu có) hoặc trang ghi chú khám bệnh *@
+                                    <a class="btn btn-sm btn-outline-info" href="@Url.Action("Details", "Schedules", new { id = v.AppointmentId })">
+                                        <i class="ti ti-file-text me-1"></i> Xem chi tiết
+                                    </a>
+                                    @* Thêm nút chỉnh sửa ghi chú nếu cần *@
+                                </td>
+                            </tr>
+                            i++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        } @* Đóng else *@
+        @* Bỏ nút quay lại ở đây vì đã có ở header card *@
     </div>
-    <div class="card-body">
-        <a class="btn btn-secondary" href="@Url.Action("Index")">← Quay lại danh sách</a>
-    </div>
-</div>

@@ -4,10 +4,16 @@
     ViewBag.Title = "Danh sách bác sĩ";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
     var q = Request["q"];
-    Func<string, string> actionUrl = (action) =>
-        Url.RouteUrl("Admin_Doctors_actions", new { action }) ??
-        Url.Action(action, "Doctor", new { area = "Admin" });
-    var createHref = actionUrl("Create");
+    Func<string, object, string> actionUrlWithId = (action, routeValues) =>
+        Url.RouteUrl("Admin_Doctors_actions", routeValues) ??
+        Url.Action(action, "Doctor", routeValues); // Fallback
+
+    // *** THÊM URL HELPER CHO WORKSHIFTS ***
+    Func<object, string> workShiftsUrl = (routeValues) =>
+        Url.Action("Index", "WorkShifts", routeValues); // Trỏ đến WorkShifts controller
+                                                        // *** KẾT THÚC THÊM ***
+
+    var createHref = actionUrlWithId("Create", new { area = "Admin", action = "Create" }); // Sửa lại cách gọi helper
     bool hasData = Model != null && Model.Any();
 }
 <div class="container-fluid py-3">
@@ -52,24 +58,34 @@
                     @{ var i = 1; }
                     @foreach (var d in Model)
                     {
-                        var editHref = Url.RouteUrl("Admin_Doctors_actions", new { action = "Edit", id = d.Id })
-                                         ?? Url.Action("Edit", "Doctor", new { area = "Admin", id = d.Id });
-                        var deleteHref = Url.RouteUrl("Admin_Doctors_actions", new { action = "Delete", id = d.Id })
-                                         ?? Url.Action("Delete", "Doctor", new { area = "Admin", id = d.Id });
+                        var editHref = actionUrlWithId("Edit", new { area = "Admin", action = "Edit", id = d.Id });
+                        var deleteHref = actionUrlWithId("Delete", new { area = "Admin", action = "Delete", id = d.Id });
+                        // *** TẠO LINK QUẢN LÝ CA ***
+                        var manageShiftsHref = workShiftsUrl(new { area = "Admin", doctorIdFilter = d.Id });
 
                         <tr>
                             <td>@(i++)</td>
                             <td>
                                 @if (!string.IsNullOrWhiteSpace(d.PhotoUrl))
                                 {
-                                    <img src="@d.PhotoUrl" alt="Ảnh" style="height:40px;width:40px;object-fit:cover;border-radius:6px;" />
-                                }
+                                    <img src="@Url.Content(d.PhotoUrl)" alt="Ảnh" style="height:40px;width:40px;object-fit:cover;border-radius:6px;"
+                                         onerror="this.onerror=null; this.src='@Url.Content("~/Resources/images/avatar-doctor.png")';" /> @* Thêm fallback *@
+                                    }
+                                    else
+                                    {
+                                        <img src="@Url.Content("~/Resources/images/avatar-doctor.png")" alt="Ảnh" style="height:40px;width:40px;object-fit:cover;border-radius:6px;" /> @* Ảnh mặc định *@
+                                    }
                             </td>
                             <td>@(d?.Name ?? "-")</td>
                             <td>@(d?.Specialty ?? "-")</td>
                             <td>@(string.IsNullOrWhiteSpace(d?.Email) ? "-" : d.Email)</td>
                             <td>@(d?.PhoneNumber ?? "-")</td>
                             <td class="text-end text-nowrap">
+                                @* *** THÊM NÚT QUẢN LÝ CA *** *@
+                                <a class="btn btn-sm btn-info me-1" href="@manageShiftsHref" title="Quản lý ca làm việc">
+                                    <i class="ti ti-clock-hour-4"></i> QL Ca
+                                </a>
+                                @* *** KẾT THÚC THÊM *** *@
                                 <a class="btn btn-sm btn-primary me-1" href="@editHref">Sửa</a>
                                 <a class="btn btn-sm btn-outline-danger" href="@deleteHref">Xóa</a>
                             </td>

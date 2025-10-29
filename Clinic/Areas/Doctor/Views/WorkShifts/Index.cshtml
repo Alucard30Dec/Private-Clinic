@@ -1,0 +1,177 @@
+﻿@model Clinic.Areas.Doctor.Controllers.DoctorWorkShiftViewModel
+@* Đảm bảo đúng ViewModel *@
+@using Clinic.Models
+@using System.Globalization
+
+@{
+    ViewBag.Title = "Đăng ký ca làm";
+    ViewBag.Nav = "workshifts";
+    var dayOfWeekListForDropdown = Model.DayOfWeekList;
+    var timeFormat = @"hh\:mm";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@if (TempData["ok"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["ok"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (TempData["error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@* Hiển thị lỗi validation chung *@
+@Html.ValidationSummary(false, "", new { @class = "alert alert-danger" })
+
+
+<h4>Ca làm việc đã đăng ký</h4>
+@if (!Model.ExistingShifts.Any())
+{
+    <p class="text-muted fst-italic">Bạn chưa đăng ký ca làm nào.</p>
+}
+else
+{
+    <div class="table-responsive mb-4">
+        <table class="table table-sm table-striped table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Thứ</th>
+                    <th>Bắt đầu</th>
+                    <th>Kết thúc</th>
+                    <th class="text-end">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var shift in Model.ExistingShifts)
+                {
+                    <tr>
+                        <td>@CultureInfo.CurrentCulture.DateTimeFormat.GetDayName(shift.DayOfWeek)</td> @* Hiển thị tên tiếng Việt *@
+                        <td>@shift.Start.ToString(timeFormat)</td>
+                        <td>@shift.End.ToString(timeFormat)</td>
+                        <td class="text-end">
+                            @using (Html.BeginForm("Delete", "WorkShifts", new { area = "Doctor", id = shift.Id }, FormMethod.Post, new { @style = "display:inline;", onsubmit = "return confirm('Xóa ca làm này?');" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-xs btn-danger">Xóa</button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+
+<h4>Thêm ca làm mới</h4>
+@using (Html.BeginForm("Create", "WorkShifts", new { area = "Doctor" }, FormMethod.Post, new { @class = "row g-3 align-items-end" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="col-md-3">
+        @Html.LabelFor(m => m.NewShift.DayOfWeek, "Thứ", new { @class = "form-label" })
+        @Html.DropDownListFor(m => m.NewShift.DayOfWeek, dayOfWeekListForDropdown, "-- Chọn thứ --", new { @class = "form-select", id = "DayOfWeekSelect" }) @* Thêm ID *@
+        @Html.ValidationMessageFor(m => m.NewShift.DayOfWeek, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-3">
+        @Html.LabelFor(m => m.NewShift.Start, "Giờ bắt đầu", new { @class = "form-label" })
+        @* Thêm list="start-times" *@
+        @Html.TextBoxFor(m => m.NewShift.Start, "{0:hh\\:mm}", new { @class = "form-control", type = "time", required = "required", id = "StartTimeInput", list = "start-times", step = "900" }) @* step=900 là 15 phút *@
+        <datalist id="start-times"></datalist> @* Thêm datalist *@
+        @Html.ValidationMessageFor(m => m.NewShift.Start, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-3">
+        @Html.LabelFor(m => m.NewShift.End, "Giờ kết thúc", new { @class = "form-label" })
+        @* Thêm list="end-times" *@
+        @Html.TextBoxFor(m => m.NewShift.End, "{0:hh\\:mm}", new { @class = "form-control", type = "time", required = "required", id = "EndTimeInput", list = "end-times", step = "900" })
+        <datalist id="end-times"></datalist> @* Thêm datalist *@
+        @Html.ValidationMessageFor(m => m.NewShift.End, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-3">
+        <button type="submit" class="btn btn-success w-100">Thêm ca</button>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+         $(document).ready(function () {
+             var daySelect = $('#DayOfWeekSelect');
+             var startTimeInput = $('#StartTimeInput');
+             var endTimeInput = $('#EndTimeInput');
+             var startTimeDatalist = $('#start-times');
+             var endTimeDatalist = $('#end-times');
+
+             // Định nghĩa các khoảng thời gian hợp lệ
+             var morningStart = "08:00";
+             var morningEnd = "11:30";
+             var afternoonStart = "13:00";
+             var afternoonEnd = "17:00";
+             var stepMinutes = 15; // Bước nhảy (phút)
+
+             // Hàm tạo các option cho datalist
+             function generateTimeOptions(startStr, endStr) {
+                 var options = '';
+                 var start = new Date('1970-01-01T' + startStr + ':00');
+                 var end = new Date('1970-01-01T' + endStr + ':00');
+
+                 while (start <= end) {
+                     var hours = ('0' + start.getHours()).slice(-2);
+                     var minutes = ('0' + start.getMinutes()).slice(-2);
+                     var timeString = hours + ':' + minutes;
+                     options += '<option value="' + timeString + '">';
+                     start.setMinutes(start.getMinutes() + stepMinutes);
+                 }
+                 return options;
+             }
+
+             // Hàm cập nhật datalist dựa trên ngày được chọn
+             function updateDataLists() {
+                 var selectedDay = parseInt(daySelect.val()); // Lấy giá trị số (0=Sun, 6=Sat)
+                 var startOptions = '';
+                 var endOptions = '';
+
+                 if (selectedDay === 6) { // Nếu là Thứ 7
+                     startOptions = generateTimeOptions(morningStart, morningEnd);
+                     endOptions = generateTimeOptions(morningStart, morningEnd);
+                     // Set min/max để trình duyệt hiểu giới hạn cơ bản
+                     startTimeInput.attr('min', morningStart).attr('max', morningEnd);
+                     endTimeInput.attr('min', morningStart).attr('max', morningEnd);
+                 } else if (selectedDay >= 1 && selectedDay <= 5) { // Nếu là Thứ 2 - Thứ 6
+                     startOptions = generateTimeOptions(morningStart, morningEnd) + generateTimeOptions(afternoonStart, afternoonEnd);
+                     endOptions = generateTimeOptions(morningStart, morningEnd) + generateTimeOptions(afternoonStart, afternoonEnd);
+                      // Set min/max tổng quát
+                     startTimeInput.attr('min', morningStart).attr('max', afternoonEnd);
+                     endTimeInput.attr('min', morningStart).attr('max', afternoonEnd);
+                 } else { // Chưa chọn hoặc Chủ nhật (đã loại bỏ khỏi dropdown)
+                     startTimeInput.attr('min', morningStart).attr('max', afternoonEnd);
+                     endTimeInput.attr('min', morningStart).attr('max', afternoonEnd);
+                 }
+
+                 startTimeDatalist.html(startOptions);
+                 endTimeDatalist.html(endOptions);
+
+                 // Xóa giá trị cũ khi thay đổi ngày để tránh giờ không hợp lệ
+                 startTimeInput.val('');
+                 endTimeInput.val('');
+             }
+
+             // Gọi khi thay đổi ngày
+             daySelect.on('change', updateDataLists);
+
+             // Gọi lần đầu khi load trang (để thiết lập min/max ban đầu nếu cần)
+              updateDataLists(); // Gọi để thiết lập min/max ban đầu
+         });
+    </script>
+}
+

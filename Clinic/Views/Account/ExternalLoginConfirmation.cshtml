@@ -1,7 +1,8 @@
 ﻿@model Clinic.Models.ExternalLoginConfirmationViewModel
 @{
-    ViewBag.Title = "Register";
+    ViewBag.Title = "Hoàn tất liên kết tài khoản"; // Sửa Title
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var loginProvider = ViewBag.LoginProvider as string ?? "dịch vụ ngoài";
 }
 
 <section id="external-confirm" data-stellar-background-ratio="3" style="padding:60px 0;">
@@ -9,10 +10,9 @@
         <div class="row">
             <div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1">
 
-                <!-- Tiêu đề giống Login -->
                 <div class="section-title wow fadeInUp" data-wow-delay="0.2s">
                     <h2>@ViewBag.Title</h2>
-                    <p>Kết nối tài khoản @ViewBag.LoginProvider với hệ thống để hoàn tất đăng nhập.</p>
+                    <p>Bạn đã xác thực thành công với <strong>@loginProvider</strong>. Vui lòng xác nhận email để hoàn tất tạo tài khoản mới liên kết với @loginProvider.</p>
                 </div>
 
                 @using (Html.BeginForm("ExternalLoginConfirmation", "Account",
@@ -22,43 +22,51 @@
                 {
                     @Html.AntiForgeryToken()
 
+                    @* Hiển thị lỗi chung (nếu có) *@
                     @Html.ValidationSummary(true, "", new { @class = "text-danger", @style = "margin-bottom:15px" })
 
-                    <!-- Thông tin mô tả (giữ nguyên nội dung) -->
+                    <!-- Thông tin mô tả (đã sửa) -->
                     <div class="row">
                         <div class="col-md-12 col-sm-12">
+                             @* Hiển thị tên gợi ý nếu có *@
+                             @if (!string.IsNullOrWhiteSpace(Model.SuggestedName))
+                             {
+                                <p style="margin-bottom:10px;">
+                                    Tên gợi ý từ @loginProvider: <strong>@Model.SuggestedName</strong>
+                                    @Html.HiddenFor(m => m.SuggestedName) @* Gửi lại tên gợi ý lên server *@
+                                </p>
+                             }
                             <p class="text-info" style="margin-bottom:15px;">
-                                You've successfully authenticated with
-                                <strong>@ViewBag.LoginProvider</strong>.
-                                Please enter a user name for this site below and click the
-                                <strong>Register</strong> button to finish logging in.
+                                Vui lòng xác nhận hoặc nhập địa chỉ email bạn muốn sử dụng cho tài khoản này.
                             </p>
                         </div>
                     </div>
 
-                    <!-- Form nhập Email (giữ nguyên binding) -->
+                    <!-- Form nhập Email -->
                     <div class="row">
                         <div class="col-md-12 col-sm-12">
-                            @Html.LabelFor(m => m.Email)
+                            @Html.LabelFor(m => m.Email, new { @class = "control-label" }) @* Thêm class *@
                             @Html.TextBoxFor(m => m.Email,
-                                new { @class = "form-control", placeholder = "you@example.com", autofocus = "autofocus" })
+                                new { @class = "form-control", placeholder = "you@example.com", autofocus = "autofocus", required = "required" }) @* Thêm required *@
                             @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
                         </div>
                     </div>
 
-                    <!-- Submit (giữ nguyên hành động, đồng bộ màu nút) -->
+                    <!-- Submit -->
                     <div class="row">
                         <div class="col-md-12 col-sm-12" style="margin-top:15px;">
-                            <button type="submit" class="form-control section-btn btn btn-primary">Register</button>
+                            <button type="submit" class="form-control section-btn btn btn-primary">Xác nhận và Tiếp tục</button>
                         </div>
                     </div>
                 }
 
-                <!-- Link quay lại đăng nhập (tuỳ chọn, để giống không khí UI) -->
+                <!-- Link quay lại đăng nhập -->
                 <div class="row" style="margin-top:12px;">
                     <div class="col-md-12 col-sm-12 text-center">
                         Đã có tài khoản?
-                        <a href="@Url.Action("Login","Account")">Đăng nhập</a>
+                        <a href="@Url.Action("Login","Account", new { ReturnUrl = ViewBag.ReturnUrl })">Đăng nhập</a> @* Thêm ReturnUrl *@
+                        |
+                        <a href="@Url.Action("Register","Account", new { ReturnUrl = ViewBag.ReturnUrl })">Đăng ký bằng mật khẩu</a> @* Thêm ReturnUrl *@
                     </div>
                 </div>
 

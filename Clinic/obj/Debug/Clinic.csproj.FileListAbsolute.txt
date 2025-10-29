@@ -248,3 +248,10 @@ D:\Private-Clinic\Clinic\obj\Debug\Clinic.csproj.CoreCompileInputs.cache
 D:\Private-Clinic\Clinic\obj\Debug\Clinic.csproj.Up2Date
 D:\Private-Clinic\Clinic\obj\Debug\Clinic.dll
 D:\Private-Clinic\Clinic\obj\Debug\Clinic.pdb
+E:\Study\WebApp\Project\Private-Clinic\Clinic\obj\Debug\Clinic.Migrations.ClinicMigrations.UpdateAppointmentRequest.resources
+E:\Study\WebApp\Project\Private-Clinic\Clinic\obj\Debug\Clinic.Migrations.ClinicMigrations.AddExamTypeToAppointmentAndService.resources
+E:\Study\WebApp\Project\Private-Clinic\Clinic\obj\Debug\Clinic.Migrations.ClinicMigrations.MakePatientUserIdNullable.resources
+E:\Study\WebApp\Project\Private-Clinic\Clinic\obj\Debug\Clinic.Migrations.ClinicMigrations.UpdateSeedServicesExamType.resources
+E:\Study\WebApp\Project\Private-Clinic\Clinic\obj\Debug\Clinic.Migrations.ClinicMigrations.ReflectPendingModelChanges.resources
+E:\Study\WebApp\Project\Private-Clinic\Clinic\obj\Debug\Clinic.Migrations.ClinicMigrations.SyncAfterIdentityFix.resources
+E:\Study\WebApp\Project\Private-Clinic\Clinic\obj\Debug\Clinic.Migrations.ClinicMigrations.AddExtendedPatientProperties.resources

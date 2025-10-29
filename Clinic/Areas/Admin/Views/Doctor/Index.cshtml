@@ -4,40 +4,45 @@
     ViewBag.Title = "Danh sách bác sĩ";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
     var q = Request["q"];
+    // *** CORRECTED ROUTE NAME HERE ***
     Func<string, object, string> actionUrlWithId = (action, routeValues) =>
-        Url.RouteUrl("Admin_Doctors_actions", routeValues) ??
+        Url.RouteUrl("Admin_Doctor_actions", routeValues) ?? // Use Admin_Doctor_actions (no 's')
         Url.Action(action, "Doctor", routeValues); // Fallback
 
-    // *** THÊM URL HELPER CHO WORKSHIFTS ***
     Func<object, string> workShiftsUrl = (routeValues) =>
-        Url.Action("Index", "WorkShifts", routeValues); // Trỏ đến WorkShifts controller
-                                                        // *** KẾT THÚC THÊM ***
+        Url.Action("Index", "WorkShifts", routeValues);
 
-    var createHref = actionUrlWithId("Create", new { area = "Admin", action = "Create" }); // Sửa lại cách gọi helper
+    var createHref = actionUrlWithId("Create", new { area = "Admin", action = "Create" });
     bool hasData = Model != null && Model.Any();
 }
 <div class="container-fluid py-3">
+    @* TempData messages (giữ nguyên) *@
     @if (TempData["ok"] != null)
-    {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            @TempData["ok"] <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    }
+    {<div class="alert alert-success alert-dismissible fade show" role="alert">@TempData["ok"]<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>}
+    @if (TempData["err"] != null)
+    {<div class="alert alert-danger alert-dismissible fade show" role="alert">@TempData["err"]<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>}
+    @if (TempData["warn"] != null)
+    {<div class="alert alert-warning alert-dismissible fade show" role="alert">@TempData["warn"]<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>}
+
 
     <div class="d-flex align-items-center justify-content-between mb-3">
         <h2 class="mb-0">Danh sách bác sĩ</h2>
         <div class="d-flex gap-2">
             <form method="get" class="d-flex" role="search">
-                <input name="q" value="@q" class="form-control" placeholder="Tìm theo tên, chuyên khoa, email" />
+                <input name="q" value="@q" class="form-control" placeholder="Tìm tên, khoa, email, CCCD, địa chỉ..." />
                 <button class="btn btn-primary ms-2" type="submit">Tìm</button>
+                @if (!string.IsNullOrWhiteSpace(q))
+                {
+                    <a href="@Url.Action("Index")" class="btn btn-outline-secondary ms-1" title="Xóa lọc"><i class="ti ti-x"></i></a>
+                }
             </form>
-            <a class="btn btn-success" href="@createHref">Thêm mới</a>
+            <a class="btn btn-success text-nowrap" href="@createHref"><i class="ti ti-plus me-1"></i>Thêm mới</a>
         </div>
     </div>
 
     @if (!hasData)
     {
-        <div class="text-muted fst-italic">Chưa có bác sĩ nào. Hãy bấm <a href="@createHref">Thêm mới</a>.</div>
+        <div class="alert alert-info">Chưa có bác sĩ nào. Hãy bấm <a href="@createHref">Thêm mới</a>.</div>
     }
     else
     {
@@ -48,9 +53,11 @@
                         <th style="width:72px">#</th>
                         <th>Ảnh</th>
                         <th>Họ tên</th>
-                        <th>Chuyên khoa</th>
+                        <th>Chuyên khoa</th> @* Giữ nguyên cột này *@
                         <th>Email</th>
                         <th>Điện thoại</th>
+                        <th>Số CCCD</th>
+                        <th>Địa chỉ</th>
                         <th class="text-end" style="width:1%; white-space:nowrap;">Thao tác</th>
                     </tr>
                 </thead>
@@ -60,7 +67,6 @@
                     {
                         var editHref = actionUrlWithId("Edit", new { area = "Admin", action = "Edit", id = d.Id });
                         var deleteHref = actionUrlWithId("Delete", new { area = "Admin", action = "Delete", id = d.Id });
-                        // *** TẠO LINK QUẢN LÝ CA ***
                         var manageShiftsHref = workShiftsUrl(new { area = "Admin", doctorIdFilter = d.Id });
 
                         <tr>
@@ -69,25 +75,31 @@
                                 @if (!string.IsNullOrWhiteSpace(d.PhotoUrl))
                                 {
                                     <img src="@Url.Content(d.PhotoUrl)" alt="Ảnh" style="height:40px;width:40px;object-fit:cover;border-radius:6px;"
-                                         onerror="this.onerror=null; this.src='@Url.Content("~/Resources/images/avatar-doctor.png")';" /> @* Thêm fallback *@
-                                    }
-                                    else
-                                    {
-                                        <img src="@Url.Content("~/Resources/images/avatar-doctor.png")" alt="Ảnh" style="height:40px;width:40px;object-fit:cover;border-radius:6px;" /> @* Ảnh mặc định *@
-                                    }
+                                         onerror="this.onerror=null; this.src='@Url.Content("~/Resources/images/avatar-doctor.png")';" />
+                                }
+                                else
+                                {
+                                    <img src="@Url.Content("~/Resources/images/avatar-doctor.png")" alt="Ảnh" style="height:40px;width:40px;object-fit:cover;border-radius:6px;" />
+                                }
                             </td>
                             <td>@(d?.Name ?? "-")</td>
-                            <td>@(d?.Specialty ?? "-")</td>
+                            @* *** SỬA: Hiển thị tên chuyên khoa từ navigation property *** *@
+                            <td>@(d?.Specialty?.Name ?? "-")</td>
+                            @* *** KẾT THÚC SỬA *** *@
                             <td>@(string.IsNullOrWhiteSpace(d?.Email) ? "-" : d.Email)</td>
                             <td>@(d?.PhoneNumber ?? "-")</td>
+                            <td>@(string.IsNullOrWhiteSpace(d.NationalId) ? "-" : d.NationalId)</td>
+                            <td class="text-truncate" style="max-width: 150px;" title="@d.Address">@(string.IsNullOrWhiteSpace(d.Address) ? "-" : d.Address)</td>
                             <td class="text-end text-nowrap">
-                                @* *** THÊM NÚT QUẢN LÝ CA *** *@
                                 <a class="btn btn-sm btn-info me-1" href="@manageShiftsHref" title="Quản lý ca làm việc">
                                     <i class="ti ti-clock-hour-4"></i> QL Ca
                                 </a>
-                                @* *** KẾT THÚC THÊM *** *@
-                                <a class="btn btn-sm btn-primary me-1" href="@editHref">Sửa</a>
-                                <a class="btn btn-sm btn-outline-danger" href="@deleteHref">Xóa</a>
+                                <a class="btn btn-sm btn-primary me-1" href="@editHref">
+                                    <i class="ti ti-pencil me-1"></i> Sửa
+                                </a>
+                                <a class="btn btn-sm btn-outline-danger" href="@deleteHref">
+                                    <i class="ti ti-trash me-1"></i> Ẩn
+                                </a> @* Sửa thành nút Ẩn *@
                             </td>
                         </tr>
                     }

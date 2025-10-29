@@ -1,214 +1,205 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
+using System.ComponentModel.DataAnnotations; // Keep this
+using System.ComponentModel.DataAnnotations.Schema; // Keep this
 using System.Linq;
-using System.Threading.Tasks;
-using System.Web.Mvc;
-using Clinic.Models;
+// using System.Reflection; // No longer needed here
+using System.Web.Mvc; // Add this using for Controller base class
+using Clinic.Models; // Add this using for ClinicDbContext, etc.
+using System.Threading.Tasks; // Add this for async methods
+using System.Collections.Generic; // Add this for List
+using System.Data.Entity; // Add this for Include/FirstOrDefaultAsync
 
+// *** FIX: Namespace should be Clinic.Controllers ***
 namespace Clinic.Controllers
 {
-    public class AppointmentController : Controller
+    // Definitions for ExamType, AppointmentStatus, Appointment, and EnumExtensions
+    // ONLY exist in Clinic.Models namespace (e.g., in Appointment.cs)
+
+    public class AppointmentController : Controller // Inherit from Controller
     {
-        // Dùng DbContext domain của bạn
         private readonly ClinicDbContext _db = new ClinicDbContext();
 
-        // GET: /Appointment
-        [AllowAnonymous]
+        // GET: Appointment (or Appointment/Index)
         public async Task<ActionResult> Index()
         {
-            // Lấy danh sách chuyên khoa từ các bác sĩ
-            var specialties = await _db.Doctors
-                                        .Select(d => d.Specialty)
-                                        .Where(s => s != null && s != "")
-                                        .Distinct()
-                                        .OrderBy(s => s)
-                                        .ToListAsync();
+            ViewBag.Title = "Make an appointment";
+            var specialties = await _db.Specialties // *** Query Specialties table ***
+                                     .Where(s => s.IsVisible)
+                                     .OrderBy(s => s.Name)
+                                     .Select(s => new { s.Name })
+                                     .ToListAsync();
 
-            ViewBag.Specialties = new SelectList(specialties);
+            ViewBag.Specialties = new SelectList(specialties, "Name", "Name");
 
             return View(new AppointmentRequest());
         }
 
-        // POST: /Appointment/Create
+        // POST: Appointment/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [AllowAnonymous]
-        public async Task<ActionResult> Create([Bind(Include = "Name,Email,Phone,Specialty,RequestedSlot,Message")] AppointmentRequest model)
+        public async Task<ActionResult> Create(AppointmentRequest model)
         {
-            if (model.RequestedSlot.Kind == DateTimeKind.Unspecified)
-            {
-                // Giả định thời gian người dùng nhập là giờ Local
-                model.RequestedSlot = DateTime.SpecifyKind(model.RequestedSlot, DateTimeKind.Local);
-            }
-
-            // Chuyển sang UTC để lưu trữ
-            model.RequestedSlot = model.RequestedSlot.ToUniversalTime();
-
+            // Reload specialties if validation fails
+            Func<Task> reloadSpecialties = async () => {
+                var specialties = await _db.Specialties // *** Query Specialties table ***
+                                         .Where(s => s.IsVisible)
+                                         .OrderBy(s => s.Name)
+                                         .Select(s => new { s.Name })
+                                         .ToListAsync();
+                ViewBag.Specialties = new SelectList(specialties, "Name", "Name", model.Specialty);
+            };
 
             if (!ModelState.IsValid)
             {
-                // Trả lại form kèm lỗi
-                var specialties = await _db.Doctors
-                                .Select(d => d.Specialty)
-                                .Where(s => s != null && s != "")
-                                .Distinct()
-                                .OrderBy(s => s)
-                                .ToListAsync();
-                ViewBag.Specialties = new SelectList(specialties, model.Specialty);
+                await reloadSpecialties();
                 return View("Index", model);
             }
 
-            // Bảo vệ: nếu chưa set thời điểm tạo thì set UTC
-            if (model.CreatedAt == default(DateTime))
-                model.CreatedAt = DateTime.UtcNow;
+            // Timezone Handling (Keep as is)
+            if (model.RequestedSlot.Kind == DateTimeKind.Unspecified)
+            {
+                model.RequestedSlot = DateTime.SpecifyKind(model.RequestedSlot, DateTimeKind.Local);
+            }
+            else if (model.RequestedSlot.Kind == DateTimeKind.Utc)
+            {
+                model.RequestedSlot = model.RequestedSlot.ToLocalTime();
+            }
+            DateTime requestedSlotUtc = model.RequestedSlot.ToUniversalTime();
 
-            _db.AppointmentRequests.Add(model);
+            // Validation (Keep as is)
+            if (requestedSlotUtc <= DateTime.UtcNow)
+            {
+                ModelState.AddModelError("RequestedSlot", "Không thể đặt lịch hẹn trong quá khứ.");
+                await reloadSpecialties();
+                return View("Index", model);
+            }
+            if (model.RequestedSlot.DayOfWeek == DayOfWeek.Sunday)
+            {
+                ModelState.AddModelError("RequestedSlot", "Phòng khám nghỉ Chủ nhật, vui lòng chọn ngày khác.");
+                await reloadSpecialties();
+                return View("Index", model);
+            }
+
+            // Save Request (Keep as is)
+            var requestToSave = new AppointmentRequest
+            {
+                Name = model.Name,
+                Email = model.Email,
+                Phone = model.Phone,
+                Specialty = model.Specialty,
+                RequestedSlot = requestedSlotUtc,
+                Message = model.Message,
+                CreatedAt = DateTime.UtcNow,
+                IsHandled = false
+            };
+            _db.AppointmentRequests.Add(requestToSave);
             await _db.SaveChangesAsync();
 
-            // Hiển thị lời cảm ơn NGAY TRÊN TRANG (không redirect layout khác)
-            ModelState.Clear(); // xóa dữ liệu cũ trong form
-            ViewBag.Success = "Cảm ơn bạn! Chúng tôi đã nhận yêu cầu đặt lịch. Lễ tân sẽ sớm liên hệ qua Email hoặc SĐT để xác nhận.";
-
-            // Tải lại danh sách chuyên khoa cho form rỗng
-            var specialtiesReload = await _db.Doctors
-                                    .Select(d => d.Specialty)
-                                    .Where(s => s != null && s != "")
-                                    .Distinct()
-                                    .OrderBy(s => s)
-                                    .ToListAsync();
-            ViewBag.Specialties = new SelectList(specialtiesReload);
-
-            // Trả về Index với form rỗng + thông báo thành công
+            ViewBag.Success = "Yêu cầu đặt lịch của bạn đã được gửi thành công! Lễ tân sẽ liên hệ xác nhận sớm nhất.";
+            await reloadSpecialties();
             return View("Index", new AppointmentRequest());
         }
 
-        // API Endpoint cho JavaScript
-        // GET: /Appointment/GetAvailableSlots?date=2025-10-30&specialty=Nhi
-        [AllowAnonymous]
+
+        // GET: Appointment/GetAvailableSlots
         [HttpGet]
-        public async Task<JsonResult> GetAvailableSlots(DateTime date, string specialty)
+        public async Task<JsonResult> GetAvailableSlots(string date, string specialty)
         {
-            const int slotDurationMinutes = 30; // 30 phút mỗi slot
-            var availableSlots = new List<TimeSpan>();
-
-            // 1. Lấy DayOfWeek (Chủ nhật = 0, Thứ 2 = 1, ...)
-            var dayOfWeek = date.DayOfWeek;
-
-            // 2. Chủ nhật không làm việc
-            if (dayOfWeek == DayOfWeek.Sunday)
+            if (string.IsNullOrEmpty(date) || string.IsNullOrEmpty(specialty))
             {
-                return Json(new { slots = availableSlots, message = "Chủ nhật phòng khám không làm việc." }, JsonRequestBehavior.AllowGet);
+                return Json(new { slots = new List<string>(), message = "Vui lòng chọn chuyên khoa và ngày." }, JsonRequestBehavior.AllowGet);
+            }
+            if (!DateTime.TryParse(date, out DateTime selectedLocalDate))
+            {
+                return Json(new { slots = new List<string>(), message = "Ngày không hợp lệ." }, JsonRequestBehavior.AllowGet);
             }
 
-            // Giờ hiện tại (Local)
-            var now = DateTime.Now;
+            // Timezone Handling & Past/Sunday checks (Keep as is)
+            DateTime startOfDayLocal = selectedLocalDate.Date;
+            DateTime endOfDayLocal = startOfDayLocal.AddDays(1);
+            DateTime startOfDayUtc = DateTime.SpecifyKind(startOfDayLocal, DateTimeKind.Local).ToUniversalTime();
+            DateTime endOfDayUtc = DateTime.SpecifyKind(endOfDayLocal, DateTimeKind.Local).ToUniversalTime();
+            DateTime nowUtc = DateTime.UtcNow;
+            if (startOfDayUtc < nowUtc && endOfDayUtc > nowUtc) startOfDayUtc = nowUtc;
+            else if (endOfDayUtc <= nowUtc) return Json(new { slots = new List<string>(), message = "Ngày đã chọn nằm trong quá khứ." }, JsonRequestBehavior.AllowGet);
+            if (selectedLocalDate.DayOfWeek == DayOfWeek.Sunday) return Json(new { slots = new List<string>(), message = "Phòng khám nghỉ Chủ nhật." }, JsonRequestBehavior.AllowGet);
 
-            // 3. Tìm các bác sĩ thuộc chuyên khoa
-            var doctorIds = await _db.Doctors
-                .Where(d => d.Specialty == specialty)
-                .Select(d => d.Id)
-                .ToListAsync();
-
-            if (!doctorIds.Any())
+            try
             {
-                return Json(new { slots = availableSlots, message = "Không tìm thấy bác sĩ cho chuyên khoa này." }, JsonRequestBehavior.AllowGet);
-            }
+                var availableSlotsLocal = new List<string>();
+                int slotDuration = 30; // minutes
+                DayOfWeek selectedDayOfWeekLocal = selectedLocalDate.DayOfWeek;
 
-            // 4. Lấy tất cả các khung giờ làm việc của các bác sĩ này VÀO NGÀY ĐÓ
-            var workBlocks = await _db.WorkingHours
-                .Where(wh => doctorIds.Contains(wh.DoctorId) && wh.DayOfWeek == dayOfWeek)
-                .ToListAsync();
+                // *** FIX: Query doctors and their WORKING HOURS correctly ***
+                // 1. Find doctors with the specialty
+                var doctorIdsWithSpecialty = await _db.Doctors
+                    .Where(d => d.IsVisible && d.Specialty.Name == specialty) // Compare Specialty.Name
+                    .Select(d => d.Id)
+                    .ToListAsync();
 
-            if (!workBlocks.Any())
-            {
-                return Json(new { slots = availableSlots, message = "Không có lịch làm việc cho ngày này." }, JsonRequestBehavior.AllowGet);
-            }
-
-            // 5. Lấy tất cả các lịch hẹn (Appointments) đã có của các bác sĩ này VÀO NGÀY ĐÓ
-            var dayStartLocal = date.Date;
-            var dayEndLocal = dayStartLocal.AddDays(1);
-
-            // Chuyển sang UTC để query CSDL (vì Appointment lưu giờ UTC)
-            var dayStartUtc = dayStartLocal.ToUniversalTime();
-            var dayEndUtc = dayEndLocal.ToUniversalTime();
-
-            var existingAppts = await _db.Appointments
-                .Where(a => doctorIds.Contains(a.DoctorId) &&
-                            a.StartTime >= dayStartUtc && a.StartTime < dayEndUtc &&
-                            a.Status != AppointmentStatus.Canceled)
-                .ToListAsync();
-
-            // 6. Tạo danh sách các slot tiềm năng
-            // Tìm giờ bắt đầu sớm nhất và kết thúc muộn nhất
-            var minStart = workBlocks.Min(wb => wb.Start);
-            var maxEnd = workBlocks.Max(wb => wb.End);
-
-            for (var slotTime = minStart; slotTime < maxEnd; slotTime = slotTime.Add(TimeSpan.FromMinutes(slotDurationMinutes)))
-            {
-                var slotStartLocal = date.Date.Add(slotTime);
-
-                // Bỏ qua slot trong quá khứ
-                if (slotStartLocal < now)
+                if (!doctorIdsWithSpecialty.Any())
                 {
-                    continue;
+                    return Json(new { slots = new List<string>(), message = "Không có bác sĩ nào thuộc chuyên khoa này." }, JsonRequestBehavior.AllowGet);
                 }
 
-                var slotEndLocal = slotStartLocal.AddMinutes(slotDurationMinutes);
+                // 2. Get working hours for those doctors on the selected day
+                var workingHoursForDay = await _db.WorkingHours
+                    .Where(wh => doctorIdsWithSpecialty.Contains(wh.DoctorId) && wh.DayOfWeek == selectedDayOfWeekLocal)
+                    .Select(wh => new { wh.DoctorId, wh.Start, wh.End })
+                    .ToListAsync();
 
-                // 7. Kiểm tra xem slot này có "khả dụng" không
-                // "Khả dụng" = Có ít nhất 1 bác sĩ RẢNH vào giờ này.
-                // "Rảnh" = Bác sĩ đó có LỊCH LÀM VIỆC (workBlocks) VÀ không có LỊCH HẸN (existingAppts)
-
-                // Tìm các bác sĩ CÓ LỊCH LÀM VIỆC trong khung giờ này
-                var workingDoctorIds = workBlocks
-                    .Where(wb => slotTime >= wb.Start && slotEndLocal.TimeOfDay <= wb.End)
-                    .Select(wb => wb.DoctorId)
-                    .Distinct()
-                    .ToList();
-
-                if (!workingDoctorIds.Any())
+                if (!workingHoursForDay.Any())
                 {
-                    continue; // Không có bác sĩ nào làm việc giờ này
+                    return Json(new { slots = new List<string>(), message = "Không có bác sĩ nào làm việc vào ngày đã chọn." }, JsonRequestBehavior.AllowGet);
                 }
 
-                // Chuyển slot sang UTC để so sánh
-                var slotStartUtc = slotStartLocal.ToUniversalTime();
-                var slotEndUtc = slotEndLocal.ToUniversalTime();
-
-                // Tìm các bác sĩ BẬN (đã có lịch hẹn) trong khung giờ này
-                var bookedDoctorIds = existingAppts
-                    .Where(a => a.StartTime < slotEndUtc && a.EndTime > slotStartUtc) // Logic kiểm tra overlap
-                    .Select(a => a.DoctorId)
-                    .ToHashSet(); // Dùng HashSet để kiểm tra nhanh
-
-                // Kiểm tra xem có bác sĩ nào LÀM VIỆC mà KHÔNG BẬN không
-                bool isSlotAvailable = workingDoctorIds.Any(docId => !bookedDoctorIds.Contains(docId));
-
-                if (isSlotAvailable)
+                // Generate potential slots (Keep as is)
+                var potentialSlotsLocal = new HashSet<DateTime>();
+                foreach (var shift in workingHoursForDay) // Loop through the fetched working hours
                 {
-                    availableSlots.Add(slotTime);
+                    DateTime shiftStartLocal = startOfDayLocal.Add(shift.Start);
+                    DateTime shiftEndLocal = startOfDayLocal.Add(shift.End);
+                    for (DateTime slotStart = shiftStartLocal; slotStart.AddMinutes(slotDuration) <= shiftEndLocal; slotStart = slotStart.AddMinutes(slotDuration))
+                    {
+                        if (slotStart >= DateTime.SpecifyKind(startOfDayUtc.ToLocalTime(), DateTimeKind.Local))
+                        {
+                            potentialSlotsLocal.Add(slotStart);
+                        }
+                    }
                 }
+
+                // *** FIX: Get booked slots using Doctor.Specialty.Name ***
+                // Include Doctor and Specialty to filter by Specialty.Name
+                var bookedSlotsUtc = await _db.Appointments
+                   .Include(a => a.Doctor.Specialty) // Include Doctor and Specialty
+                   .Where(a => a.Doctor.Specialty.Name == specialty // Filter by Specialty Name
+                              && a.StartTime >= startOfDayUtc && a.StartTime < endOfDayUtc
+                              && a.Status != AppointmentStatus.Canceled)
+                   .Select(a => a.StartTime)
+                   .ToListAsync();
+
+                // Filter potential slots (Keep as is)
+                var bookedSlotsLocalSet = new HashSet<DateTime>(bookedSlotsUtc.Select(bst => DateTime.SpecifyKind(bst.ToLocalTime(), DateTimeKind.Local)));
+                foreach (DateTime potentialSlot in potentialSlotsLocal.OrderBy(s => s))
+                {
+                    if (!bookedSlotsLocalSet.Contains(potentialSlot))
+                    {
+                        availableSlotsLocal.Add(potentialSlot.ToString("HH:mm"));
+                    }
+                }
+
+                // Return result (Keep as is)
+                if (!availableSlotsLocal.Any()) return Json(new { slots = new List<string>(), message = "Đã hết lịch trống cho ngày này. Vui lòng chọn ngày khác." }, JsonRequestBehavior.AllowGet);
+                return Json(new { slots = availableSlotsLocal, message = "Các khung giờ còn trống:" }, JsonRequestBehavior.AllowGet);
             }
-
-            var formattedSlots = availableSlots.Select(ts => ts.ToString(@"hh\:mm")).ToList();
-            string successMessage = formattedSlots.Any() ?
-                $"Tìm thấy {formattedSlots.Count} khung giờ khả dụng." :
-                "Đã hết khung giờ khả dụng cho ngày này. Vui lòng chọn ngày khác.";
-
-            return Json(new { slots = formattedSlots, message = successMessage }, JsonRequestBehavior.AllowGet);
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error getting slots: {ex.Message} \n {ex.StackTrace}"); // Log stack trace too
+                return Json(new { slots = new List<string>(), message = "Lỗi khi tải lịch hẹn. Vui lòng thử lại." }, JsonRequestBehavior.AllowGet);
+            }
         }
 
-        [AllowAnonymous]
-        public ActionResult SubmittedReception()
-        {
-            return View();
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing) _db.Dispose();
-            base.Dispose(disposing);
-        }
+        // Dispose DbContext (Keep as is)
+        protected override void Dispose(bool disposing) { if (disposing) _db.Dispose(); base.Dispose(disposing); }
     }
 }

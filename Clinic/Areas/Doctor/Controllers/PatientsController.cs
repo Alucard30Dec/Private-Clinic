@@ -4,8 +4,8 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using Clinic.Areas.Doctor.Data;
-using System; // Thêm để dùng DateTime
+using Clinic.Areas.Doctor.Data; // <<< *** ENSURE THIS USING DIRECTIVE IS PRESENT AND CORRECT ***
+using System;
 
 namespace Clinic.Areas.Doctor.Controllers
 {
@@ -42,34 +42,33 @@ namespace Clinic.Areas.Doctor.Controllers
             ViewBag.Nav = "mypatients";
 
             var did = await CurrentDoctorIdAsync();
+            // CS0472 Warning: The result of the expression is always 'true' since a value of type 'int' is never equal to 'null' of type 'int?'
+            // This warning is informational. Comparing a nullable int? (did) with null is standard practice and the logic is correct here.
             if (did == null) return HttpNotFound("Không tìm thấy hồ sơ bác sĩ.");
 
-            // Lấy danh sách bệnh nhân đã từng khám với bác sĩ này
-            // *** CẬP NHẬT TRUY VẤN ĐỂ LẤY THÊM TRƯỜNG VÀ TÍNH TUỔI ***
             var query = _db.Appointments
-                           .Where(a => a.DoctorId == did.Value && a.PatientId != null) // Đảm bảo PatientId không null
-                           .Select(a => a.Patient) // Lấy đối tượng Patient
-                           .Where(p => p != null) // Lọc bỏ Patient null (nếu có lỗi dữ liệu)
-                           .Distinct() // Chỉ lấy mỗi bệnh nhân 1 lần
-                           .Select(p => new // Tạo ViewModel
+                           .Where(a => a.DoctorId == did.Value && a.PatientId != null)
+                           .Select(a => a.Patient)
+                           .Where(p => p != null)
+                           .Distinct()
+                           .Select(p => new // Intermediate anonymous type
                            {
-                               Patient = p, // Giữ lại đối tượng Patient để lấy thông tin khác
+                               Patient = p,
                                TotalVisits = _db.Appointments.Count(ap => ap.PatientId == p.Id && ap.DoctorId == did.Value),
                                LastVisit = _db.Appointments
                                             .Where(ap => ap.PatientId == p.Id && ap.DoctorId == did.Value)
-                                            .Max(ap => (DateTime?)ap.StartTime) // Lấy lần khám cuối cùng
+                                            .Max(ap => (DateTime?)ap.StartTime)
                            })
-                           .Select(g => new MyPatientRowVM // Map sang ViewModel cuối cùng
+                           .Select(g => new MyPatientRowVM // Map to correct ViewModel (Now found)
                            {
                                PatientId = g.Patient.Id,
                                FullName = g.Patient.FullName,
                                PhoneNumber = g.Patient.PhoneNumber,
                                Email = g.Patient.Email,
                                DOB = g.Patient.DateOfBirth,
-                               Gender = g.Patient.Gender, // Lấy giới tính
+                               Gender = g.Patient.Gender,
                                TotalVisits = g.TotalVisits,
                                LastVisit = g.LastVisit,
-                               // Tính tuổi trực tiếp trong Select hoặc sau khi ToListAsync()
                            });
 
 
@@ -78,15 +77,13 @@ namespace Clinic.Areas.Doctor.Controllers
                 q = q.Trim().ToLower();
                 query = query.Where(x =>
                     (x.FullName != null && x.FullName.ToLower().Contains(q)) ||
-                    (x.PhoneNumber != null && x.PhoneNumber.Contains(q)) || // SĐT không cần ToLower
+                    (x.PhoneNumber != null && x.PhoneNumber.Contains(q)) ||
                     (x.Email != null && x.Email.ToLower().Contains(q)) ||
-                    (x.Gender != null && x.Gender.ToLower().Contains(q)) // Thêm tìm theo giới tính
+                    (x.Gender != null && x.Gender.ToLower().Contains(q))
                  );
             }
 
             var list = await query.OrderBy(x => x.FullName).ToListAsync();
-
-            // Tính tuổi sau khi đã lấy dữ liệu
             list.ForEach(p => p.Age = CalculateAge(p.DOB));
 
             ViewBag.q = q;
@@ -95,19 +92,18 @@ namespace Clinic.Areas.Doctor.Controllers
 
 
         // GET: /Doctor/Patients/Details/5
-        public async Task<ActionResult> Details(int id)
+        public async Task<ActionResult> Details(int id) // Parameter 'id' is non-nullable int, no explicit `id == null` check needed.
         {
             ViewBag.Title = "Hồ sơ bệnh nhân";
             ViewBag.Nav = "mypatients";
 
             var did = await CurrentDoctorIdAsync();
+            // CS0472 Warning (similar to above, comparing nullable int? to null is valid)
             if (did == null) return HttpNotFound();
 
-            // Lấy thông tin bệnh nhân (bao gồm các trường mới)
             var patient = await _db.Patients
                                    .Where(p => p.Id == id)
-                                   // *** LẤY THÊM TRƯỜNG ***
-                                   .Select(p => new PatientDetailVM
+                                   .Select(p => new PatientDetailVM // Map to correct ViewModel (Now found)
                                    {
                                        PatientId = p.Id,
                                        FullName = p.FullName,
@@ -125,31 +121,26 @@ namespace Clinic.Areas.Doctor.Controllers
                                    .FirstOrDefaultAsync();
 
             if (patient == null) return HttpNotFound();
-
-            // Tính tuổi
             patient.Age = CalculateAge(patient.DOB);
 
-            // Chỉ lấy các lần khám với chính bác sĩ này
             var visits = await _db.Appointments
                 .Where(a => a.PatientId == id && a.DoctorId == did.Value)
                 .OrderByDescending(a => a.StartTime)
-                .Select(a => new PatientVisitRowVM
+                .Select(a => new PatientVisitRowVM // Map to correct ViewModel (Now found)
                 {
                     AppointmentId = a.Id,
-                    ServiceName = a.Service.Name,
-                    StartTime = a.StartTime, // Giữ UTC để tính toán nếu cần
-                    EndTime = a.EndTime,     // Giữ UTC
-                    Status = (int)a.Status,
+                    ServiceName = a.Service.Name, // Assuming Service navigation property exists
+                    StartTime = a.StartTime,
+                    EndTime = a.EndTime,
+                    Status = (int)a.Status, // Cast enum to int for the ViewModel
                     Notes = a.Notes
-                    // Lấy thêm thông tin khám bệnh nếu có
                 })
                 .ToListAsync();
 
-            patient.Visits = visits; // Gán danh sách visits vào ViewModel
+            patient.Visits = visits;
 
-            return View(patient); // Truyền ViewModel đã có visits
+            return View(patient);
         }
-
 
         protected override void Dispose(bool disposing)
         {

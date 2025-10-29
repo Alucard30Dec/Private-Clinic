@@ -111,6 +111,17 @@ namespace Clinic.Areas.Admin.Controllers
                 return View(a);
             }
 
+            // *** CONVERT TO UTC BEFORE SAVING ***
+            if (a.StartTime.Kind == DateTimeKind.Unspecified)
+                a.StartTime = DateTime.SpecifyKind(a.StartTime, DateTimeKind.Local);
+            if (a.EndTime.Kind == DateTimeKind.Unspecified)
+                a.EndTime = DateTime.SpecifyKind(a.EndTime, DateTimeKind.Local);
+
+            a.StartTime = a.StartTime.ToUniversalTime();
+            a.EndTime = a.EndTime.ToUniversalTime();
+            a.CreatedAt = DateTime.UtcNow; // Set CreatedAt
+
+
             _db.Appointments.Add(a);
             await _db.SaveChangesAsync();
             TempData["ok"] = "Đã tạo lịch hẹn.";
@@ -187,7 +198,7 @@ namespace Clinic.Areas.Admin.Controllers
             TempData["ok"] = "Đã cập nhật lịch hẹn.";
             return RedirectToAction("Index"); // Về trang danh sách
         }
-        
+
 
         // GET: Admin/Appointments/Delete/5
         public async Task<ActionResult> Delete(int? id)

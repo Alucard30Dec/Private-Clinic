@@ -1,27 +1,68 @@
 ﻿@model Clinic.Models.Patient
 @{
-    // Layout của Patient
-    ViewBag.Title = "Bổ sung thông tin";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    // Layout của Patient (layout public)
+    ViewBag.Title = ViewBag.Title ?? "Hồ sơ Bệnh nhân"; // Lấy Title từ Controller hoặc đặt mặc định
+    Layout = ViewBag.Layout ?? "~/Views/Shared/_Layout.cshtml"; // Lấy Layout từ Controller hoặc mặc định
 
-    // Biến để biết đây là form đăng ký mới hay chỉnh sửa
+    // Biến để biết đây là form đăng ký mới, bắt buộc hoàn thiện, hay chỉnh sửa
     var isNewRegistration = ViewBag.IsNewRegistration as bool? ?? false;
-    // *** THÊM BIẾN NÀY ***
     var isForcedCompletion = ViewBag.IsForcedCompletion as bool? ?? false;
+    var isEditing = !isNewRegistration && !isForcedCompletion; // Đang chỉnh sửa nếu không phải 2 trường hợp kia
+
+    // Tiêu đề form động
+    string formTitle = isNewRegistration ? "Hoàn thiện Hồ sơ Bệnh nhân"
+                      : isForcedCompletion ? "Hoàn thiện Hồ sơ Bệnh nhân"
+                      : "Chỉnh sửa Hồ sơ";
+    // Văn bản nút Submit động
+    string submitButtonText = isNewRegistration ? "Hoàn tất đăng ký"
+                             : isForcedCompletion ? "Hoàn tất hồ sơ"
+                             : "Lưu thông tin";
+    // Văn bản hướng dẫn động
+    string instructionText = isNewRegistration ? "Vui lòng nhập đầy đủ thông tin để hoàn tất đăng ký tài khoản."
+                            : isForcedCompletion ? "Vui lòng nhập đầy đủ thông tin để tiếp tục sử dụng dịch vụ."
+                            : "Cập nhật thông tin cá nhân của bạn.";
 }
 
-<section style="padding:40px 0;">
-    <div class="container" style="max-width:720px;">
-
-        <h2 class="wow fadeInUp" data-wow-delay="0.1s">
-            @(isNewRegistration ? "Hoàn thiện Hồ sơ Bệnh nhân" : (isForcedCompletion ? "Hoàn thiện Hồ sơ Bệnh nhân" : "Chỉnh sửa Hồ sơ"))
-        </h2>
-
-        @if (isNewRegistration || isForcedCompletion) // Hiển thị thông báo cho cả 2 trường hợp cần hoàn thiện
-        {
-            <p>Vui lòng nhập đầy đủ thông tin @(isNewRegistration ? "để hoàn tất đăng ký tài khoản." : "để tiếp tục sử dụng dịch vụ.")</p>
+@* Phần CSS cho giao diện đẹp hơn (có thể chuyển vào file CSS riêng) *@
+@section Styles {
+    <style>
+        .form-section {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
         }
 
+            .form-section:last-child {
+                border-bottom: none;
+                margin-bottom: 15px; /* Giảm margin cho phần cuối */
+            }
+
+            .form-section h4 {
+                margin-bottom: 15px;
+                color: #555;
+                font-size: 1.1em;
+                border-left: 3px solid #337ab7; /* Tạo điểm nhấn */
+                padding-left: 10px;
+            }
+
+        .form-group label {
+            font-weight: 600; /* Đậm chữ cho label */
+        }
+
+        .text-muted {
+            font-size: 0.9em;
+        }
+    </style>
+}
+
+<section style="padding:40px 0;" class="wow fadeInUp" data-wow-delay="0.1s">
+    <div class="container" style="max-width:800px;">
+        @* Tăng max-width *@
+
+        <h2>@formTitle</h2>
+        <p>@instructionText</p>
+
+        @* Hiển thị thông báo (nếu có) *@
         @if (ViewBag.Warn != null)
         {<div class="alert alert-warning">@ViewBag.Warn</div>}
         @if (TempData["ok"] != null)
@@ -29,54 +70,107 @@
         @if (TempData["err"] != null)
         {<div class="alert alert-danger">@TempData["err"]</div>}
 
+    @* Hiển thị lỗi validation *@
         @Html.ValidationSummary(false, "", new { @class = "alert alert-danger" })
 
-        @using (Html.BeginForm("Complete", "Patient", FormMethod.Post))
+        @using (Html.BeginForm("Complete", "Patient", FormMethod.Post, new { area = "" })) // Đảm bảo area=""
         {
             @Html.AntiForgeryToken()
 
-            @* Trường ẩn UserId (RẤT QUAN TRỌNG) và Email (cần cho tạo mới) *@
+            @* Trường ẩn UserId (cần khi cập nhật hoặc bắt buộc hoàn thiện) *@
             @Html.HiddenFor(m => m.UserId)
+            @* Email chỉ đọc (không cho sửa khi đăng ký mới hoặc bắt buộc hoàn thiện) *@
             @Html.HiddenFor(m => m.Email)
             @* Trường ẩn để Controller biết là đăng ký mới *@
             @Html.Hidden("isNewRegistration", isNewRegistration)
 
+            @* Trường ẩn returnUrl (nếu có) *@
             <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
 
-            <div class="form-group">
-                @Html.LabelFor(m => m.FullName)
-                @Html.TextBoxFor(m => m.FullName, new { @class = "form-control", placeholder = "Họ và tên bắt buộc", required = "required" })
-                @Html.ValidationMessageFor(m => m.FullName, "", new { @class = "text-danger" })
+            @* Phần Thông tin Cơ bản *@
+            <div class="form-section">
+                <h4>Thông tin cá nhân</h4>
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        @Html.LabelFor(m => m.FullName)
+                        @Html.TextBoxFor(m => m.FullName, new { @class = "form-control", placeholder = "Họ và tên (*)", required = "required" })
+                        @Html.ValidationMessageFor(m => m.FullName, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-6 form-group">
+                        @Html.LabelFor(m => m.Email)
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @readonly = "readonly", title = "Email không thể thay đổi" })
+                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        @Html.LabelFor(m => m.PhoneNumber, "Số điện thoại")
+                        @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control", required = "required", placeholder = "Số điện thoại (*)", type = "tel" })
+                        @Html.ValidationMessageFor(m => m.PhoneNumber, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-6 form-group">
+                        @Html.LabelFor(m => m.DateOfBirth, "Ngày sinh")
+                        @Html.TextBoxFor(m => m.DateOfBirth, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", max = DateTime.Today.ToString("yyyy-MM-dd") }) @* Thêm max date *@
+                        @Html.ValidationMessageFor(m => m.DateOfBirth, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        @Html.LabelFor(m => m.Gender, "Giới tính khai sinh")
+                        @* Sử dụng DropDownList cho Giới tính *@
+                        @Html.DropDownListFor(m => m.Gender, new SelectList(new[] { "Nam", "Nữ", "Khác" }), "-- Chọn giới tính --", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Gender, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-6 form-group">
+                        @Html.LabelFor(m => m.NationalId, "Số CMND/CCCD")
+                        @Html.TextBoxFor(m => m.NationalId, new { @class = "form-control", placeholder = "Chỉ nhập số", type = "text", pattern = @"\d*", title = "Chỉ nhập số" }) @* Thêm pattern và title *@
+                        @Html.ValidationMessageFor(m => m.NationalId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Address, "Địa chỉ")
+                    @Html.TextBoxFor(m => m.Address, new { @class = "form-control", placeholder = "Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố" })
+                    @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })
+                </div>
             </div>
 
-            <div class="form-group">
-                @Html.LabelFor(m => m.PhoneNumber, "Số điện thoại")
-                @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control", required = "required", placeholder = "Số điện thoại bắt buộc" }) @* Thêm required và placeholder *@
-                @Html.ValidationMessageFor(m => m.PhoneNumber, "", new { @class = "text-danger" })
+            @* Phần Thông tin Liên hệ Khẩn cấp *@
+            <div class="form-section">
+                <h4>Thông tin liên hệ khẩn cấp (Tùy chọn)</h4>
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        @Html.LabelFor(m => m.EmergencyContactName)
+                        @Html.TextBoxFor(m => m.EmergencyContactName, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.EmergencyContactName, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-6 form-group">
+                        @Html.LabelFor(m => m.EmergencyContactRelationship)
+                        @Html.TextBoxFor(m => m.EmergencyContactRelationship, new { @class = "form-control", placeholder = "Vợ/Chồng, Cha/Mẹ, Anh/Chị/Em..." })
+                        @Html.ValidationMessageFor(m => m.EmergencyContactRelationship, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.EmergencyContactPhone)
+                    @Html.TextBoxFor(m => m.EmergencyContactPhone, new { @class = "form-control", type = "tel" })
+                    @Html.ValidationMessageFor(m => m.EmergencyContactPhone, "", new { @class = "text-danger" })
+                </div>
             </div>
 
-            <div class="form-group">
-                @Html.LabelFor(m => m.DateOfBirth, "Ngày sinh")
-                @Html.TextBoxFor(m => m.DateOfBirth, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
-                @Html.ValidationMessageFor(m => m.DateOfBirth, "", new { @class = "text-danger" })
+            @* Nút Submit và Quay lại *@
+            <div style="margin-top: 20px;">
+                <button type="submit" class="section-btn btn btn-success">
+                    <i class="fa fa-check"></i> @submitButtonText
+                </button>
+
+                @* Chỉ hiển thị nút "Quay lại" khi đang chỉnh sửa thông thường *@
+                @if (isEditing)
+                {
+                    <a class="btn btn-link" href="@(string.IsNullOrWhiteSpace(ViewBag.ReturnUrl as string) ? Url.Action("Index","Manage", new {area=""}) : ViewBag.ReturnUrl)">
+                        ← Quay lại
+                    </a>
+                }
+                @* Không hiển thị nút hủy khi đăng ký mới hoặc bắt buộc hoàn thiện *@
             </div>
-
-            <div class="form-group">
-                @Html.LabelFor(m => m.Address, "Địa chỉ")
-                @Html.TextBoxFor(m => m.Address, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })
-            </div>
-
-            <button class="btn btn-success">
-                @(isNewRegistration ? "Hoàn tất đăng ký" : (isForcedCompletion ? "Hoàn tất hồ sơ" : "Lưu thông tin"))
-            </button>
-
-            @* === SỬA LỖI Ở ĐÂY: Xóa @ trước if === *@
-            if (!isNewRegistration && !isForcedCompletion) // Chỉ hiển thị nút "Về danh sách" khi chỉnh sửa thông thường
-            {
-                <a class="btn btn-link" href="@Url.Action("Index","Doctors")">← Về danh sách bác sĩ</a>
-            }
-            @* === KẾT THÚC SỬA LỖI === *@
         }
     </div>
 </section>

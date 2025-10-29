@@ -1,17 +1,31 @@
 ﻿@model Clinic.Models.Service
+@* Cần truyền ExamTypeList từ Controller qua ViewBag *@
+@{
+    var examTypeListForDropdown = ViewBag.ExamTypeList as SelectList;
+}
+
 @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
 <div class="mb-3">
     @Html.LabelFor(m => m.Name, new { @class = "form-label" })
-    @Html.TextBoxFor(m => m.Name, new { @class = "form-control", required = "required" })
-    @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
+    @Html.TextBoxFor(m => m.Name, new { @class = "form-control", required = "required", placeholder = "Tên dịch vụ" })
+    @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger small" })
 </div>
+
+@* *** THÊM Dropdown cho ExamType *** *@
+<div class="mb-3">
+    @Html.LabelFor(m => m.ExamType, new { @class = "form-label" })
+    @Html.DropDownListFor(m => m.ExamType, examTypeListForDropdown, "-- Chọn loại hình --", new { @class = "form-select", required = "required" })
+    @Html.ValidationMessageFor(m => m.ExamType, "", new { @class = "text-danger small" })
+</div>
+@* *** KẾT THÚC THÊM *** *@
+
 <div class="mb-3">
     @Html.LabelFor(m => m.Fee, new { @class = "form-label" })
-    @Html.TextBoxFor(m => m.Fee, new { @class = "form-control", type = "number", step = "1000", min = "0" })
-    @Html.ValidationMessageFor(m => m.Fee, "", new { @class = "text-danger" })
+    @Html.TextBoxFor(m => m.Fee, "{0:N0}", new { @class = "form-control", type = "number", step = "1000", min = "0", required = "required", placeholder = "Chi phí (VNĐ)" })
+    @Html.ValidationMessageFor(m => m.Fee, "", new { @class = "text-danger small" })
 </div>
 <div class="mb-3">
     @Html.LabelFor(m => m.DurationMinutes, new { @class = "form-label" })
-    @Html.TextBoxFor(m => m.DurationMinutes, new { @class = "form-control", type = "number", step = "5", min = "0" })
-    @Html.ValidationMessageFor(m => m.DurationMinutes, "", new { @class = "text-danger" })
+    @Html.TextBoxFor(m => m.DurationMinutes, new { @class = "form-control", type = "number", step = "5", min = "0", placeholder = "Thời gian dự kiến (phút)" })
+    @Html.ValidationMessageFor(m => m.DurationMinutes, "", new { @class = "text-danger small" })
 </div>

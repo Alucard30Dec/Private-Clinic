@@ -1,28 +1,36 @@
 ﻿@model Clinic.Models.Doctor
 @{
-    ViewBag.Title = "Xóa bác sĩ";
+    ViewBag.Title = "Xác nhận ẩn Bác sĩ"; // Sửa title
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
-<h2 class="mb-3 text-danger">Xóa bác sĩ</h2>
-<p>Bạn có chắc muốn xóa bác sĩ sau?</p>
+<h2 class="mb-3 text-danger">@ViewBag.Title</h2>
+<p>Bạn có chắc muốn ẩn bác sĩ <strong>@Model.Name</strong> không?</p>
+<p class="text-muted small">Bác sĩ này sẽ không hiển thị trong danh sách và không thể chọn khi đặt lịch hẹn. Bạn có thể khôi phục lại sau (nếu cần chức năng đó).</p>
+
 
 <div class="row">
     <div class="col-md-3">
         @if (!string.IsNullOrWhiteSpace(Model?.PhotoUrl))
         {
-            <img src="@Model.PhotoUrl" alt="Ảnh bác sĩ" class="img-thumbnail mb-3" style="max-width:100%" />
+            <img src="@Url.Content(Model.PhotoUrl)" alt="Ảnh bác sĩ" class="img-thumbnail mb-3" style="max-width:100%" onerror="this.style.display='none'" />
         }
     </div>
     <div class="col-md-9">
         <dl class="row">
             <dt class="col-sm-3">Họ tên</dt>
             <dd class="col-sm-9">@Model.Name</dd>
+            @* *** SỬA: Hiển thị tên chuyên khoa *** *@
             <dt class="col-sm-3">Chuyên khoa</dt>
-            <dd class="col-sm-9">@Model.Specialty</dd>
+            <dd class="col-sm-9">@(Model.Specialty?.Name ?? "-")</dd>
+            @* *** KẾT THÚC SỬA *** *@
             <dt class="col-sm-3">Email</dt>
-            <dd class="col-sm-9">@Model.Email</dd>
+            <dd class="col-sm-9">@(Model.Email ?? "-")</dd>
             <dt class="col-sm-3">SĐT</dt>
-            <dd class="col-sm-9">@Model.PhoneNumber</dd>
+            <dd class="col-sm-9">@(Model.PhoneNumber ?? "-")</dd>
+            <dt class="col-sm-3">Số CCCD</dt>
+            <dd class="col-sm-9">@(Model.NationalId ?? "-")</dd>
+            <dt class="col-sm-3">Địa chỉ</dt>
+            <dd class="col-sm-9">@(Model.Address ?? "-")</dd>
             <dt class="col-sm-3">Ngày sinh</dt>
             <dd class="col-sm-9">@((Model.DateOfBirth.HasValue ? Model.DateOfBirth.Value.ToString("dd/MM/yyyy") : "-"))</dd>
             <dt class="col-sm-3">Giới tính</dt>
@@ -41,6 +49,10 @@
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.Id)
-    <button class="btn btn-danger" type="submit">Xóa</button>
-    @Html.ActionLink("Hủy", "Index", "Doctor", new { area = "Admin" }, new { @class = "btn btn-secondary ms-2" })
+    <div class="mt-3">
+        <button class="btn btn-danger" type="submit">
+            <i class="ti ti-trash me-1"></i> Xác nhận Ẩn
+        </button>
+        @Html.ActionLink("Hủy", "Index", "Doctor", new { area = "Admin" }, new { @class = "btn btn-secondary ms-2" })
+    </div>
 }

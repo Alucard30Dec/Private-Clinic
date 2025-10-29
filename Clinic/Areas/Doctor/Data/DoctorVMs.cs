@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Clinic.Models; // For AppointmentStatus
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Clinic.Areas.Doctor.Data
 {
-    // Bệnh nhân của tôi (list)
+    // ViewModel for the Doctor's patient list (/Doctor/Patients/Index)
     public class MyPatientRowVM
     {
         public int PatientId { get; set; }
@@ -11,13 +13,27 @@ namespace Clinic.Areas.Doctor.Data
         public string PhoneNumber { get; set; }
         public string Email { get; set; }
         public DateTime? DOB { get; set; }
-        public string Gender { get; set; } // Thêm giới tính
+        public string Gender { get; set; }
         public int TotalVisits { get; set; }
         public DateTime? LastVisit { get; set; }
-        public int? Age { get; set; } // Thêm tuổi (tính toán)
+
+        // Calculated property (set in controller)
+        [Display(Name = "Tuổi")]
+        public int? Age { get; set; }
     }
 
-    // Hồ sơ chi tiết 1 bệnh nhân
+    // ViewModel for a single visit row in patient details (/Doctor/Patients/Details)
+    public class PatientVisitRowVM
+    {
+        public int AppointmentId { get; set; }
+        public string ServiceName { get; set; }
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
+        public int Status { get; set; } // Keep as int to match controller query
+        public string Notes { get; set; }
+    }
+
+    // ViewModel for patient details (/Doctor/Patients/Details)
     public class PatientDetailVM
     {
         public int PatientId { get; set; }
@@ -25,30 +41,23 @@ namespace Clinic.Areas.Doctor.Data
         public string PhoneNumber { get; set; }
         public string Email { get; set; }
         public DateTime? DOB { get; set; }
-        public string Gender { get; set; } // Thêm giới tính
-        public string BloodType { get; set; } // Thêm nhóm máu
-        public string Address { get; set; } // Thêm địa chỉ
-        public string MedicalHistory { get; set; } // Thêm tiền sử
-        public string Allergies { get; set; } // Thêm dị ứng
-        public string EmergencyContactName { get; set; } // Thêm liên hệ KC
-        public string EmergencyContactPhone { get; set; } // Thêm SĐT liên hệ KC
-        public int? Age { get; set; } // Thêm tuổi (tính toán)
+        public string Gender { get; set; }
+        public string BloodType { get; set; }
+        public string Address { get; set; }
+        public string MedicalHistory { get; set; }
+        public string Allergies { get; set; }
+        public string EmergencyContactName { get; set; }
+        public string EmergencyContactPhone { get; set; }
 
-        public IEnumerable<PatientVisitRowVM> Visits { get; set; }
+        // Calculated property (set in controller)
+        [Display(Name = "Tuổi")]
+        public int? Age { get; set; }
+
+        // List of past visits with this doctor
+        public List<PatientVisitRowVM> Visits { get; set; } = new List<PatientVisitRowVM>();
     }
 
-    public class PatientVisitRowVM
-    {
-        public int AppointmentId { get; set; }
-        public string ServiceName { get; set; }
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
-        public int Status { get; set; } // Có thể đổi thành enum string nếu muốn
-        public string Notes { get; set; }
-        // Thêm các trường liên quan đến khám bệnh nếu cần (ví dụ: Chẩn đoán, Chỉ định...)
-    }
-
-    // Hồ sơ khám (toàn bộ lịch hẹn của bác sĩ) - Giữ nguyên
+    // ViewModel for the doctor's appointment records list (/Doctor/Records/Index)
     public class RecordRowVM
     {
         public int AppointmentId { get; set; }
@@ -56,7 +65,36 @@ namespace Clinic.Areas.Doctor.Data
         public string ServiceName { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
-        public int Status { get; set; } // Có thể đổi thành enum string
+        public int Status { get; set; } // Keep as int to match controller query
         public string Notes { get; set; }
+    }
+
+    // ViewModel for the doctor's schedule list (/Doctor/Schedules/Index)
+    public class AppointmentRowVM
+    {
+        public int Id { get; set; }
+        public string PatientFullName { get; set; }
+        public string ServiceFullName { get; set; }
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
+        public int Status { get; set; } // Keep as int to match controller query
+        public string Notes { get; set; }
+    }
+
+    // ViewModel for appointment details (/Doctor/Schedules/Details)
+    public class AppointmentDetailVM
+    {
+        public int Id { get; set; }
+        public string PatientFullName { get; set; }
+        public string PatientPhone { get; set; }
+        public string PatientEmail { get; set; }
+        public string ServiceFullName { get; set; }
+        public string ServiceDesc { get; set; } // Add this if needed from Service model
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
+        public int Status { get; set; } // Keep as int to match controller query
+        public string Notes { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
     }
 }

@@ -1,0 +1,72 @@
+﻿@model IEnumerable<Clinic.Areas.Admin.Controllers.ReceptionistListViewModel>
+@{
+    ViewBag.Title = "Quản lý Lễ tân";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    ViewBag.Nav = "receptionists";
+}
+
+<div class="container-fluid py-3">
+
+    @if (TempData["ok"] != null)
+    {<div class="alert alert-success alert-dismissible fade show" role="alert">@TempData["ok"]<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>}
+    @if (TempData["err"] != null)
+    {<div class="alert alert-danger alert-dismissible fade show" role="alert">@TempData["err"]<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>}
+    @if (TempData["warn"] != null)
+    {<div class="alert alert-warning alert-dismissible fade show" role="alert">@TempData["warn"]<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>}
+
+    <div class="d-flex justify-content-between mb-3 align-items-center">
+        <h2 class="mb-0">@ViewBag.Title</h2>
+        <a class="btn btn-success" href="@Url.Action("Create")">
+            <i class="ti ti-plus me-1"></i> Thêm Lễ tân
+        </a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">Chưa có tài khoản lễ tân nào.</div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Email / Tên đăng nhập</th>
+                        <th>Trạng thái</th>
+                        <th class="text-end">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Email</td>
+                            <td>
+                                @if (item.IsLockedOut)
+                                {
+                                    <span class="badge bg-danger">Đã khóa</span>
+                                    if (item.LockoutEndDateUtc.HasValue)
+                                    {
+                                        <small class="text-muted">(Đến: @item.LockoutEndDateUtc.Value.ToLocalTime().ToString("g"))</small>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success">Hoạt động</span>
+                                }
+                            </td>
+                            <td class="text-end text-nowrap">
+                                <a href="@Url.Action("Edit", new { id = item.Id })" class="btn btn-sm btn-primary me-1">
+                                    <i class="ti ti-pencil me-1"></i> Sửa / Đặt lại MK
+                                </a>
+                                <a href="@Url.Action("Delete", new { id = item.Id })" class="btn btn-sm btn-outline-danger">
+                                    <i class="ti ti-trash me-1"></i> Xóa
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

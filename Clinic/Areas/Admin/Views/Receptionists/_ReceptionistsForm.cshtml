@@ -1,0 +1,71 @@
+﻿@model Clinic.Models.Patient
+@Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+<div class="row">
+    @* --- Cột 1 --- *@
+    <div class="col-md-6">
+        <div class="mb-3">
+            @Html.LabelFor(m => m.FullName, new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.FullName, new { @class = "form-control", placeholder = "Họ tên", required = "required" })
+            @Html.ValidationMessageFor(m => m.FullName, "", new { @class = "text-danger" })
+        </div>
+        <div class="mb-3">
+            @Html.LabelFor(m => m.Email, new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", type = "email" })
+            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+        </div>
+        <div class="mb-3">
+            @Html.LabelFor(m => m.PhoneNumber, new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control", required = "required" }) @* Thêm required *@
+            @Html.ValidationMessageFor(m => m.PhoneNumber, "", new { @class = "text-danger" })
+        </div>
+        <div class="mb-3">
+            @Html.LabelFor(m => m.DateOfBirth, new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.DateOfBirth, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+            @Html.ValidationMessageFor(m => m.DateOfBirth, "", new { @class = "text-danger" })
+        </div>
+        <div class="mb-3">
+            @Html.LabelFor(m => m.Gender, "Giới tính", new { @class = "form-label" })
+            @Html.DropDownListFor(m => m.Gender, new SelectList(new[] { "Nam", "Nữ", "Khác" }), "-- Chọn giới tính --", new { @class = "form-select" })
+            @Html.ValidationMessageFor(m => m.Gender, "", new { @class = "text-danger" })
+        </div>
+        <div class="mb-3">
+            @Html.LabelFor(m => m.BloodType, "Nhóm máu", new { @class = "form-label" })
+            @Html.DropDownListFor(m => m.BloodType, new SelectList(new[] { "A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-" }), "-- Chọn nhóm máu --", new { @class = "form-select" })
+            @Html.ValidationMessageFor(m => m.BloodType, "", new { @class = "text-danger" })
+        </div>
+        <div class="mb-3">
+            @Html.LabelFor(m => m.Address, new { @class = "form-label" })
+            @Html.TextAreaFor(m => m.Address, 3, 50, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    @* --- Cột 2 --- *@
+    <div class="col-md-6">
+        <div class="mb-3">
+            @Html.LabelFor(m => m.UserId, new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.UserId, new { @class = "form-control", placeholder = "(Để trống nếu là khách vãng lai)" })
+            @Html.ValidationMessageFor(m => m.UserId, "", new { @class = "text-danger" })
+        </div>
+        <div class="mb-3">
+            @Html.LabelFor(m => m.MedicalHistory, "Tiền sử bệnh", new { @class = "form-label" })
+            @Html.TextAreaFor(m => m.MedicalHistory, 4, 50, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.MedicalHistory, "", new { @class = "text-danger" })
+        </div>
+        <div class="mb-3">
+            @Html.LabelFor(m => m.Allergies, "Dị ứng", new { @class = "form-label" })
+            @Html.TextAreaFor(m => m.Allergies, 4, 50, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Allergies, "", new { @class = "text-danger" })
+        </div>
+        <div class="mb-3">
+            @Html.LabelFor(m => m.EmergencyContactName, "Người liên hệ khẩn cấp", new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.EmergencyContactName, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.EmergencyContactName, "", new { @class = "text-danger" })
+        </div>
+        <div class="mb-3">
+            @Html.LabelFor(m => m.EmergencyContactPhone, "SĐT liên hệ khẩn cấp", new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.EmergencyContactPhone, new { @class = "form-control", type = "tel" })
+            @Html.ValidationMessageFor(m => m.EmergencyContactPhone, "", new { @class = "text-danger" })
+        </div>
+    </div>
+</div>

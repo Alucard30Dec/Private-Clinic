@@ -2,110 +2,65 @@
 
 namespace Clinic.Areas.Admin
 {
-    // Đổi tên class để tránh trùng với controller (nếu có)
     public class AdminAreaRegistration : AreaRegistration
     {
         public override string AreaName => "Admin";
 
         public override void RegisterArea(AreaRegistrationContext context)
         {
-            // ===== DOCTORS =====
-            var doctorsRoot = context.MapRoute(
-                name: "Admin_Doctors_root",
-                url: "Admin/Doctors",
-                defaults: new { controller = "Doctor", action = "Index" },
-                namespaces: new[] { "Clinic.Areas.Admin.Controllers" }
-            );
-            doctorsRoot.DataTokens["UseNamespaceFallback"] = false;
+            // === DOCTORS === (Giữ nguyên)
+            MapControllerRoutes(context, "Doctor", "Doctors");
 
-            var doctorsActions = context.MapRoute(
-                name: "Admin_Doctors_actions",
-                url: "Admin/Doctors/{action}/{id}",
-                defaults: new { controller = "Doctor", action = "Index", id = UrlParameter.Optional },
-                namespaces: new[] { "Clinic.Areas.Admin.Controllers" }
-            );
-            doctorsActions.DataTokens["UseNamespaceFallback"] = false;
+            // === PATIENTS === (Giữ nguyên)
+            MapControllerRoutes(context, "Patients", "Patients");
 
-            // ===== PATIENTS =====
-            var patientsRoot = context.MapRoute(
-                name: "Admin_Patients_root",
-                url: "Admin/Patients",
-                defaults: new { controller = "Patients", action = "Index" },
-                namespaces: new[] { "Clinic.Areas.Admin.Controllers" }
-            );
-            patientsRoot.DataTokens["UseNamespaceFallback"] = false;
+            // === SERVICES === (Giữ nguyên)
+            MapControllerRoutes(context, "Services", "Services");
 
-            var patientsActions = context.MapRoute(
-                name: "Admin_Patients_actions",
-                url: "Admin/Patients/{action}/{id}",
-                defaults: new { controller = "Patients", action = "Index", id = UrlParameter.Optional },
-                namespaces: new[] { "Clinic.Areas.Admin.Controllers" }
-            );
-            patientsActions.DataTokens["UseNamespaceFallback"] = false;
+            // === APPOINTMENTS === (Giữ nguyên)
+            MapControllerRoutes(context, "Appointments", "Appointments");
 
-            // ===== SERVICES =====
-            var servicesRoot = context.MapRoute(
-                name: "Admin_Services_root",
-                url: "Admin/Services",
-                defaults: new { controller = "Services", action = "Index" },
-                namespaces: new[] { "Clinic.Areas.Admin.Controllers" }
-            );
-            servicesRoot.DataTokens["UseNamespaceFallback"] = false;
+            // === WORK SHIFTS === (Giữ nguyên)
+            MapControllerRoutes(context, "WorkShifts", "WorkShifts");
 
-            var servicesActions = context.MapRoute(
-                name: "Admin_Services_actions",
-                url: "Admin/Services/{action}/{id}",
-                defaults: new { controller = "Services", action = "Index", id = UrlParameter.Optional },
-                namespaces: new[] { "Clinic.Areas.Admin.Controllers" }
-            );
-            servicesActions.DataTokens["UseNamespaceFallback"] = false;
+            // === REVIEWS === (Giữ nguyên)
+            MapControllerRoutes(context, "Reviews", "Reviews");
 
-            // ===== APPOINTMENTS (Quản lý chung bởi Admin) =====
-            var appsRoot = context.MapRoute(
-                name: "Admin_Appointments_root",
-                url: "Admin/Appointments",
-                defaults: new { controller = "Appointments", action = "Index" },
-                namespaces: new[] { "Clinic.Areas.Admin.Controllers" }
-            );
-            appsRoot.DataTokens["UseNamespaceFallback"] = false;
+            // === RECEPTIONISTS === (Giữ nguyên)
+            MapControllerRoutes(context, "Receptionists", "Receptionists");
 
-            var appsActions = context.MapRoute(
-                name: "Admin_Appointments_actions",
-                url: "Admin/Appointments/{action}/{id}",
-                defaults: new { controller = "Appointments", action = "Index", id = UrlParameter.Optional },
-                namespaces: new[] { "Clinic.Areas.Admin.Controllers" }
-            );
-            appsActions.DataTokens["UseNamespaceFallback"] = false;
+            // *** THÊM ROUTE CHO SPECIALTIES ***
+            MapControllerRoutes(context, "Specialties", "Specialties");
+            // *** KẾT THÚC THÊM ***
 
-            // ===== REVIEWS (Quản lý bởi Admin) =====
-            var reviewsRoot = context.MapRoute(
-                name: "Admin_Reviews_root",
-                url: "Admin/Reviews",
-                defaults: new { controller = "Reviews", action = "Index" },
-                namespaces: new[] { "Clinic.Areas.Admin.Controllers" }
-            );
-            reviewsRoot.DataTokens["UseNamespaceFallback"] = false;
-
-            var reviewsActions = context.MapRoute(
-                name: "Admin_Reviews_actions",
-                url: "Admin/Reviews/{action}/{id}",
-                defaults: new { controller = "Reviews", action = "Index", id = UrlParameter.Optional },
-                namespaces: new[] { "Clinic.Areas.Admin.Controllers" }
-            );
-            reviewsActions.DataTokens["UseNamespaceFallback"] = false;
-
-
-            // --- ĐÃ XÓA CÁC ROUTE CHO Reception VÀ Requests ---
-
-            // ===== DEFAULT (để CUỐI CÙNG) =====
-            // Route này sẽ bắt các URL Admin không khớp với các route cụ thể ở trên
+            // === DEFAULT (để CUỐI CÙNG) === (Giữ nguyên)
             var adminDefault = context.MapRoute(
                 name: "Admin_default",
                 url: "Admin/{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }, // Trang chủ mặc định của Admin
+                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },
                 namespaces: new[] { "Clinic.Areas.Admin.Controllers" }
             );
             adminDefault.DataTokens["UseNamespaceFallback"] = false;
+        }
+
+        // --- Helper function to avoid repetition ---
+        private void MapControllerRoutes(AreaRegistrationContext context, string controllerName, string urlPrefix)
+        {
+            var rootRoute = context.MapRoute(
+               name: $"Admin_{controllerName}_root",
+               url: $"Admin/{urlPrefix}",
+               defaults: new { controller = controllerName, action = "Index" },
+               namespaces: new[] { "Clinic.Areas.Admin.Controllers" }
+           );
+            rootRoute.DataTokens["UseNamespaceFallback"] = false;
+
+            var actionsRoute = context.MapRoute(
+                name: $"Admin_{controllerName}_actions",
+                url: $"Admin/{urlPrefix}/{{action}}/{{id}}",
+                defaults: new { controller = controllerName, action = "Index", id = UrlParameter.Optional },
+                namespaces: new[] { "Clinic.Areas.Admin.Controllers" }
+            );
+            actionsRoute.DataTokens["UseNamespaceFallback"] = false;
         }
     }
 }

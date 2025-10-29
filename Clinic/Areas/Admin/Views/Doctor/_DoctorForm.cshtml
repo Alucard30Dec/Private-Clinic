@@ -1,4 +1,5 @@
 ﻿@model Clinic.Models.Doctor
+@* Có thể đổi thành ViewModel nếu cần, nhưng phải đảm bảo cả Create và Edit đều dùng chung *@
 
 @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
 
@@ -10,11 +11,13 @@
             @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
         </div>
 
+        @* *** SỬA: Dùng DropDownListFor cho SpecialtyId *** *@
         <div class="mb-3">
-            @Html.LabelFor(m => m.Specialty, new { @class = "form-label" })
-            @Html.TextBoxFor(m => m.Specialty, new { @class = "form-control", placeholder = "Chuyên khoa", required = "required" })
-            @Html.ValidationMessageFor(m => m.Specialty, "", new { @class = "text-danger" })
+            @Html.LabelFor(m => m.SpecialtyId, "Chuyên khoa", new { @class = "form-label" })
+            @Html.DropDownListFor(m => m.SpecialtyId, (SelectList)ViewBag.SpecialtyId, "-- Chọn chuyên khoa --", new { @class = "form-select", required = "required" })
+            @Html.ValidationMessageFor(m => m.SpecialtyId, "", new { @class = "text-danger" })
         </div>
+        @* *** KẾT THÚC SỬA *** *@
 
         <div class="mb-3">
             @Html.LabelFor(m => m.Email, new { @class = "form-label" })
@@ -29,6 +32,12 @@
         </div>
 
         <div class="mb-3">
+            @Html.LabelFor(m => m.NationalId, new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.NationalId, new { @class = "form-control", placeholder = "Số CCCD/CMND", type = "text", pattern = @"\d*", title = "Chỉ nhập số" })
+            @Html.ValidationMessageFor(m => m.NationalId, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="mb-3">
             @Html.LabelFor(m => m.YearsOfExperience, new { @class = "form-label" })
             @Html.TextBoxFor(m => m.YearsOfExperience, new { @class = "form-control", type = "number", min = "0", step = "1", placeholder = "Số năm kinh nghiệm" })
             @Html.ValidationMessageFor(m => m.YearsOfExperience, "", new { @class = "text-danger" })
@@ -39,14 +48,16 @@
         <div class="mb-3">
             @Html.Label("Ảnh bác sĩ", new { @class = "form-label" })
             <input type="file" name="photo" id="photo" class="form-control" accept=".jpg,.jpeg,.png,.gif,.webp" />
-            @Html.HiddenFor(m => m.PhotoUrl) @* giữ đường dẫn ảnh cũ nếu không upload mới *@
+            @Html.HiddenFor(m => m.PhotoUrl) @* Giữ URL ảnh cũ *@
+            @Html.ValidationMessage("photo", "", new { @class = "text-danger" }) @* Validation message for file input itself *@
 
             <div class="mt-2">
                 <img id="photoPreview"
-                     src="@(string.IsNullOrWhiteSpace(Model?.PhotoUrl) ? "" : Model.PhotoUrl)"
-                     alt="Ảnh bác sĩ"
+                     src="@(string.IsNullOrWhiteSpace(Model?.PhotoUrl) ? "" : Url.Content(Model.PhotoUrl))"
+                     alt="Ảnh xem trước"
                      style="max-height:140px; display:@(string.IsNullOrWhiteSpace(Model?.PhotoUrl) ? "none" : "inline-block")"
-                     class="img-thumbnail" />
+                     class="img-thumbnail"
+                     onerror="this.style.display='none'" />
             </div>
         </div>
 
@@ -58,22 +69,26 @@
 
         <div class="mb-3">
             @Html.LabelFor(m => m.DateOfBirth, new { @class = "form-label" })
-            @* Format MVC5 an toàn cho input type=date *@
-            @Html.TextBoxFor(m => m.DateOfBirth, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+            @Html.TextBoxFor(m => m.DateOfBirth, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", max = DateTime.Today.ToString("yyyy-MM-dd") })
             @Html.ValidationMessageFor(m => m.DateOfBirth, "", new { @class = "text-danger" })
         </div>
 
         <div class="mb-3">
-            @Html.Label("Gender", "Giới tính", new { @class = "form-label" })
+            @Html.LabelFor(m => m.Gender, "Giới tính", new { @class = "form-label" })
             @Html.DropDownListFor(m => m.Gender,
-                new List<SelectListItem> {
-                    new SelectListItem { Value = "",       Text = "— Chọn —", Selected = string.IsNullOrEmpty(Model?.Gender) },
-                    new SelectListItem { Value = "Male",   Text = "Nam",      Selected = (Model?.Gender == "Male") },
-                    new SelectListItem { Value = "Female", Text = "Nữ",       Selected = (Model?.Gender == "Female") },
-                    new SelectListItem { Value = "Other",  Text = "Khác",     Selected = (Model?.Gender == "Other") }
-                },
-                new { @class = "form-select" })
+                    new List<SelectListItem> {
+                        new SelectListItem { Value = "",       Text = "— Chọn —"},
+                        new SelectListItem { Value = "Nam",   Text = "Nam"},
+                        new SelectListItem { Value = "Nữ", Text = "Nữ"},
+                        new SelectListItem { Value = "Khác",  Text = "Khác"}
+                    }, new { @class = "form-select" })
             @Html.ValidationMessageFor(m => m.Gender, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="mb-3">
+            @Html.LabelFor(m => m.Address, new { @class = "form-label" })
+            @Html.TextAreaFor(m => m.Address, 3, 50, new { @class = "form-control", placeholder = "Địa chỉ liên hệ" })
+            @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })
         </div>
     </div>
 </div>
@@ -84,33 +99,23 @@
     @Html.ValidationMessageFor(m => m.Bio, "", new { @class = "text-danger" })
 </div>
 
-@section Scripts {
-    <script>
-// Preview ảnh khi chọn file
-(function () {
-    var input = document.getElementById('photo');
-    var img   = document.getElementById('photoPreview');
-    if (!input || !img) return;
-
-    input.addEventListener('change', function (e) {
-        var file = this.files && this.files[0];
-        if (!file) return;
-
-        // kiểm tra nhanh định dạng client-side (server vẫn kiểm tra lại)
-        var ok = /\.(jpe?g|png|gif|webp)$/i.test(file.name);
-        if (!ok) {
-            alert('Định dạng ảnh không hợp lệ. Chỉ chấp nhận: jpg, jpeg, png, gif, webp.');
-            this.value = "";
-            return;
-        }
-
-        var reader = new FileReader();
-        reader.onload = function (ev) {
-            img.src = ev.target.result || "";
-            img.style.display = img.src ? "inline-block" : "none";
-        };
-        reader.readAsDataURL(file);
-    });
-})();
-    </script>
-}
+@* Script preview ảnh (giữ nguyên) *@
+<script>
+    (function () {
+        var input = document.getElementById('photo');
+        var img = document.getElementById('photoPreview');
+        if (!input || !img) return;
+        input.addEventListener('change', function (e) {
+            var file = this.files && this.files[0];
+            if (!file) { img.style.display = 'none'; img.src = ''; return; };
+            var ok = /\.(jpe?g|png|gif|webp)$/i.test(file.name);
+            if (!ok) {
+                alert('Định dạng ảnh không hợp lệ.'); this.value = ""; img.style.display = 'none'; img.src = ''; return;
+            }
+            var reader = new FileReader();
+            reader.onload = function (ev) { img.src = ev.target.result || ""; img.style.display = img.src ? "inline-block" : "none"; };
+            reader.onerror = function () { alert('Lỗi đọc file ảnh.'); img.style.display = 'none'; img.src = ''; };
+            reader.readAsDataURL(file);
+        });
+    })();
+</script>

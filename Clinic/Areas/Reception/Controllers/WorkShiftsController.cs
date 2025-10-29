@@ -20,7 +20,8 @@ namespace Clinic.Areas.Reception.Controllers
         public List<DoctorModel> AllDoctors { get; set; }
         public IEnumerable<WorkingHour> FilteredShifts { get; set; }
         public int? SelectedDoctorId { get; set; }
-        public string SelectedDoctorName { get; set; } // To display which doctor's shifts are shown
+        // *** REMOVED unused variable 'SelectedDoctorName' ***
+        // public string SelectedDoctorName { get; set; } // To display which doctor's shifts are shown
     }
 
     // *** THÊM VIEWMODEL CHO TRANG CHI TIẾT ***
@@ -44,13 +45,15 @@ namespace Clinic.Areas.Reception.Controllers
 
             // 1. Get all doctors for the list (Sử dụng DoctorModel)
             var allDoctors = await _db.Doctors
+                .Where(d => d.IsVisible) // Only show visible doctors
                 .OrderBy(d => d.Name)
                 .ToListAsync();
 
             // 2. Get shifts only if a doctor is selected (LOGIC NÀY SẼ ĐƯỢC CHUYỂN SANG ACTION DETAILS)
             // Giữ lại phần này nhưng set rỗng để tránh lỗi khi render Index
             IEnumerable<WorkingHour> filteredShifts = new List<WorkingHour>();
-            string selectedDoctorName = null;
+            // *** REMOVED unused variable 'selectedDoctorName' ***
+            // string selectedDoctorName = null;
 
             // Nếu có doctorIdFilter, CHUYỂN HƯỚNG SANG TRANG DETAILS NGAY LẬP TỨC
             if (doctorIdFilter.HasValue && allDoctors.Any(d => d.Id == doctorIdFilter.Value))
@@ -65,7 +68,8 @@ namespace Clinic.Areas.Reception.Controllers
                 AllDoctors = allDoctors.Cast<DoctorModel>().ToList(), // Cast to the alias type
                 FilteredShifts = filteredShifts, // Luôn rỗng
                 SelectedDoctorId = null, // Luôn null
-                SelectedDoctorName = null // Luôn null
+                // *** REMOVED unused variable 'SelectedDoctorName' ***
+                // SelectedDoctorName = null // Luôn null
             };
 
             return View("~/Areas/Reception/Views/WorkShifts/Index.cshtml", viewModel);
@@ -77,10 +81,13 @@ namespace Clinic.Areas.Reception.Controllers
         {
             ViewBag.Nav = "reception_workshifts";
 
-            var doctor = await _db.Doctors.FindAsync(id);
+            var doctor = await _db.Doctors
+                                 .Where(d => d.IsVisible && d.Id == id) // Ensure doctor is visible
+                                 .FirstOrDefaultAsync();
+
             if (doctor == null)
             {
-                TempData["warn"] = "Không tìm thấy hồ sơ bác sĩ.";
+                TempData["warn"] = "Không tìm thấy hồ sơ bác sĩ hoặc bác sĩ đã bị ẩn.";
                 return RedirectToAction("Index");
             }
 

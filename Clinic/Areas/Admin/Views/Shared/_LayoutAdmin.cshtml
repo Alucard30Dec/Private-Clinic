@@ -89,11 +89,17 @@
                                 <i class="ti ti-calendar-event me-2"></i> Lịch hẹn (All)
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link @(currentNav == "workshifts" ? "active" : "")" href="@workShiftsAdminUrl">
-                                <i class="ti ti-clock-hour-4 me-2"></i> Ca làm việc
-                            </a>
-                        </li>
+
+                        @* === SỬA THEO YÊU CẦU: ẨN MENU "CA LÀM VIỆC" === *@
+                        @*
+                            <li class="nav-item">
+                                <a class="nav-link @(currentNav == "workshifts" ? "active" : "")" href="@workShiftsAdminUrl">
+                                    <i class="ti ti-clock-hour-4 me-2"></i> Ca làm việc
+                                </a>
+                            </li>
+                        *@
+                        @* === KẾT THÚC SỬA === *@
+
                         <li class="nav-item">
                             <a class="nav-link @(currentNav == "reviews" ? "active" : "")" href="@reviewsUrl">
                                 <i class="ti ti-message-star me-2"></i> Đánh giá

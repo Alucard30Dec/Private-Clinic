@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<Clinic.Models.Appointment>
-@using Clinic.Models  
-                            @{ ViewBag.Title = "Lịch sử Đặt lịch"; Layout = "~/Views/Shared/_Layout.cshtml"; }
+@using Clinic.Models
+@{ ViewBag.Title = "Lịch sử Đặt lịch"; Layout = "~/Views/Shared/_Layout.cshtml"; }
 
 <section id="my-bookings" style="padding: 60px 0;">
     <div class="container">
@@ -53,7 +53,15 @@
                                         <td>@localTime.ToString("dd/MM/yyyy")</td>
                                         <td>@localTime.ToString("HH:mm")</td>
                                         <td>@(item.Doctor?.Name ?? "N/A")</td>
-                                        <td>@(item.Doctor?.Specialty ?? "N/A")</td>
+
+                                        @* === SỬA LỖI BIÊN DỊCH TẠI ĐÂY === *@
+                                        @*
+                                            Lỗi (ảnh image_681984.png): item.Doctor.Specialty là một đối tượng, không phải string.
+                                            Sửa: Phải truy cập thuộc tính .Name của đối tượng Specialty.
+                                        *@
+                                        <td>@(item.Doctor?.Specialty?.Name ?? "N/A")</td>
+                                        @* === KẾT THÚC SỬA LỖI === *@
+
                                         <td>
                                             @* === SỬA LỖI: Đã thêm { } cho các khối if/else === *@
                                             @{
@@ -80,7 +88,7 @@
                                         <td>
                                             @if (canCancel)
                                             {
-                                                using (Html.BeginForm("Cancel", "Bookings", new { id = item.Id }, FormMethod.Post, new { @style="display:inline;" }))
+                                                using (Html.BeginForm("Cancel", "Bookings", new { id = item.Id }, FormMethod.Post, new { @style = "display:inline;" }))
                                                 {
                                                     @Html.AntiForgeryToken()
                                                     <button type="submit" class="btn btn-xs btn-danger"

@@ -104,6 +104,14 @@ namespace Clinic.Areas.Admin.Controllers // Changed from Reception to Admin
             ViewBag.Nav = "workshifts";
             ViewBag.Title = "Thêm Ca làm việc";
 
+            // *** SỬA LỖI: THÊM KIỂM TRA DoctorId ***
+            // Kiểm tra xem người dùng đã chọn bác sĩ chưa (tránh lỗi FK)
+            if (workingHour.DoctorId == 0)
+            {
+                ModelState.AddModelError("DoctorId", "Vui lòng chọn một bác sĩ.");
+            }
+            // *** KẾT THÚC SỬA LỖI ***
+
             // Basic validation
             if (workingHour.Start >= workingHour.End)
             {
@@ -113,7 +121,7 @@ namespace Clinic.Areas.Admin.Controllers // Changed from Reception to Admin
 
             // Overlap validation
             bool isOverlapping = false;
-            if (ModelState.IsValid)
+            if (ModelState.IsValid) // ModelState sẽ là false nếu DoctorId == 0
             {
                 isOverlapping = await _db.WorkingHours
                    .AnyAsync(wh => wh.DoctorId == workingHour.DoctorId
@@ -130,7 +138,7 @@ namespace Clinic.Areas.Admin.Controllers // Changed from Reception to Admin
             if (ModelState.IsValid)
             {
                 _db.WorkingHours.Add(workingHour);
-                await _db.SaveChangesAsync();
+                await _db.SaveChangesAsync(); // Dòng 132/133 gây lỗi nếu DoctorId = 0
                 TempData["ok"] = "Đã thêm ca làm việc mới.";
                 // Redirect back to the index, possibly filtering for the added doctor
                 return RedirectToAction("Index", new { doctorIdFilter = workingHour.DoctorId });
